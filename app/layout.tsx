@@ -18,12 +18,12 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: "Kurt Baker — Wealth Advisor, Entrepreneur, Mental Health Advocate",
   description:
-    "Kurtis 'Kurt' Baker is a CERTIFIED FINANCIAL PLANNER™ who helps small and middle-market business owners build an Exit Ready Business. Host of Master Your Finances and co-founder of Attitudes In Reverse®.",
+    "Kurtis 'Kurt' Baker is a CERTIFIED FINANCIAL PLANNER™ who helps small and middle-market business owners build a Freedom Ready Business. Host of Master Your Finances and co-founder of Attitudes In Reverse®.",
   metadataBase: new URL("https://kurtisbaker.com"),
   openGraph: {
     title: "Kurt Baker",
     description:
-      "CFP® and private wealth manager helping business owners build an Exit Ready Business.",
+      "CFP® and private wealth manager helping business owners build a Freedom Ready Business.",
     url: "https://kurtisbaker.com",
     siteName: "Kurt Baker",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kurt Baker",
     description:
-      "CFP® and private wealth manager helping business owners build an Exit Ready Business.",
+      "CFP® and private wealth manager helping business owners build a Freedom Ready Business.",
     creator: "@kurtisbaker",
   },
 };

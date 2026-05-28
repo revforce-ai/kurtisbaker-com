@@ -17,8 +17,8 @@ export const pillars = [
     body: "Serving successful small and middle-market business owners as a CERTIFIED FINANCIAL PLANNER™ at Certified Wealth Management & Investment LLC.",
   },
   {
-    title: "Exit-Ready Business Strategy",
-    body: "Helping owners build companies that create significant value, run without them, and are positioned for a meaningful exit on their own terms.",
+    title: "Freedom Ready Business Strategy",
+    body: "Helping owners build companies that create significant value, run without them, and give them the freedom to live, lead, and exit on their own terms.",
   },
   {
     title: "Speaking & Storytelling",
@@ -64,10 +64,18 @@ export const companies: Company[] = [
     category: "Media",
   },
   {
+    name: "Freedom Ready Business",
+    role: "Founder",
+    description:
+      "The framework and community for owners building companies that give them freedom — to live, lead, scale, and exit on their own terms.",
+    href: "https://freedomreadybusiness.com",
+    category: "Wealth",
+  },
+  {
     name: "Kurtis Baker Speaks",
     role: "Speaker",
     description:
-      "Keynotes and talks on building Exit Ready businesses, leadership, and life after loss.",
+      "Keynotes and talks on building a Freedom Ready Business, leadership, and life after loss.",
     href: "https://kurtisbakerspeaks.com",
     category: "Speaking",
   },

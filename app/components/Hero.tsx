@@ -8,8 +8,9 @@ export function Hero() {
               CFP® · Entrepreneur · Speaker
             </p>
             <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight text-ink">
-              Helping owners build an{" "}
-              <span className="italic text-accent">Exit Ready</span> business.
+              Helping owners build a{" "}
+              <span className="italic text-accent">Freedom Ready</span>{" "}
+              business.
             </h1>
             <p className="mt-8 text-lg md:text-xl text-ink-muted leading-relaxed max-w-xl">
               I&apos;m Kurt Baker — a private wealth manager, entrepreneur, and
