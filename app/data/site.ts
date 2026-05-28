@@ -10,8 +10,11 @@ export const site = {
   ghl: {
     contactFormUrl:
       "https://api.leadconnectorhq.com/widget/form/pvijux6F8kWW1JH53kji",
-    bookingUrl:
-      "https://api.leadconnectorhq.com/widget/bookings/schedule",
+    bookingUrl: "https://link.revforce.ai/widget/bookings/meet-with-kurt",
+  },
+  masterYourFinances: {
+    home: "https://masteryourfinances.us",
+    showUrl: "https://masteryourfinances.us/shows/master-of-finances/",
   },
   socials: {
     linkedin: "https://www.linkedin.com/in/kurtisbaker/",
@@ -74,7 +77,7 @@ export const companies: Company[] = [
     role: "Host",
     description:
       "Weekly radio show featuring entrepreneurs, advisors, and the financial conversations that shape real lives.",
-    href: "https://masteryourfinances.com",
+    href: "https://masteryourfinances.us",
     category: "Media",
     logo: "/logos/master-your-finances.jpg",
   },

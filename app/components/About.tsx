@@ -54,7 +54,7 @@ export function About() {
               </a>
               {" "}to the conversations on{" "}
               <a
-                href="https://masteryourfinances.com"
+                href="https://masteryourfinances.us"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors"

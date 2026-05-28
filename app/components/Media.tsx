@@ -18,7 +18,7 @@ export function Media() {
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <a
-                href="https://masteryourfinances.com"
+                href="https://masteryourfinances.us/shows/master-of-finances/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 text-base font-medium text-bg hover:bg-accent transition-colors"
