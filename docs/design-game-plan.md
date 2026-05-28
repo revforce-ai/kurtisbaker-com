@@ -17,7 +17,14 @@ The tone target: **Patrick O'Shaughnessy meets a top-tier RIA meets Dan Martell.
 
 ---
 
-## Reference Matrix — the visual vocabulary we're pulling from
+## Framing clarification (2026-05-28)
+
+- **kurtisbaker.com = personal hero hub.** Where Kurt-the-person lives. Points to every venture. Reads as an author/operator/storyteller's home base.
+- **cwmi.us = the wealth management business site** (separate, later). Will be designed for prospective wealth clients with its own audience, tone, and compliance posture.
+
+This game plan is now scoped specifically to the *personal hero hub* category — the reference matrix below has been updated to reflect that.
+
+## Hero Hub Reference Matrix — what top digital media companies build for sites like this
 
 Each row: what the site does, what we steal, what we leave behind.
 
@@ -123,6 +130,128 @@ Each row: what the site does, what we steal, what we leave behind.
 | Below-fold logo strip preview | |
 
 **Lesson:** Headline *scale* matters. Our current hero is 7xl on desktop — could push to 8xl with the right typography.
+
+---
+
+## Hero Hub-Specific References (visited 2026-05-28)
+
+These are the sites a top digital media company would point to when designing a personal hero hub like kurtisbaker.com.
+
+### 10. Ali Abdaal — `aliabdaal.com`
+**Category:** Doctor → Entrepreneur → YouTuber → Author hub
+
+| Take | Leave |
+|---|---|
+| Warm cream background + playful hand-drawn doodles (yellow speech bubble, blue underline, paper airplane) | Emoji in the headline — too casual for a CFP |
+| Identity arc: "I'm a Doctor turned Entrepreneur, YouTuber, and the author of..." | |
+| "Join 230k+ Subscribers" as primary CTA — newsletter-first | |
+| Clean serif headline + plain sans body | |
+
+**Lesson:** Stating an identity *arc* ("X turned Y") instantly tells the visitor your whole story. For Kurt: *"CFP® turned entrepreneur, podcaster, speaker, and mental health advocate."*
+
+### 11. Tim Ferriss — `tim.blog`
+**Category:** Author/podcaster/investor hub
+
+| Take | Leave |
+|---|---|
+| Full-bleed atmospheric portrait (him sitting on stairs in dappled light) | The hero-card-promoting-a-book layout — overcommits to one product |
+| Wordmark "TIM FERRISS" top-left in serif | |
+| Clean nav: About / Blog / Books / Podcast / TV | |
+| Newsletter CTA top-right ("FREE NEWSLETTER") | |
+| Books visible at bottom of hero — product placement done quietly | |
+
+**Lesson:** A *single, beautiful environmental photo* (not a studio headshot) creates atmosphere. We could shoot Kurt in his radio studio, at his desk, or on stage.
+
+### 12. Codie Sanchez — `codiesanchez.com`
+**Category:** Operator/investor/author hub
+
+| Take | Leave |
+|---|---|
+| Warm beige gradient background | The empty right side of the hero — could carry a portrait |
+| "CS" monogram + "CODIE SANCHEZ" wordmark | |
+| Eyebrow ("From Wall Street to Main Street:") + bold sans-serif headline ("The New Revolution") | |
+| Orange "Get on the List" pill CTA | |
+| Minimal top nav: About / Book / Connect / MSM Live Event | |
+
+**Lesson:** This is *closest to your direction* — warm premium beige, monogram, big bold headline, single-color accent CTA. Steal this template.
+
+### 13. The Futur / Chris Do — `thefutur.com`
+**Category:** Creator/teacher/business coach hub
+
+| Take | Leave |
+|---|---|
+| Hero quote spanning full width ("Make a living doing what you love.") | The "Featured" content card below the quote — feels too publication-y for a personal site |
+| Below the quote: featured content immediately (podcast episode card) | |
+| Clean editorial layout, content-forward | |
+| "Ask me anything" floating chat (this is what *we're building* with Ask-Kurt AI) | |
+
+**Lesson:** Your *thesis statement* could be the hero. ("Building Freedom Ready businesses." or similar.) Then the page is content cascading from that thesis.
+
+### 14. Gary Vaynerchuk — `garyvaynerchuk.com`
+**Category:** Multi-venture personal brand hub
+
+| Take | Leave |
+|---|---|
+| **Fixed left-side nav** listing his ventures (Gary Vaynerchuk / GaryVee / VeeFriends / Contact) | The yellow announcement bar — too loud |
+| Handwritten signature mark as logo (memorable, personal) | The all-caps Impact-style "SERIAL ENTREPRENEUR" caption layout |
+| Full-bleed candid photo of him laughing | |
+| Socials in left rail too | |
+| Video play button in the hero (he hosts video everywhere) | |
+
+**Lesson:** This is *the strongest pattern for multi-venture nav.* Left-rail with ventures listed vertically would let Kurt put CWMI / Master Your Finances / RevForce / Kurtis Baker Speaks / Freedom Ready Business / AIR all visible without crowding the main content area.
+
+### 15. Lewis Howes — `lewishowes.com`
+**Category:** Speaker/podcaster/author hub
+
+| Take | Leave |
+|---|---|
+| Stage-spotlight photo of him on stage looking up (gives "I belong on a stage") | The "Get the Book Today!" banner at top — promo overload |
+| Wordmark logo "LEWIS HOWES" in clean sans | The cookie banner blocking the hero |
+| Orange "Subscribe Now" CTA contrasting blue/cool palette | |
+| Nav: Podcast / Books / About | |
+
+**Lesson:** A *stage photo* establishes the "this person speaks at events" credential instantly. Kurt has speaking footage we can pull a frame from.
+
+### 16. Brené Brown — `brenebrown.com`
+**Category:** Author/researcher/podcaster hub (best-in-class editorial design)
+
+| Take | Leave |
+|---|---|
+| **Vintage paper-collage editorial design** — hand-torn paper textures, retro print type, cutout portraits | The aged-paper texture is brand-specific to her |
+| Big serif "Brené Brown" wordmark | |
+| Nav: Books / Podcasts / Hubs / About / Explore / ABK Edit / Our Newsletter | |
+| Podcast promo as the editorial-style hero with co-host portrait cutouts and vintage mic illustration | |
+| Custom illustration as visual identity (the microphone) | |
+
+**Lesson:** This is what an A-tier creative shop would produce — *the brand* has its own visual world, not just a layout. We could build a custom illustration vocabulary for Kurt: stylized radio mic, a "Freedom Ready" diagram, abstract financial-flow illustrations. The site becomes a *brand world*, not just a webpage.
+
+### 17. Locomotive — `locomotive.ca`
+**Category:** A-tier creative agency — what they put on their own site
+
+| Take | Leave |
+|---|---|
+| Pure showmanship hero: scrambled/glitching letters that resolve into "Locomotive" | Agency site — not a direct comp |
+| Demonstrates what scroll-driven typography + interaction can do | |
+| Black background, pure focus on the type effect | |
+
+**Lesson:** This is *Tier 3 territory.* If we eventually want award-grade interactive moments, this is the bar. Could apply to the Freedom Ready Business framework reveal — letters/concepts scrambling into clarity.
+
+---
+
+## Pattern map — what *every* hero hub site does well
+
+After looking at all 17 references, the consistent moves of best-in-class personal hubs are:
+
+1. **A single defining photo or video** of the person — environmental, not studio
+2. **An identity arc** — "X turned Y, Z, and A" or a 3-word trinity (Entrepreneur \| Investor \| Author)
+3. **One primary CTA** — usually newsletter subscribe, sometimes book-a-call
+4. **Multi-venture navigation** — either left-rail (Gary V), side-tabs (OSV), or magazine-style top nav (Brené)
+5. **Editorial weight** — feels like a publication, not a brochure
+6. **Quiet wordmark** as identity anchor — not a complicated logo
+7. **Warm or atmospheric palette** — beige/cream/dappled photo light beats stark white or pure dark
+8. **Content cascading below the hero** — recent writing, episodes, talks, books — not a "features" list
+
+The kurtisbaker.com hero hub will land best by combining: **Codie Sanchez's warm palette + Gary V's left-rail venture nav + Tim Ferriss's environmental photography + Brené Brown's editorial weight.**
 
 ---
 
