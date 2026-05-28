@@ -5,7 +5,7 @@ const GHL_FUNNELS_HOST = "https://funnels.kurtisbaker.com";
 
 const NATIVE_PATHS = new Set<string>(["/"]);
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   if (NATIVE_PATHS.has(pathname)) {
