@@ -1,7 +1,18 @@
 export const site = {
   name: "Kurt Baker",
   tagline: "Wealth advisor, entrepreneur, mental health advocate.",
-  email: "kurt@revforce.ai",
+  phone: "+1 (609) 716-4700",
+  phoneTel: "+16097164700",
+  address: {
+    street: "101 College Rd E, Ste 2",
+    cityState: "Princeton, NJ 08540",
+  },
+  ghl: {
+    contactFormUrl:
+      "https://api.leadconnectorhq.com/widget/form/pvijux6F8kWW1JH53kji",
+    bookingUrl:
+      "https://api.leadconnectorhq.com/widget/bookings/schedule",
+  },
   socials: {
     linkedin: "https://www.linkedin.com/in/kurtisbaker/",
     twitter: "https://x.com/kurtisbaker",

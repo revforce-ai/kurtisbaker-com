@@ -22,10 +22,12 @@ export function Hero() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
               <a
-                href="#contact"
+                href="https://api.leadconnectorhq.com/widget/bookings/schedule"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 text-base font-medium text-bg hover:bg-accent transition-colors"
               >
-                Work with me
+                Book a call
               </a>
               <a
                 href="#media"
