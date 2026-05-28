@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
@@ -34,10 +36,15 @@ export function Hero() {
             </div>
           </div>
           <div className="relative">
-            <div className="aspect-[4/5] rounded-2xl bg-gradient-to-br from-ink to-[#1e3258] shadow-2xl overflow-hidden flex items-center justify-center">
-              <span className="font-serif text-9xl text-accent/30 select-none">
-                KB
-              </span>
+            <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-ink/10 relative bg-ink">
+              <Image
+                src="/kurt-baker.jpg"
+                alt="Kurtis Baker"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 400px"
+                className="object-cover object-top"
+              />
             </div>
             <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-lg max-w-[220px]">
               <p className="text-xs uppercase tracking-wider text-ink-muted mb-1">

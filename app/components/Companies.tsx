@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { companies } from "@/app/data/site";
 
 export function Companies() {
@@ -23,29 +24,49 @@ export function Companies() {
               href={c.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block rounded-2xl border border-border bg-bg-elevated p-6 hover:border-accent hover:shadow-lg transition-all"
+              className="group block rounded-2xl border border-border bg-bg-elevated overflow-hidden hover:border-accent hover:shadow-lg transition-all"
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[11px] uppercase tracking-[0.16em] text-accent font-medium">
-                  {c.category}
-                </span>
-                <svg
-                  className="w-4 h-4 text-ink-muted group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <path d="M4 12L12 4M12 4H6M12 4V10" strokeLinecap="round" />
-                </svg>
+              <div className="aspect-[16/9] bg-white border-b border-border flex items-center justify-center p-6 relative">
+                {c.logo ? (
+                  <Image
+                    src={c.logo}
+                    alt={`${c.name} logo`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 360px"
+                    className="object-contain p-6"
+                  />
+                ) : (
+                  <span className="font-serif text-3xl text-ink/80 italic tracking-tight">
+                    {c.name}
+                  </span>
+                )}
               </div>
-              <h3 className="font-serif text-xl text-ink leading-tight mb-1">
-                {c.name}
-              </h3>
-              <p className="text-sm text-ink-muted mb-3 italic">{c.role}</p>
-              <p className="text-sm text-ink-muted leading-relaxed">
-                {c.description}
-              </p>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] uppercase tracking-[0.16em] text-accent font-medium">
+                    {c.category}
+                  </span>
+                  <svg
+                    className="w-4 h-4 text-ink-muted group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      d="M4 12L12 4M12 4H6M12 4V10"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-xl text-ink leading-tight mb-1">
+                  {c.name}
+                </h3>
+                <p className="text-sm text-ink-muted mb-3 italic">{c.role}</p>
+                <p className="text-sm text-ink-muted leading-relaxed">
+                  {c.description}
+                </p>
+              </div>
             </a>
           ))}
         </div>

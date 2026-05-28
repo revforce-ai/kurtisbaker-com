@@ -36,6 +36,7 @@ export type Company = {
   description: string;
   href: string;
   category: "Wealth" | "Media" | "Speaking" | "AI" | "Nonprofit";
+  logo?: string;
 };
 
 export const companies: Company[] = [
@@ -46,6 +47,7 @@ export const companies: Company[] = [
       "Comprehensive financial planning and investment management for successful business owners.",
     href: "https://www.cwmi.us",
     category: "Wealth",
+    logo: "/logos/cwmi.jpg",
   },
   {
     name: "Certified Wealth Mortgage & Investment",
@@ -54,6 +56,7 @@ export const companies: Company[] = [
       "Mortgage and lending solutions integrated with broader financial strategy.",
     href: "https://www.cwmi.us",
     category: "Wealth",
+    logo: "/logos/cwmi-mortgage.jpg",
   },
   {
     name: "Master Your Finances",
@@ -62,6 +65,7 @@ export const companies: Company[] = [
       "Weekly radio show featuring entrepreneurs, advisors, and the financial conversations that shape real lives.",
     href: "https://masteryourfinances.com",
     category: "Media",
+    logo: "/logos/master-your-finances.jpg",
   },
   {
     name: "Freedom Ready Business",
@@ -78,6 +82,7 @@ export const companies: Company[] = [
       "Keynotes and talks on building a Freedom Ready Business, leadership, and life after loss.",
     href: "https://kurtisbakerspeaks.com",
     category: "Speaking",
+    logo: "/logos/kurtis-baker-speaks.webp",
   },
   {
     name: "RevForce",
@@ -86,6 +91,7 @@ export const companies: Company[] = [
       "AI virtual receptionist 'Rachel' — answers calls, books appointments, and never misses a lead.",
     href: "https://revforce.ai",
     category: "AI",
+    logo: "/logos/revforce.webp",
   },
   {
     name: "Attitudes In Reverse®",
@@ -94,6 +100,7 @@ export const companies: Company[] = [
       "Nonprofit founded in memory of Kenny Baker — eliminating stigma around mental health through education.",
     href: "https://attitudesinreverse.org",
     category: "Nonprofit",
+    logo: "/logos/air.jpg",
   },
 ];
 
