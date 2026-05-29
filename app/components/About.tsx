@@ -33,7 +33,7 @@ export function About() {
                 In 2010, my family lost our son Kenny. Out of that loss, my wife
                 Tricia and I co-founded{" "}
                 <a
-                  href="https://attitudesinreverse.org"
+                  href="https://air.ngo"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors"

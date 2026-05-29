@@ -1,5 +1,8 @@
 export const site = {
   name: "Kurt Baker",
+  fullName: "Kurtis Baker",
+  // Rendered with proper trademark symbols in the UI
+  credentialSuffix: "CFP®, CEPA®, AIF®",
   tagline: "Wealth advisor, entrepreneur, mental health advocate.",
   phone: "+1 (609) 716-4700",
   phoneTel: "+16097164700",
@@ -51,6 +54,7 @@ export type Company = {
   href: string;
   category: "Wealth" | "Media" | "Speaking" | "AI" | "Nonprofit";
   logo?: string;
+  comingSoon?: boolean;
 };
 
 export const companies: Company[] = [
@@ -86,17 +90,19 @@ export const companies: Company[] = [
     role: "Founder",
     description:
       "The framework and community for owners building companies that give them freedom — to live, lead, scale, and exit on their own terms.",
-    href: "https://freedomreadybusiness.com",
+    href: "",
     category: "Wealth",
+    comingSoon: true,
   },
   {
     name: "Kurtis Baker Speaks",
     role: "Speaker",
     description:
       "Keynotes and talks on building a Freedom Ready Business, leadership, and life after loss.",
-    href: "https://kurtisbakerspeaks.com",
+    href: "",
     category: "Speaking",
     logo: "/logos/kurtis-baker-speaks.webp",
+    comingSoon: true,
   },
   {
     name: "RevForce",
@@ -112,7 +118,7 @@ export const companies: Company[] = [
     role: "Co-Founder",
     description:
       "Nonprofit founded in memory of Kenny Baker — eliminating stigma around mental health through education.",
-    href: "https://attitudesinreverse.org",
+    href: "https://air.ngo",
     category: "Nonprofit",
     logo: "/logos/air.jpg",
   },
@@ -126,8 +132,7 @@ export const certifications = [
     bodyUrl: "https://www.cfp.net",
     blurb:
       "Held to the highest fiduciary standard in financial planning — competency, ethics, and ongoing education.",
-    verifyUrl:
-      "https://www.cfp.net/verify-a-cfp-professional/certification-and-background/88572a4d-e597-4767-85e8-ba4039254714",
+    verifyUrl: "https://www.cfp.net/verify-a-cfp-professional",
     verifyLabel: "Verify on cfp.net",
   },
   {

@@ -65,16 +65,14 @@ export function Hero() {
                   className="absolute inset-0 ring-1 ring-inset ring-accent/10 rounded-2xl"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-[0_12px_30px_-12px_rgba(15,26,46,0.35)] max-w-[240px]">
-                <p className="text-xs uppercase tracking-[0.22em] text-ink-muted mb-2">
-                  Certifications
-                </p>
+              <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-[0_12px_30px_-12px_rgba(15,26,46,0.35)] max-w-[260px]">
                 <p className="font-serif text-xl text-ink leading-tight tracking-tight">
-                  CFP<sup className="text-[0.55em] -top-2 relative">®</sup>{" "}
-                  <span className="text-accent">·</span> CEPA
-                  <sup className="text-[0.55em] -top-2 relative">®</sup>{" "}
-                  <span className="text-accent">·</span> AIF
-                  <sup className="text-[0.55em] -top-2 relative">®</sup>
+                  Kurtis Baker
+                </p>
+                <p className="text-sm text-ink-muted mt-1 tracking-tight">
+                  CFP<sup className="text-[0.6em] -top-1.5 relative">®</sup>,{" "}
+                  CEPA<sup className="text-[0.6em] -top-1.5 relative">®</sup>,{" "}
+                  AIF<sup className="text-[0.6em] -top-1.5 relative">®</sup>
                 </p>
               </div>
             </div>

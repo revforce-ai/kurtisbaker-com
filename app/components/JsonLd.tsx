@@ -53,9 +53,8 @@ export function JsonLd() {
           site.socials.instagram,
           site.socials.youtube,
           site.socials.facebook,
-          // Authority signals: link identity to verified credential pages
-          certifications[0].verifyUrl,
-          certifications[1].verifyUrl,
+          // Authority signals: person-specific authoritative profiles
+          "https://exit-planning-institute.org/member-detail/kurtis-baker",
           "https://www.plannersearch.org/financial-advisor/kurtis-baker",
         ],
         knowsAbout: [
@@ -108,7 +107,7 @@ export function JsonLd() {
       {
         "@type": "NGO",
         name: "Attitudes In Reverse®",
-        url: "https://attitudesinreverse.org",
+        url: "https://air.ngo",
         founder: { "@id": personId },
         description:
           "Nonprofit working to eliminate the stigma surrounding mental health by bringing education into schools, founded after the loss of Kenny Baker in 2010.",

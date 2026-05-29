@@ -1,12 +1,44 @@
 import { site } from "@/app/data/site";
 import { ScrollReveal } from "@/app/components/ScrollReveal";
+import {
+  LinkedInIcon,
+  XIcon,
+  InstagramIcon,
+  YouTubeIcon,
+  FacebookIcon,
+} from "@/app/components/SocialIcons";
 
 const socialItems = [
-  { name: "LinkedIn", href: site.socials.linkedin, handle: "in/kurtisbaker" },
-  { name: "X / Twitter", href: site.socials.twitter, handle: "@kurtisbaker" },
-  { name: "Instagram", href: site.socials.instagram, handle: "@thekurtbaker" },
-  { name: "YouTube", href: site.socials.youtube, handle: "@kurtisbaker" },
-  { name: "Facebook", href: site.socials.facebook, handle: "kurtis.baker" },
+  {
+    name: "LinkedIn",
+    href: site.socials.linkedin,
+    handle: "in/kurtisbaker",
+    Icon: LinkedInIcon,
+  },
+  {
+    name: "X / Twitter",
+    href: site.socials.twitter,
+    handle: "@kurtisbaker",
+    Icon: XIcon,
+  },
+  {
+    name: "Instagram",
+    href: site.socials.instagram,
+    handle: "@thekurtbaker",
+    Icon: InstagramIcon,
+  },
+  {
+    name: "YouTube",
+    href: site.socials.youtube,
+    handle: "@kurtisbaker",
+    Icon: YouTubeIcon,
+  },
+  {
+    name: "Facebook",
+    href: site.socials.facebook,
+    handle: "kurtis.baker",
+    Icon: FacebookIcon,
+  },
 ];
 
 export function Contact() {
@@ -105,7 +137,8 @@ export function Contact() {
                           rel="noopener noreferrer"
                           className="group flex items-center justify-between py-1.5 transition-colors hover:text-accent"
                         >
-                          <span className="text-sm text-ink transition-colors group-hover:text-accent">
+                          <span className="flex items-center gap-2.5 text-sm text-ink transition-colors group-hover:text-accent">
+                            <s.Icon className="w-[18px] h-[18px] text-ink-muted transition-colors group-hover:text-accent" />
                             {s.name}
                           </span>
                           <span className="text-xs text-ink-muted transition-colors group-hover:text-accent">
