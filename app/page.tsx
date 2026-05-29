@@ -1,5 +1,6 @@
 import { Nav } from "@/app/components/Nav";
 import { Hero } from "@/app/components/Hero";
+import { LogoMarquee } from "@/app/components/LogoMarquee";
 import { Credentials } from "@/app/components/Credentials";
 import { Pillars } from "@/app/components/Pillars";
 import { Companies } from "@/app/components/Companies";
@@ -14,6 +15,7 @@ export default function Home() {
       <Nav />
       <main className="flex-1">
         <Hero />
+        <LogoMarquee />
         <Credentials />
         <Pillars />
         <Companies />

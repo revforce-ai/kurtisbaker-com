@@ -4,6 +4,8 @@ import "./globals.css";
 import { GhlChatWidget } from "@/app/components/GhlChatWidget";
 import { ScrollProgress } from "@/app/components/ScrollProgress";
 import { JsonLd } from "@/app/components/JsonLd";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-sans-stack",
@@ -87,6 +89,8 @@ export default function RootLayout({
         <ScrollProgress />
         {children}
         <GhlChatWidget />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
