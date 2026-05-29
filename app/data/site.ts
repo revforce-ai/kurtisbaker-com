@@ -123,22 +123,33 @@ export const certifications = [
     mark: "CFP®",
     full: "CERTIFIED FINANCIAL PLANNER™",
     body: "CFP Board",
+    bodyUrl: "https://www.cfp.net",
     blurb:
       "Held to the highest fiduciary standard in financial planning — competency, ethics, and ongoing education.",
+    verifyUrl:
+      "https://www.cfp.net/verify-a-cfp-professional/certification-and-background/88572a4d-e597-4767-85e8-ba4039254714",
+    verifyLabel: "Verify on cfp.net",
   },
   {
     mark: "CEPA®",
     full: "Certified Exit Planning Advisor®",
     body: "Exit Planning Institute",
+    bodyUrl: "https://exit-planning-institute.org",
     blurb:
       "Trained to help owners build companies that create value, run without them, and are ready for any future.",
+    verifyUrl:
+      "https://exit-planning-institute.org/member-detail/kurtis-baker",
+    verifyLabel: "Verify on EPI",
   },
   {
     mark: "AIF®",
     full: "Accredited Investment Fiduciary®",
     body: "Fi360 (Broadridge)",
+    bodyUrl: "https://www.fi360.com",
     blurb:
       "Disciplined fiduciary process for prudent investment decision-making on behalf of clients.",
+    verifyUrl: "https://www.fi360.com/app/designee/search",
+    verifyLabel: "Verify on Fi360",
   },
 ];
 

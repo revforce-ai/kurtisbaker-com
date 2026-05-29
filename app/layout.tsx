@@ -3,6 +3,7 @@ import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { GhlChatWidget } from "@/app/components/GhlChatWidget";
 import { ScrollProgress } from "@/app/components/ScrollProgress";
+import { JsonLd } from "@/app/components/JsonLd";
 
 const inter = Inter({
   variable: "--font-sans-stack",
@@ -18,9 +19,43 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Kurt Baker — Private Wealth Manager, Entrepreneur, Speaker",
+  title: {
+    default: "Kurt Baker — Private Wealth Manager (CFP® · CEPA® · AIF®)",
+    template: "%s · Kurt Baker",
+  },
   description:
-    "Kurtis 'Kurt' Baker, CFP® · CEPA® · AIF® — private wealth manager helping small and middle-market business owners build a Freedom Ready Business. Host of Master Your Finances and co-founder of Attitudes In Reverse®.",
+    "Kurtis 'Kurt' Baker, CFP® · CEPA® · AIF® — private wealth manager in Princeton, NJ helping small and middle-market business owners build a Freedom Ready Business. Host of Master Your Finances and co-founder of Attitudes In Reverse®.",
+  keywords: [
+    "Kurt Baker",
+    "Kurtis Baker",
+    "CFP",
+    "CEPA",
+    "AIF",
+    "private wealth manager Princeton NJ",
+    "Freedom Ready Business",
+    "Exit Planning Advisor",
+    "Master Your Finances",
+    "Attitudes In Reverse",
+    "Certified Wealth Management Investment",
+    "CWMI",
+  ],
+  authors: [{ name: "Kurt Baker", url: "https://kurtisbaker.com" }],
+  creator: "Kurt Baker",
+  publisher: "Kurt Baker",
+  alternates: {
+    canonical: "https://kurtisbaker.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   metadataBase: new URL("https://kurtisbaker.com"),
   openGraph: {
     title: "Kurt Baker",
@@ -48,6 +83,7 @@ export default function RootLayout({
       className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
+        <JsonLd />
         <ScrollProgress />
         {children}
         <GhlChatWidget />

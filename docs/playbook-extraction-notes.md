@@ -113,6 +113,82 @@ This file captures the reusable *method* behind the kurtisbaker.com build so it 
 
 ---
 
+## SEO + GEO + AIO + LLMO + AEO — the 5-discipline discoverability framework
+
+Every site built by Stack 13 must ship optimized for **all five** discovery surfaces from day one, then maintain that posture with an ongoing-strategy skill.
+
+### What each acronym actually optimizes for
+
+| Discipline | Target surface | What changes |
+|---|---|---|
+| **SEO** — Search Engine Optimization | Google, Bing, DuckDuckGo result pages | Crawlability, indexable HTML, metadata, sitemap, canonical, page speed, internal linking, backlinks |
+| **GEO** — Generative Engine Optimization | Google AI Overviews, SearchGPT, Bing Chat, Brave AI | Crawler-allowed for `Google-Extended` / `ClaudeBot` / etc, citable structured facts, schema.org, E-E-A-T signals |
+| **AIO** — AI Optimization | Broad umbrella for AI-driven discovery | All of GEO + LLMO + AEO; emphasis on machine-readable content, llms.txt, FAQ schema |
+| **LLMO** — Large Language Model Optimization | LLM training data and zero-shot answers (Claude, GPT, Gemini) | Memorable canonical facts, knowledge-graph entities (Schema.org Person, sameAs to authoritative profiles), Wikipedia/Wikidata/Crunchbase presence |
+| **AEO** — Answer Engine Optimization | Perplexity, You.com, Brave Search, AI assistants | Direct-answer paragraphs, FAQ schema, HowTo schema, "best in class" citations, clean H2/H3 structure |
+
+### Initial-pass checklist (`web:optimize-discoverability`)
+
+What the skill applies on every site, day-one:
+
+1. **HTML / Meta foundation**
+   - Semantic landmarks (`<header>`, `<main>`, `<section>`, `<article>`, `<footer>`)
+   - One `<h1>` per page, proper heading hierarchy
+   - Descriptive `alt` text on every image
+   - `lang` attribute on `<html>`
+   - Canonical URL meta + `<link rel="canonical">`
+   - Complete Open Graph + Twitter Card meta
+   - Page-level `<title>` template + descriptions
+2. **`/robots.txt`** — explicitly allow major AI crawlers (`GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`, `anthropic-ai`, `CCBot`, `Bytespider`, `Applebot-Extended`). Sitemap + host directives.
+3. **`/sitemap.xml`** — auto-generated from routes
+4. **`/llms.txt`** — the "for AI eyes" markdown brief: who the person is, credentials with verification URLs, ventures with URLs, expertise topics, contact, booking links. Drives LLMO + AEO.
+5. **JSON-LD `@graph`** — at minimum:
+   - `Person` (name, alternateName, jobTitle, image, address, telephone, sameAs[], hasCredential[], knowsAbout[])
+   - `ProfessionalService` / `FinancialService` / `LocalBusiness` for the practice
+   - `WebSite` (publisher → Person)
+   - Domain-specific types (`RadioSeries`, `NGO`, `Book`, `Course`, `PodcastSeries`, `Event` etc.)
+   - **The sameAs array is the LLM identity anchor** — link to every authoritative profile (LinkedIn, credential verification pages, FPA/CFP Board profiles, Wikipedia/Wikidata if available)
+6. **E-E-A-T signals** (Expertise, Experience, Authoritativeness, Trustworthiness):
+   - Credentials with **outbound links to the credentialing body's verification page** for that person
+   - Real business info (address, phone) — surface on every page or in JSON-LD
+   - Awards and recognition surfaced
+   - Author bylines with credentials on any content
+7. **Performance** — Vercel image optimization, font preload, lazy-load below-fold images, Lighthouse 95+
+8. **Local SEO** (when applicable) — `LocalBusiness` schema, Google Business Profile linked via sameAs
+9. **Page-1 direct answers** — for any FAQ-style content, add `FAQPage` schema. AEO platforms cite these heavily.
+
+### Ongoing-strategy cadence (`web:maintain-discoverability`)
+
+Skill that runs on a recurring basis (e.g., monthly):
+
+1. **Search Console + Bing Webmaster** — pull query/click data, identify rising queries to write content for
+2. **AI-mention monitoring** — query Perplexity / SearchGPT / Google AI Overviews for the person's name and topics; verify the site is being cited; identify gaps where competitors are cited but we're not
+3. **Schema audit** — re-validate JSON-LD against Schema.org changes, add new types as the person's work expands (e.g., new Book, new Course)
+4. **Content velocity** — at least one cite-worthy long-form piece per month; tag with topic taxonomy in JSON-LD
+5. **Backlink growth** — track Authoritative Domain Rating; pursue podcast appearances and guest posts (each one becomes a `sameAs` candidate)
+6. **Refresh `/llms.txt` quarterly** — accurate biz info, current ventures, current credentials
+7. **Knowledge graph hygiene** — Wikidata entry maintenance; Crunchbase profile; Muck Rack profile for journalists; podcast directory profiles
+8. **Real-world citations** — speaking gigs, podcast appearances, press mentions — each gets a structured `mention` entry
+
+### Reusable artifact templates (extract these for the skill)
+
+After kurtisbaker.com ships, the following files become skill templates parameterized by the input profile:
+
+- `app/components/JsonLd.tsx` — Person + Service @graph
+- `app/robots.ts` — AI crawler allow-list
+- `app/sitemap.ts`
+- `public/llms.txt` — Markdown identity brief
+- Layout-level `metadata` object — keywords, alternates, robots config
+
+The skill's input parameters that drive all five files:
+- Person identity block (name, title, image, address, phone, social URLs)
+- Credential list with verification URLs
+- Venture portfolio
+- Topic expertise list
+- Office / business info (for LocalBusiness schema)
+
+---
+
 ## Open extraction questions
 
 - How do we make the reference research category-aware? (User says "I'm a CFP" → skill knows which top advisor sites to visit)
