@@ -53,9 +53,15 @@ export function Footer() {
             {site.phone}
           </a>
         </div>
-        <p className="text-xs text-ink-muted sm:text-right">
-          © {year} Kurtis Baker. All rights reserved.
-        </p>
+        <div className="text-xs text-ink-muted sm:text-right">
+          <a
+            href="/privacy"
+            className="hover:text-accent transition-colors"
+          >
+            Privacy Policy
+          </a>
+          <p className="mt-2">© {year} Kurtis Baker. All rights reserved.</p>
+        </div>
       </div>
     </footer>
   );

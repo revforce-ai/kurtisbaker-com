@@ -189,6 +189,43 @@ The skill's input parameters that drive all five files:
 
 ---
 
+## Privacy & legal (every site ships with this)
+
+Every site Stack 13 builds must include, by default:
+
+1. **Privacy Policy page** (`/privacy`) — covers: info collected, how used, **SMS/text-messaging consent + STOP/HELP opt-out + "not shared with third parties" carve-out** (required for A2P 10DLC / carrier approval), cookies, data sharing with processors, retention, security, children's privacy, contact, effective date. Footer link on every page.
+2. **SMS consent disclosure on every lead form** — visible TCPA-style authorization text adjacent to the form: who's contacting, channels (phone/email/SMS), "msg & data rates may apply," "msg frequency varies," "reply STOP to opt out," "consent not a condition of purchase," link to Privacy Policy. NOTE: the actual opt-in checkbox should also live IN the CRM form (GHL) — the on-page disclosure complements it; flag a task to confirm the checkbox exists in the form builder.
+3. **Terms of Service page** (`/terms`) — recommended; add for sites taking payments or with memberships.
+4. **Legal-review flag** — generated policies are solid templates but must be reviewed by counsel for the client's jurisdiction/industry (especially regulated ones like financial advisors). The skill states this explicitly in the page footer + handoff notes.
+5. **Native-path registration** — any new app-served route (e.g. `/privacy`, `/terms`) must be added to the proxy/middleware `NATIVE_PATHS` so the catch-all redirect doesn't capture it.
+
+## QC & monitoring (the `web:qc` + `web:monitor` skills)
+
+Two QC layers, both shipped with every site:
+
+### Layer 1 — Click-through checklist (`docs/qc-checklist.md`)
+A human-readable table of **every link and button** on the site with its expected destination, grouped by section (nav, hero, credentials, companies, about, media, contact, footer, shortcuts, chat, optimization artifacts). Lets the owner (or QA) click through and tick each one. Generated from the same data that drives the site, so it never drifts.
+
+### Layer 2 — Automated link checker (`scripts/qc-links.mjs`)
+A zero-dependency Node script (uses global `fetch`) that:
+- Crawls all app pages, extracts every `<a href>`
+- Verifies asset routes (`robots.txt`, `sitemap.xml`, `llms.txt`, `/privacy`) return 2xx
+- Verifies booking/named shortcuts **301 to the expected target** (substring match)
+- Confirms critical CTAs (booking, form, show, ventures) are present in markup
+- Classifies internal vs external; **internal failures + shortcut mismatches are fatal (exit 1)**, external failures are warnings (bot-blocking is common)
+- Run: `node scripts/qc-links.mjs [baseUrl]` (defaults to env `QC_BASE_URL`)
+
+### Layer 3 — Periodic CI (`.github/workflows/qc.yml`)
+GitHub Action that runs the link checker:
+- **Weekly** (cron), on **every push to main**, and **on demand** (`workflow_dispatch`)
+- Fails → GitHub notifies → broken links caught before a visitor finds them
+- `QC_BASE_URL` env points to the live domain (vercel alias pre-cutover, apex post-cutover)
+- This is the "set up a periodic QC to make sure the site is still working" requirement — runs independent of anyone's machine being on.
+
+**Skill extraction:** `qc-links.mjs`, `qc-checklist.md`, and `qc.yml` are all parameterized templates driven by the site's link inventory (CTAs, ventures, shortcuts, asset routes). The skill generates all three from the same config object that builds the site, so the QC always matches what was actually built.
+
+**Future monitoring upgrades (Tier 2+):** uptime/SSL/Core-Web-Vitals monitoring (e.g. Vercel monitoring, UptimeRobot, or a Lighthouse-CI action), broken-redirect alerts, and the AI-mention monitoring already documented in the optimization section.
+
 ## Open extraction questions
 
 - How do we make the reference research category-aware? (User says "I'm a CFP" → skill knows which top advisor sites to visit)

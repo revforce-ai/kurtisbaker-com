@@ -74,6 +74,22 @@ export function Contact() {
                 loading="lazy"
               />
             </div>
+            <p className="mt-4 text-xs leading-relaxed text-ink-muted">
+              By submitting this form, you authorize Kurt Baker and Certified
+              Wealth Management &amp; Investment to contact you by phone, email,
+              and SMS text message at the number and address provided, including
+              for scheduling and follow-up. Message frequency varies. Message
+              &amp; data rates may apply. Reply STOP to opt out of texts at any
+              time, or HELP for help. Consent is not a condition of any purchase.
+              See our{" "}
+              <a
+                href="/privacy"
+                className="underline decoration-border underline-offset-2 hover:text-accent transition-colors"
+              >
+                Privacy Policy
+              </a>
+              .
+            </p>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
             <div className="space-y-8">

@@ -17,8 +17,9 @@ export function Pillars() {
               Four pursuits. One throughline.
             </h2>
             <p className="mt-5 text-lg text-ink-muted leading-relaxed">
-              Help good people — business owners, families, communities — protect
-              what they&apos;ve built and put it to work for what matters most.
+              Across all four, the work is the same: help business owners,
+              families, and communities protect what they&apos;ve built — and put
+              it to work for what matters most.
             </p>
           </div>
         </ScrollReveal>
