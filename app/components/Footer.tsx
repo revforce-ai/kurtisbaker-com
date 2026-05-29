@@ -54,12 +54,14 @@ export function Footer() {
           </a>
         </div>
         <div className="text-xs text-ink-muted sm:text-right">
-          <a
-            href="/privacy"
-            className="hover:text-accent transition-colors"
-          >
-            Privacy Policy
-          </a>
+          <div className="flex gap-4 sm:justify-end">
+            <a href="/privacy" className="hover:text-accent transition-colors">
+              Privacy Policy
+            </a>
+            <a href="/terms" className="hover:text-accent transition-colors">
+              Terms &amp; Conditions
+            </a>
+          </div>
           <p className="mt-2">© {year} Kurtis Baker. All rights reserved.</p>
         </div>
       </div>

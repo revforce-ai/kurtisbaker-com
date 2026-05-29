@@ -21,7 +21,13 @@ const BASE =
 
 const PAGES = ["/", "/privacy"];
 
-const ASSET_ROUTES = ["/robots.txt", "/sitemap.xml", "/llms.txt", "/privacy"];
+const ASSET_ROUTES = [
+  "/robots.txt",
+  "/sitemap.xml",
+  "/llms.txt",
+  "/privacy",
+  "/terms",
+];
 
 // Named booking shortcuts → expected redirect target (substring match)
 const SHORTCUTS = {

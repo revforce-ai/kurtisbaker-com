@@ -199,6 +199,54 @@ Every site Stack 13 builds must include, by default:
 4. **Legal-review flag** — generated policies are solid templates but must be reviewed by counsel for the client's jurisdiction/industry (especially regulated ones like financial advisors). The skill states this explicitly in the page footer + handoff notes.
 5. **Native-path registration** — any new app-served route (e.g. `/privacy`, `/terms`) must be added to the proxy/middleware `NATIVE_PATHS` so the catch-all redirect doesn't capture it.
 
+## Compliance & legal — the `web:compliance` skill
+
+Every site Stack 13 builds runs through a compliance pass. Two layers: a **baseline** that applies to all sites, and a **site-type detection** step that adds type-specific requirements.
+
+### Step 1 — Detect the site type (skill asks the operator + infers from content)
+The skill classifies the site into one (or more) of these types, because each carries different legal obligations:
+- **Personal brand / hub** (e.g., kurtisbaker.com)
+- **Financial advisor / RIA / wealth** (e.g., cwmi.us)
+- **Healthcare / wellness**
+- **E-commerce / retail**
+- **Legal / law firm**
+- **SaaS / software / data processor**
+- **Coaching / courses / info products**
+- **Nonprofit / charity**
+- **Local service business** (trades, restaurants, etc.)
+- **Real estate / mortgage**
+
+### Step 2 — Baseline requirements (EVERY site)
+1. **Privacy Policy** (`/privacy`) — required by GDPR, CCPA/CPRA, CalOPPA and the growing list of US state privacy laws if the site collects ANY personal info (forms, analytics, cookies). Link in footer on every page.
+2. **Terms & Conditions** (`/terms`) — governs use, IP, liability limitation, communications consent. Link in footer on every page.
+3. **Cookie consent** — if using analytics/marketing/tracking cookies: GDPR needs affirmative opt-in *before* non-essential cookies; CCPA/CPRA needs a clear opt-out ("Do Not Sell/Share"). Add a consent banner when tracking is present. (kurtisbaker.com currently runs no marketing cookies beyond the GHL chat + Vercel analytics — revisit when PostHog/ads pixels are added in Tier 2.)
+4. **ADA / WCAG 2.2 Level AA accessibility** — ADA web lawsuits run in the thousands/year targeting SMBs ($5k–$25k settlements). Requirements baked into the build: semantic HTML, alt text, color contrast ≥4.5:1, keyboard nav, focus states, `prefers-reduced-motion` honored, labels on form fields, `lang` attr. Run an automated a11y audit (axe / Lighthouse) before launch.
+5. **SMS / A2P 10DLC consent** — explicit opt-in language + checkbox on any form capturing phone numbers; STOP/HELP handling; "not shared with third parties" carve-out in privacy policy (see Privacy section).
+6. **Business identity** — real legal name, address, phone visible (trust + some jurisdictions require it).
+7. **CAN-SPAM** — any marketing email must include physical mailing address + working unsubscribe.
+
+### Step 3 — Type-specific requirements
+| Site type | Additional compliance the skill must add |
+|---|---|
+| **Financial advisor / RIA** | **SEC Marketing Rule** is a 2026 exam priority. If testimonials/endorsements are shown: disclose whether the person is a client, whether compensated, and any conflict — "clear and prominent," not buried in links. If performance shown: net AND gross with equal prominence, same methodology/period. Third-party ratings need due-diligence + disclosures alongside the rating. Add: "not investment/tax/legal advice" disclaimer, links to **Form ADV / Form CRS**, fiduciary statement, and firm's IAPD/BrokerCheck. (kurtisbaker.com is a *personal hub*, not the RIA marketing site — cwmi.us will carry the full RIA load. The personal hub still got a "no advice" disclaimer in `/terms`.) |
+| **Healthcare / wellness** | HIPAA — never collect PHI in standard web forms; BAA with any processor; privacy practices notice; no health claims without substantiation. |
+| **E-commerce** | Refund/return + shipping policies; clear pricing & tax; PCI-DSS for payments (use hosted checkout); auto-renewal disclosure laws. |
+| **Legal / law firm** | State bar advertising rules; "Attorney Advertising" label; no outcome guarantees; no inadvertent attorney-client relationship (disclaimer). |
+| **SaaS / data processor** | DPA + subprocessor list; security page (SOC 2 etc.); status page; data deletion/export per GDPR/CCPA. |
+| **Coaching / courses / info products** | FTC earnings/results disclaimers; testimonial "results not typical" disclosures; clear refund terms. |
+| **Nonprofit / charity** | State charitable-solicitation registration; donation receipt/tax-deductibility language; financial transparency. |
+| **Local service** | Licensing/insurance numbers where required; service-area disclosure. |
+| **Real estate / mortgage** | Equal Housing Opportunity logo; NMLS ID; state license disclosures. |
+
+### Step 4 — Output
+The skill generates the appropriate `/privacy`, `/terms`, and (when needed) `/disclosures`, `/accessibility`, cookie banner, and type-specific disclaimers — each parameterized by the person/business profile, site type, and jurisdiction — and **flags everything for legal-counsel review** (the skill drafts; counsel confirms). It also produces a one-page "compliance summary" handoff listing what was added and what the operator still needs to obtain (e.g., Form ADV link, NMLS ID).
+
+### Reusable artifacts (extract for skill)
+- `app/privacy/page.tsx`, `app/terms/page.tsx` — parameterized policy templates
+- Footer legal-links block
+- On-form SMS consent disclosure
+- (Tier 2) cookie-consent banner component + a11y audit step in CI
+
 ## QC & monitoring (the `web:qc` + `web:monitor` skills)
 
 Two QC layers, both shipped with every site:

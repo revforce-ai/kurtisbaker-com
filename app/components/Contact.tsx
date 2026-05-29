@@ -128,6 +128,38 @@ export function Contact() {
                     <br />
                     {site.address.cityState}
                   </p>
+                  <div className="mt-4 rounded-xl overflow-hidden border border-border">
+                    <iframe
+                      title="Map to Kurt Baker's office"
+                      src={site.address.mapsEmbed}
+                      className="w-full block"
+                      style={{ height: "200px", border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+                  <a
+                    href={site.address.directions}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors hover:text-accent"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 21s-6-5.686-6-10a6 6 0 1112 0c0 4.314-6 10-6 10z"
+                      />
+                      <circle cx="12" cy="11" r="2" />
+                    </svg>
+                    Get directions →
+                  </a>
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-[0.22em] text-ink-muted font-medium mb-2">

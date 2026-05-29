@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 const GHL_FUNNELS_HOST = "https://funnels.kurtisbaker.com";
 
 // Paths served natively by this Next.js app (never redirected to GHL funnels)
-const NATIVE_PATHS = new Set<string>(["/", "/privacy"]);
+const NATIVE_PATHS = new Set<string>(["/", "/privacy", "/terms"]);
 
 // Direct shortcuts → specific GHL booking widgets (skip the funnels subdomain hop)
 const DIRECT_REDIRECTS: Record<string, string> = {

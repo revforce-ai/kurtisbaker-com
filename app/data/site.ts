@@ -9,6 +9,11 @@ export const site = {
   address: {
     street: "101 College Rd E, Ste 2",
     cityState: "Princeton, NJ 08540",
+    full: "101 College Rd E, Ste 2, Princeton, NJ 08540",
+    mapsEmbed:
+      "https://www.google.com/maps?q=101%20College%20Rd%20E%2C%20Ste%202%2C%20Princeton%2C%20NJ%2008540&output=embed",
+    directions:
+      "https://www.google.com/maps/dir/?api=1&destination=101%20College%20Rd%20E%2C%20Ste%202%2C%20Princeton%2C%20NJ%2008540",
   },
   ghl: {
     contactFormUrl:
