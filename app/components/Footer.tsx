@@ -8,7 +8,7 @@ export function Footer() {
         <div>
           <p className="font-serif text-lg text-ink mb-1">Kurt Baker</p>
           <p className="text-xs text-ink-muted">
-            CFP® · Entrepreneur · Speaker
+            CFP® · CEPA® · AIF® — Private Wealth Manager
           </p>
         </div>
         <div className="text-sm text-ink-muted leading-relaxed">

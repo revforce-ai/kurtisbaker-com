@@ -118,8 +118,34 @@ export const companies: Company[] = [
   },
 ];
 
+export const certifications = [
+  {
+    mark: "CFP®",
+    full: "CERTIFIED FINANCIAL PLANNER™",
+    body: "CFP Board",
+    blurb:
+      "Held to the highest fiduciary standard in financial planning — competency, ethics, and ongoing education.",
+  },
+  {
+    mark: "CEPA®",
+    full: "Certified Exit Planning Advisor®",
+    body: "Exit Planning Institute",
+    blurb:
+      "Trained to help owners build companies that create value, run without them, and are ready for any future.",
+  },
+  {
+    mark: "AIF®",
+    full: "Accredited Investment Fiduciary®",
+    body: "Fi360 (Broadridge)",
+    blurb:
+      "Disciplined fiduciary process for prudent investment decision-making on behalf of clients.",
+  },
+];
+
 export const credentials = [
-  "CERTIFIED FINANCIAL PLANNER™",
+  "CERTIFIED FINANCIAL PLANNER™ (CFP®)",
+  "Certified Exit Planning Advisor® (CEPA®)",
+  "Accredited Investment Fiduciary® (AIF®)",
   "Certified Youth Mental Health First Aider & Instructor",
   "Champion for Business Award",
   "Platinum Dad Award",

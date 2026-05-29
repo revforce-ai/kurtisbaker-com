@@ -10,7 +10,7 @@ export function Hero() {
         <div className="grid md:grid-cols-[1.4fr_1fr] gap-12 md:gap-16 items-center">
           <ScrollReveal>
             <p className="text-sm uppercase tracking-[0.22em] text-accent font-medium mb-6">
-              CFP® · Entrepreneur · Speaker
+              Private Wealth Manager · Entrepreneur · Speaker
             </p>
             <h1
               className="font-serif text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[88px] leading-[0.95] tracking-[-0.025em] text-ink"
@@ -65,12 +65,16 @@ export function Hero() {
                   className="absolute inset-0 ring-1 ring-inset ring-accent/10 rounded-2xl"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-[0_12px_30px_-12px_rgba(15,26,46,0.35)] max-w-[220px]">
-                <p className="text-xs uppercase tracking-[0.16em] text-ink-muted mb-1">
-                  Trusted advisor
+              <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-[0_12px_30px_-12px_rgba(15,26,46,0.35)] max-w-[240px]">
+                <p className="text-xs uppercase tracking-[0.22em] text-ink-muted mb-2">
+                  Certifications
                 </p>
-                <p className="font-serif text-lg text-ink leading-tight">
-                  CERTIFIED FINANCIAL PLANNER™
+                <p className="font-serif text-xl text-ink leading-tight tracking-tight">
+                  CFP<sup className="text-[0.55em] -top-2 relative">®</sup>{" "}
+                  <span className="text-accent">·</span> CEPA
+                  <sup className="text-[0.55em] -top-2 relative">®</sup>{" "}
+                  <span className="text-accent">·</span> AIF
+                  <sup className="text-[0.55em] -top-2 relative">®</sup>
                 </p>
               </div>
             </div>
