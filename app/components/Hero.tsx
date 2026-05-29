@@ -1,15 +1,23 @@
 import Image from "next/image";
+import { MeshBackground } from "@/app/components/MeshBackground";
+import { ScrollReveal } from "@/app/components/ScrollReveal";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
+      <MeshBackground />
       <div className="mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-32 md:pb-32">
         <div className="grid md:grid-cols-[1.4fr_1fr] gap-12 md:gap-16 items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium mb-6">
+          <ScrollReveal>
+            <p className="text-sm uppercase tracking-[0.22em] text-accent font-medium mb-6">
               CFP® · Entrepreneur · Speaker
             </p>
-            <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight text-ink">
+            <h1
+              className="font-serif text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[88px] leading-[0.95] tracking-[-0.025em] text-ink"
+              style={{
+                fontVariationSettings: '"opsz" 96, "SOFT" 30',
+              }}
+            >
               Helping owners build a{" "}
               <span className="italic text-accent">Freedom Ready</span>{" "}
               business.
@@ -25,40 +33,48 @@ export function Hero() {
                 href="https://link.revforce.ai/widget/bookings/meet-with-kurt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 text-base font-medium text-bg hover:bg-accent transition-colors"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-base font-medium text-bg shadow-[0_4px_14px_rgba(15,26,46,0.18)] transition-all hover:bg-accent hover:shadow-[0_6px_20px_rgba(167,123,58,0.30)] hover:-translate-y-0.5"
               >
                 Book a call
+                <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
               </a>
               <a
                 href="https://masteryourfinances.us/shows/master-of-finances/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-border bg-bg-elevated px-6 py-3 text-base font-medium text-ink hover:border-ink transition-colors"
+                className="inline-flex items-center justify-center rounded-full border border-border bg-bg-elevated/70 backdrop-blur px-6 py-3 text-base font-medium text-ink transition-all hover:border-ink hover:bg-bg-elevated hover:-translate-y-0.5"
               >
                 Listen to the show
               </a>
             </div>
-          </div>
-          <div className="relative">
-            <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-ink/10 relative bg-ink">
-              <Image
-                src="/kurt-baker.jpg"
-                alt="Kurtis Baker"
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 400px"
-                className="object-cover object-top"
-              />
+          </ScrollReveal>
+          <ScrollReveal delay={0.15}>
+            <div className="relative">
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_30px_60px_-20px_rgba(15,26,46,0.45)] ring-1 ring-ink/10 relative bg-ink">
+                <Image
+                  src="/kurt-baker.jpg"
+                  alt="Kurtis Baker"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover object-top"
+                />
+                {/* Soft gold edge glow */}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 ring-1 ring-inset ring-accent/10 rounded-2xl"
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-[0_12px_30px_-12px_rgba(15,26,46,0.35)] max-w-[220px]">
+                <p className="text-xs uppercase tracking-[0.16em] text-ink-muted mb-1">
+                  Trusted advisor
+                </p>
+                <p className="font-serif text-lg text-ink leading-tight">
+                  CERTIFIED FINANCIAL PLANNER™
+                </p>
+              </div>
             </div>
-            <div className="absolute -bottom-6 -left-6 hidden md:block bg-bg-elevated border border-border rounded-xl px-5 py-4 shadow-lg max-w-[220px]">
-              <p className="text-xs uppercase tracking-wider text-ink-muted mb-1">
-                Trusted advisor
-              </p>
-              <p className="font-serif text-lg text-ink leading-tight">
-                CERTIFIED FINANCIAL PLANNER™
-              </p>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

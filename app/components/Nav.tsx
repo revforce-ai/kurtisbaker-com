@@ -1,5 +1,12 @@
 import Link from "next/link";
 
+const navItems = [
+  { href: "#what-i-do", label: "What I Do" },
+  { href: "#companies", label: "Companies" },
+  { href: "#about", label: "About" },
+  { href: "#media", label: "Media" },
+];
+
 export function Nav() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-bg/75 border-b border-border/60">
@@ -7,28 +14,32 @@ export function Nav() {
         <Link
           href="/"
           className="font-serif text-xl tracking-tight text-ink hover:text-accent transition-colors"
+          style={{ fontVariationSettings: '"opsz" 36' }}
         >
           Kurt Baker
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm text-ink-muted">
-          <a href="#what-i-do" className="hover:text-ink transition-colors">
-            What I Do
-          </a>
-          <a href="#companies" className="hover:text-ink transition-colors">
-            Companies
-          </a>
-          <a href="#about" className="hover:text-ink transition-colors">
-            About
-          </a>
-          <a href="#media" className="hover:text-ink transition-colors">
-            Media
-          </a>
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="group relative py-1 transition-colors hover:text-ink"
+            >
+              {item.label}
+              <span
+                aria-hidden
+                className="absolute inset-x-0 -bottom-px h-px origin-left scale-x-0 bg-accent transition-transform duration-300 ease-out group-hover:scale-x-100"
+              />
+            </a>
+          ))}
         </div>
         <a
-          href="#contact"
-          className="inline-flex items-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-bg hover:bg-accent transition-colors"
+          href="https://link.revforce.ai/widget/bookings/meet-with-kurt"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center rounded-full bg-ink px-4 py-2 text-sm font-medium text-bg transition-all hover:bg-accent hover:-translate-y-0.5"
         >
-          Get in touch
+          Book a call
         </a>
       </nav>
     </header>

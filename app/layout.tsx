@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { GhlChatWidget } from "@/app/components/GhlChatWidget";
+import { ScrollProgress } from "@/app/components/ScrollProgress";
 
 const inter = Inter({
   variable: "--font-sans-stack",
@@ -47,6 +48,7 @@ export default function RootLayout({
       className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
+        <ScrollProgress />
         {children}
         <GhlChatWidget />
       </body>
