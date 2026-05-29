@@ -95,19 +95,17 @@ export const companies: Company[] = [
     role: "Founder",
     description:
       "The framework and community for owners building companies that give them freedom — to live, lead, scale, and exit on their own terms.",
-    href: "",
+    href: "https://freedomreadybusiness.com",
     category: "Wealth",
-    comingSoon: true,
   },
   {
     name: "Kurtis Baker Speaks",
     role: "Speaker",
     description:
       "Keynotes and talks on building a Freedom Ready Business, leadership, and life after loss.",
-    href: "",
+    href: "https://kurtisbakerspeaks.com",
     category: "Speaking",
     logo: "/logos/kurtis-baker-speaks.webp",
-    comingSoon: true,
   },
   {
     name: "RevForce",

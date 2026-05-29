@@ -47,6 +47,21 @@ Type: A   Name: www   Value: 76.76.21.21   TTL: 600    (was: CNAME sites.ludicro
 
 ---
 
+## New sites — freedomreadybusiness.com & kurtisbakerspeaks.com
+Both are built, deployed to Vercel, and attached to their Vercel projects. Both
+domains are also registered at **GoDaddy** and just need DNS pointed:
+
+```
+freedomreadybusiness.com   A  @    76.76.21.21
+www.freedomreadybusiness.com  A  www  76.76.21.21   (or CNAME → cname.vercel-dns.com)
+
+kurtisbakerspeaks.com      A  @    76.76.21.21
+www.kurtisbakerspeaks.com  A  www  76.76.21.21   (or CNAME → cname.vercel-dns.com)
+```
+Live now (pre-DNS) at: `freedomreadybusiness-com.vercel.app` and
+`kurtisbakerspeaks-com.vercel.app`. The kurtisbaker.com portfolio cards already
+link to the final domains, so they go live the moment DNS resolves.
+
 ## How we execute
 - **Option A (safest):** You apply Steps 1–2 at GoDaddy using the records above; I verify each step live.
 - **Option B:** You log into GoDaddy in Chrome → say "GoDaddy ready" → I make the exact edits with you watching, confirming before the apex flip.
