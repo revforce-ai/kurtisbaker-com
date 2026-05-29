@@ -97,28 +97,33 @@ function record(category, target, ok, detail) {
   }
 }
 
-async function extractLinks(path) {
+async function fetchPage(path) {
   const url = BASE + path;
   const res = await fetch(url, { headers: { "user-agent": UA } });
   if (!res.ok) {
     record("page", url, false, `page returned ${res.status}`);
-    return [];
+    return "";
   }
-  const html = await res.text();
-  const hrefs = [...html.matchAll(/href="([^"]+)"/g)]
+  return res.text();
+}
+
+// Only real navigation links: <a ... href="...">  (ignores <link rel=canonical>, preload, etc.)
+function extractAnchors(html) {
+  return [...html.matchAll(/<a\s[^>]*?href="([^"]+)"/gi)]
     .map((m) => m[1])
     .filter((h) => h.startsWith("http") || h.startsWith("/"));
-  return [...new Set(hrefs)];
 }
 
 async function main() {
   console.log(`\nQC link check — base: ${BASE}\n${"=".repeat(60)}`);
 
-  // 1. Crawl pages, collect links
+  // 1. Crawl pages: collect anchor links + keep raw HTML for presence checks
   const allLinks = new Set();
+  let htmlBlob = "";
   for (const p of PAGES) {
-    const links = await extractLinks(p);
-    links.forEach((l) => allLinks.add(l));
+    const html = await fetchPage(p);
+    htmlBlob += html;
+    extractAnchors(html).forEach((l) => allLinks.add(l));
   }
 
   // 2. Asset routes
@@ -157,9 +162,12 @@ async function main() {
     );
   }
 
-  // 5. Critical external presence + reachability
+  // 5. Critical presence — check anchors AND raw HTML (covers <iframe src>, scripts)
   for (const c of CRITICAL_EXTERNAL) {
-    const present = [...allLinks].some((l) => l.startsWith(c.split("?")[0]));
+    const prefix = c.split("?")[0];
+    const present =
+      [...allLinks].some((l) => l.startsWith(prefix)) ||
+      htmlBlob.includes(prefix);
     if (!present) {
       record("critical", c, false, "NOT FOUND in page markup");
     }
