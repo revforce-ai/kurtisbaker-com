@@ -1,15 +1,17 @@
-import { site, certifications } from "@/app/data/site";
+import { site, certifications, faqs } from "@/app/data/site";
 
 /**
  * JSON-LD structured data for SEO + GEO + AIO + LLMO + AEO.
  *
- * Schema.org Person + ProfessionalService graph. The sameAs array makes Kurt's
- * identity resolvable to AI engines (Perplexity, Google AI Overviews, SearchGPT)
- * via his credential body verification pages and social profiles.
+ * Schema.org @graph: Person + FinancialService/LocalBusiness + Organization +
+ * WebSite + RadioSeries + NGO + FAQPage. The sameAs array + cross-linked @ids
+ * make Kurt's identity resolvable to AI engines (Perplexity, Google AI
+ * Overviews, ChatGPT/Claude search) via credential bodies and social profiles.
  */
 export function JsonLd() {
   const personId = "https://kurtisbaker.com/#kurt";
   const businessId = "https://kurtisbaker.com/#business";
+  const orgId = "https://kurtisbaker.com/#org";
 
   const graph = {
     "@context": "https://schema.org",
@@ -47,6 +49,11 @@ export function JsonLd() {
           },
           url: c.verifyUrl,
         })),
+        award: [
+          "Champion for Business Award",
+          "Platinum Dad Award",
+          "People's Choice Award",
+        ],
         sameAs: [
           site.socials.linkedin,
           site.socials.twitter,
@@ -68,11 +75,17 @@ export function JsonLd() {
         ],
       },
       {
-        "@type": "FinancialService",
+        // Typed as LocalBusiness (not just FinancialService) for local-pack
+        // eligibility. NOTE: precise geo coordinates and openingHours are
+        // intentionally omitted until verified from the Google Business Profile
+        // — fabricated local data hurts more than it helps.
+        "@type": ["FinancialService", "LocalBusiness"],
         "@id": businessId,
         name: "Certified Wealth Management & Investment LLC",
         alternateName: "CWMI",
         url: "https://www.cwmi.us",
+        image: "https://kurtisbaker.com/kurt-baker.jpg",
+        priceRange: "$$$",
         description:
           "Private wealth management for successful small and middle-market business owners — comprehensive financial planning, investment management, and Freedom Ready Business strategy.",
         founder: { "@id": personId },
@@ -86,15 +99,35 @@ export function JsonLd() {
           addressCountry: "US",
         },
         telephone: "+16097164700",
-        areaServed: { "@type": "Country", name: "United States" },
+        hasMap: site.address.directions,
+        areaServed: [
+          { "@type": "City", name: "Princeton" },
+          { "@type": "AdministrativeArea", name: "Mercer County, NJ" },
+          { "@type": "Country", name: "United States" },
+        ],
+      },
+      {
+        // Publisher org carries the logo (powers logo rich results / knowledge panel)
+        "@type": "Organization",
+        "@id": orgId,
+        name: "Kurt Baker",
+        url: "https://kurtisbaker.com",
+        logo: "https://kurtisbaker.com/kurt-baker.jpg",
+        founder: { "@id": personId },
+        sameAs: [
+          site.socials.linkedin,
+          site.socials.youtube,
+          site.socials.twitter,
+        ],
       },
       {
         "@type": "WebSite",
         "@id": "https://kurtisbaker.com/#website",
         url: "https://kurtisbaker.com",
         name: "Kurt Baker",
-        description: "The personal hub for Kurt Baker's work, ventures, and writing.",
-        publisher: { "@id": personId },
+        description:
+          "The personal hub for Kurt Baker's work, ventures, and writing.",
+        publisher: { "@id": orgId },
       },
       {
         "@type": "RadioSeries",
@@ -111,6 +144,15 @@ export function JsonLd() {
         founder: { "@id": personId },
         description:
           "Nonprofit working to eliminate the stigma surrounding mental health by bringing education into schools, founded after the loss of Kenny Baker in 2010.",
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://kurtisbaker.com/#faq",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
       },
     ],
   };

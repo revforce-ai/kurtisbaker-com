@@ -170,3 +170,31 @@ export const credentials = [
   "Platinum Dad Award",
   "People's Choice Award",
 ];
+
+// Answer-first Q&A — doubles as on-page content and FAQPage schema (SEO + AEO).
+export const faqs = [
+  {
+    q: "Who is Kurt Baker?",
+    a: "Kurtis “Kurt” Baker is a private wealth manager (CFP®, CEPA®, AIF®) based in Princeton, NJ. He serves successful small and middle-market business owners through Certified Wealth Management & Investment LLC, hosts the Master Your Finances radio show, and co-founded the nonprofit Attitudes In Reverse®.",
+  },
+  {
+    q: "What does a Certified Exit Planning Advisor (CEPA) do?",
+    a: "A CEPA helps business owners increase the value of their company, build a business that can run without them, and prepare for a successful sale or transition on their own terms — aligning the business with the owner’s personal and financial goals.",
+  },
+  {
+    q: "What is a fiduciary financial advisor?",
+    a: "A fiduciary is required to act in the client’s best interest at all times. As a CFP® and Accredited Investment Fiduciary (AIF®), Kurt Baker follows a disciplined fiduciary process for financial planning and investment decisions.",
+  },
+  {
+    q: "What is a Freedom Ready Business?",
+    a: "A Freedom Ready Business creates significant value, runs without the owner, and gives the owner the freedom to live, lead, scale, and exit on their own terms. It is the framework Kurt Baker uses with the business owners he serves.",
+  },
+  {
+    q: "Who does Kurt Baker work with?",
+    a: "He works primarily with successful small and middle-market business owners and their families who want comprehensive financial planning, investment management, and a clear exit or transition strategy.",
+  },
+  {
+    q: "Where is Kurt Baker located and how do I get in touch?",
+    a: "His office is at 101 College Rd E, Ste 2, Princeton, NJ 08540. You can call (609) 716-4700 or book an introductory call directly through this site.",
+  },
+];
