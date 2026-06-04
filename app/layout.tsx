@@ -85,6 +85,12 @@ export default function RootLayout({
       className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-bg focus:shadow-lg"
+        >
+          Skip to content
+        </a>
         <JsonLd />
         <ScrollProgress />
         {children}
