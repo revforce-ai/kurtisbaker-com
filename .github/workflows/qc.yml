@@ -6,8 +6,8 @@ name: QC — Link & Site Health
 
 on:
   schedule:
-    # Mondays at 13:00 UTC (~8–9am ET)
-    - cron: "0 13 * * 1"
+    # Mondays at 13:05 UTC (~8–9am ET)
+    - cron: "5 13 * * 1"
   push:
     branches: [main]
   workflow_dispatch:
@@ -15,7 +15,7 @@ on:
       base_url:
         description: "Base URL to check"
         required: false
-        default: "https://kurtisbaker-com.vercel.app"
+        default: "https://kurtisbaker.com"
 
 jobs:
   qc:
@@ -27,6 +27,5 @@ jobs:
           node-version: "20"
       - name: Run QC link check
         env:
-          # After DNS cutover, change this to https://kurtisbaker.com
-          QC_BASE_URL: ${{ github.event.inputs.base_url || 'https://kurtisbaker-com.vercel.app' }}
+          QC_BASE_URL: ${{ github.event.inputs.base_url || 'https://kurtisbaker.com' }}
         run: node scripts/qc-links.mjs
