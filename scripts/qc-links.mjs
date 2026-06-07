@@ -4,15 +4,21 @@
  *
  * - Crawls the homepage + /privacy, extracts every <a href>
  * - Verifies a curated list of critical CTAs / buttons (booking, form, show, ventures)
- * - Verifies the named booking shortcuts (/breakfast, /lunch, ...) 301 to the right targets
+ * - Verifies EVERY redirect in proxy.ts DIRECT_REDIRECTS 301s to the right target
+ *   (booking shortcuts, legacy venture paths, and legacy legal paths)
+ * - Verifies the catch-all sends an unknown path to the homepage (no dead ends)
  * - Verifies asset routes (robots.txt, sitemap.xml, llms.txt, /privacy)
  *
- * Internal failures and shortcut-redirect mismatches are FATAL (exit 1).
+ * Internal failures and redirect mismatches are FATAL (exit 1).
  * External link failures are WARNINGS (sites often block bots) — reported, non-fatal.
  *
  * Usage:  node scripts/qc-links.mjs [baseUrl]
  *   baseUrl defaults to QC_BASE_URL env or the production Vercel alias.
  */
+
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
 const BASE =
   process.argv[2] ||
@@ -29,15 +35,34 @@ const ASSET_ROUTES = [
   "/terms",
 ];
 
-// Named booking shortcuts → expected redirect target (substring match)
-const SHORTCUTS = {
-  "/breakfast": "link.revforce.ai/widget/booking/puxyNUwGONRDwtTRUDny",
-  "/lunch": "link.revforce.ai/widget/booking/cLlotxW8Uss8ANCA3WZE",
-  "/coffee": "link.revforce.ai/widget/bookings/kurt/coffee",
-  "/meeting": "link.revforce.ai/widget/bookings/meet-with-kurt",
-  "/discovery":
-    "link.revforce.ai/widget/bookings/discovery-meeting-with-kurtis-baker",
-};
+// Single source of truth: parse the redirect table straight out of proxy.ts so
+// this checker can never drift from the routes the app actually serves. Every
+// entry in DIRECT_REDIRECTS is verified below — booking shortcuts, legacy
+// venture paths, and legacy legal paths alike.
+const PROXY_TS = join(dirname(fileURLToPath(import.meta.url)), "..", "proxy.ts");
+
+function loadRedirects() {
+  const src = readFileSync(PROXY_TS, "utf8");
+  const block = src.match(/DIRECT_REDIRECTS[^=]*=\s*\{([\s\S]*?)\n\};/);
+  if (!block) {
+    throw new Error(
+      `Could not parse DIRECT_REDIRECTS from ${PROXY_TS} — has proxy.ts changed shape?`,
+    );
+  }
+  // strip whole-line // comments (NOT the // inside https:// values), then
+  // pull every "path": "target" string pair
+  const body = block[1].replace(/^\s*\/\/.*$/gm, "");
+  const map = {};
+  for (const [, path, target] of body.matchAll(/"([^"]+)"\s*:\s*"([^"]+)"/g)) {
+    map[path] = target;
+  }
+  if (Object.keys(map).length === 0) {
+    throw new Error(`Parsed DIRECT_REDIRECTS from ${PROXY_TS} but found 0 entries`);
+  }
+  return map;
+}
+
+const REDIRECTS = loadRedirects();
 
 // Critical external links that MUST exist somewhere on the site
 const CRITICAL_EXTERNAL = [
@@ -138,14 +163,37 @@ async function main() {
     record("asset", route, status >= 200 && status < 400, `status ${status}`);
   }
 
-  // 3. Booking shortcuts (must 301 to expected target)
-  for (const [path, expected] of Object.entries(SHORTCUTS)) {
+  // 3. Redirects — every entry in proxy.ts must 301 to its expected target
+  for (const [path, expected] of Object.entries(REDIRECTS)) {
     const { status, location, error } = await fetchRedirect(BASE + path);
-    const ok =
-      status >= 300 && status < 400 && location.includes(expected);
+    // Internal targets ("/privacy") resolve to origin + target; external keep
+    // their absolute form. A substring match on the query-stripped target works
+    // for both. Strip the trailing slash so "https://revforce.ai" matches
+    // "https://revforce.ai/".
+    const want = expected.split("?")[0].replace(/\/$/, "");
+    const got = location.split("?")[0].replace(/\/$/, "");
+    const ok = status >= 300 && status < 400 && got.includes(want);
     record(
-      "shortcut",
-      path,
+      "redirect",
+      `${path} → ${expected}`,
+      ok,
+      error ? error : `status ${status} → ${location || "(none)"}`,
+    );
+  }
+
+  // 3b. Catch-all — an unknown legacy path must 301 to the homepage (no dead ends).
+  // Location may be relative ("/") or absolute; resolve against BASE before checking.
+  {
+    const probe = "/__qc-nonexistent-path__";
+    const { status, location, error } = await fetchRedirect(BASE + probe);
+    let ok = false;
+    if (status >= 300 && status < 400 && location) {
+      const resolved = new URL(location, BASE);
+      ok = resolved.host === baseHost() && resolved.pathname === "/";
+    }
+    record(
+      "redirect",
+      `${probe} → / (catch-all)`,
       ok,
       error ? error : `status ${status} → ${location || "(none)"}`,
     );
@@ -181,7 +229,7 @@ async function main() {
 
   // Report
   console.log("");
-  const groups = ["page", "asset", "shortcut", "internal", "critical", "external"];
+  const groups = ["page", "asset", "redirect", "internal", "critical", "external"];
   for (const g of groups) {
     const rows = results.filter((r) => r.category === g);
     if (!rows.length) continue;
@@ -194,10 +242,10 @@ async function main() {
   console.log(`\n${"=".repeat(60)}`);
   console.log(`Fatal failures: ${fatal}   Warnings (external): ${warn}`);
   if (fatal > 0) {
-    console.error("\n❌ QC FAILED — internal links or shortcuts are broken.\n");
+    console.error("\n❌ QC FAILED — internal links or redirects are broken.\n");
     process.exit(1);
   }
-  console.log("\n✅ QC PASSED (internal links + shortcuts healthy).\n");
+  console.log("\n✅ QC PASSED (internal links + redirects healthy).\n");
 }
 
 main().catch((err) => {
