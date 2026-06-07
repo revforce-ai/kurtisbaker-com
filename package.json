@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "qc": "node scripts/qc-links.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
