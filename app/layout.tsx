@@ -4,6 +4,7 @@ import "./globals.css";
 import { GhlChatWidget } from "@/app/components/GhlChatWidget";
 import { ScrollProgress } from "@/app/components/ScrollProgress";
 import { JsonLd } from "@/app/components/JsonLd";
+import { SmoothScroll } from "@/app/components/SmoothScroll";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -93,7 +94,9 @@ export default function RootLayout({
         </a>
         <JsonLd />
         <ScrollProgress />
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         <GhlChatWidget />
         <Analytics />
         <SpeedInsights />
