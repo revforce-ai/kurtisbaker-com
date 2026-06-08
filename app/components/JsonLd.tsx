@@ -60,9 +60,19 @@ export function JsonLd() {
           site.socials.instagram,
           site.socials.youtube,
           site.socials.facebook,
-          // Authority signals: person-specific authoritative profiles
+          // Authority signals: person-specific authoritative profiles.
+          // These are the third-party pages that currently outrank
+          // kurtisbaker.com for his own name — claiming them as the same
+          // entity helps engines consolidate the knowledge panel here.
           "https://exit-planning-institute.org/member-detail/kurtis-baker",
           "https://www.plannersearch.org/financial-advisor/kurtis-baker",
+          "https://money.usnews.com/financial-advisors/advisor/kurtis-baker-2868097",
+          "https://cwmi.us/team/kurt-baker/",
+          "https://masteryourfinances.us/",
+          "https://www.air.ngo/dt_team/kurtis-baker/",
+          "https://brokercheck.finra.org/individual/summary/4433438",
+          // TODO: add Wikidata URL (https://www.wikidata.org/wiki/Q…) once the
+          // entity is created — see P1.5 of the 2026-06-08 improvement plan.
         ],
         knowsAbout: [
           "Wealth Management",
