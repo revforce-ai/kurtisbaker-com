@@ -69,7 +69,7 @@ discloses coverage limits.
 | # | Document | What it proves / used for | On website? | Drive file |
 |---|---|---|---|---|
 | 11 | **W-9** (current year, signed) | Vendor payment setup; legal name + EIN + signature | No (attach on request) | `<<FILL IN>>` |
-| 12 | **Certificate of Insurance (COI)** — general liability, D&O, workers' comp | Proof of insurance; carrier is **The Hartford** (acct #548418020924428) — request COI from carrier/broker | **No — website exception (shows coverage limits); attach on approval only, no public link** | `<<FILL IN — request from The Hartford>>` |
+| 12 | **Certificate of Insurance (COI)** — **general/professional liability via Lio Insurance**; **workers' compensation via The Hartford** | Proof of insurance; request the COI for the coverage asked from the matching carrier/broker | **No — website exception (shows coverage limits); attach on approval only, no public link** | `<<FILL IN — liability: Lio Insurance; workers' comp: The Hartford>>` |
 | 13 | **Sales/Use tax exemption certificate** (e.g. NJ ST-5) | Tax-exempt purchasing | Optional | `<<FILL IN>>` |
 | 14 | **Certificate of Good Standing / formation** | Active, compliant legal entity | Optional | `<<FILL IN>>` |
 | 15 | **Audited financials / financial review** (if available) | Grant due diligence | Optional | `<<FILL IN>>` |
@@ -104,8 +104,9 @@ A live-mailbox check found **no org-doc PDFs in air.ngo's Drive**. Until a
 canonical Drive folder is set up, the current sources are:
 - **Form 990:** 2023 & 2024 filed (2025 not yet); currently shared as email
   attachments — also on the financials page + GuideStar.
-- **Certificate of Insurance:** carrier is The Hartford; obtain current COI from
-  them when requested.
+- **Certificate of Insurance:** general/professional liability is through **Lio
+  Insurance**; **workers' compensation** is through **The Hartford**. Obtain the
+  current COI for the requested coverage from the matching carrier/broker.
 - **Annual report:** none on file — create a one-pager if a funder requires it.
 - **Action:** stage the "AIR — Org Documents" Drive folder and drop in current
   copies (501c3 letter, 990s, signed W-9, board list, budget, one-pager) so the
