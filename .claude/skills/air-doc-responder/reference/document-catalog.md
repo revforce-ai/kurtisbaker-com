@@ -6,51 +6,72 @@ payment setup) and grant applications (due diligence) most commonly request
 from a 501(c)(3).
 
 ## How to use this file
-1. Fill in every `<<FILL IN>>` once (numbers + Drive locations).
-2. Keep one canonical, current copy of each document in the Drive folder below.
-3. The skill matches a request to a row, checks the **Tier** before attaching,
-   and links to the website where **On website? = Yes**.
+1. Fill in the remaining `<<FILL IN>>` items once (the few numbers + Drive
+   locations not yet known).
+2. Keep one canonical, current copy of each document in **AIR®'s** Google Drive
+   folder below — this is air.ngo's Drive, NOT the kurtisbaker.com repo.
+3. For each request, the skill: matches the ask to a row → checks the **Tier**
+   → **includes the website link AND attaches the PDF** (downloaded from Drive)
+   for everything except the insurance certificate, which is link-free and
+   attach-on-approval only.
 
-**Drive source folder:** `<<FILL IN: e.g. "AIR — Org Documents" Drive folder link>>`
+**Drive source folder (air.ngo's Drive):** `<<FILL IN: "AIR — Org Documents" Drive folder link>>`
 **Naming convention:** `AIR_<DocName>_<YYYY>.pdf` (e.g. `AIR_W9_2026.pdf`,
 `AIR_Form990_2024.pdf`) so the skill can find the current version by year.
+
+## Live air.ngo pages the skill links to
+| Page | URL |
+|---|---|
+| Financials (501(c)(3) letter + Form 990s: 2023, 2022, 2020) | https://www.air.ngo/about-air/financials/ |
+| Resources (downloadable program PDFs) | https://www.air.ngo/get-involved/resources/ |
+| Forms (employer matching-gift registration, etc.) | https://www.air.ngo/get-involved/forms/ |
+| Mission | https://www.air.ngo/about-air/mission/ |
+| Vendor | https://www.air.ngo/vendor/ |
+| GuideStar / Candid profile | https://www.guidestar.org/profile/27-2372917 |
 
 ## Public org facts (safe to state inline in any reply — no attachment needed)
 | Fact | Value |
 |---|---|
-| Legal name | Attitudes In Reverse® (AIR®) |
+| Legal name | Everybody Loves Kenny Project, Inc. **dba Attitudes In Reverse® (AIR®)** |
 | Tax status | 501(c)(3) public charity |
-| EIN / Federal Tax ID | `<<FILL IN>>` |
-| State charity registration # | `<<FILL IN — e.g. NJ Charities Registration #>>` |
-| Registered/mailing address | `<<FILL IN>>` |
-| Website | https://air.ngo |
+| EIN / Federal Tax ID | **27-2372917** |
+| State charity registration # | `<<FILL IN — NJ Charities Registration #>>` |
+| Location / mailing address | Princeton, NJ — `<<FILL IN full street address>>` |
+| Website | https://www.air.ngo |
 | Fiscal year end | `<<FILL IN>>` |
 | SAM.gov UEI (federal grants) | `<<FILL IN — if registered>>` |
 
+> Note: vendor and grant paperwork (W-9, contracts, registrations) must use the
+> **legal name** "Everybody Loves Kenny Project, Inc." — "Attitudes In Reverse®"
+> is the dba/program name.
+
 ---
 
-## Tier 1 — Public (auto-draftable; should live on the air.ngo website)
-| # | Document | What it proves / used for | On website? | Drive file |
+## Tier 1 — Public (include BOTH website link AND attached PDF)
+| # | Document | What it proves / used for | Public link | Drive file |
 |---|---|---|---|---|
-| 1 | **IRS Determination Letter** (501(c)(3)) | Proof of federal tax-exempt status | Yes | `<<FILL IN>>` |
-| 2 | **EIN confirmation** (IRS CP-575 / 147C) | Federal Tax ID verification | Yes | `<<FILL IN>>` |
-| 3 | **Most recent Form 990** (990 / 990-EZ / 990-N) | Annual return; financial transparency (public record) | Yes | `<<FILL IN>>` |
-| 4 | **State charitable-solicitation registration** | Legal to solicit donations; registration # | Yes | `<<FILL IN>>` |
-| 5 | **Mission / org one-pager (capability statement)** | Quick overview for grant intake & vendor files | Yes | `<<FILL IN>>` |
-| 6 | **Articles of Incorporation** | Legal formation | Yes | `<<FILL IN>>` |
+| 1 | **IRS Determination Letter** (501(c)(3)) | Proof of federal tax-exempt status | /about-air/financials/ | `<<FILL IN>>` |
+| 2 | **EIN confirmation** (IRS CP-575 / 147C) | Federal Tax ID verification (EIN 27-2372917) | state inline | `<<FILL IN>>` |
+| 3 | **Most recent Form 990** (990 / 990-EZ / 990-N) | Annual return; financial transparency (public record) | /about-air/financials/ + GuideStar | `<<FILL IN>>` |
+| 4 | **State charitable-solicitation registration** | Legal to solicit donations; registration # | `<<add to financials page>>` | `<<FILL IN>>` |
+| 5 | **Mission / org one-pager (capability statement)** | Quick overview for grant intake & vendor files | /about-air/mission/ | `<<FILL IN — create one-pager>>` |
+| 6 | **Articles of Incorporation** | Legal formation | `<<add to financials page>>` | `<<FILL IN>>` |
 | 7 | **Bylaws** | Governance structure | Optional | `<<FILL IN>>` |
-| 8 | **Board of Directors list** | Governance / grant due diligence | Yes | `<<FILL IN>>` |
-| 9 | **Annual / impact report** | Programs, outcomes, reach | Yes | `<<FILL IN>>` |
-| 10 | **Logo & brand assets** | Co-branding, grant announcements | Yes | `<<FILL IN>>` |
+| 8 | **Board of Directors list** | Governance / grant due diligence | `<<add to financials page>>` | `<<FILL IN>>` |
+| 9 | **Annual / impact report** | Programs, outcomes, reach | `<<add if published>>` | `<<FILL IN>>` |
+| 10 | **Logo & brand assets** | Co-branding, grant announcements | /get-involved/resources/ | `<<FILL IN>>` |
 
-## Tier 2 — Restricted (always DRAFT for human approval; verify requester first)
+## Tier 2 — Provided on request (attach PDF from Drive; verify requester for signed/financial items)
+These are normal, shareable nonprofit documents — fine to attach. The **only**
+one kept off the public website is the **Certificate of Insurance**, because it
+discloses coverage limits.
 | # | Document | What it proves / used for | On website? | Drive file |
 |---|---|---|---|---|
-| 11 | **W-9** (current year, signed) | Vendor payment setup; contains EIN + signature | **No** | `<<FILL IN>>` |
-| 12 | **Certificate of Insurance (COI)** — general liability, D&O, workers' comp | Proof of insurance; issued by broker, request-only | **No** | `<<FILL IN — request from broker>>` |
-| 13 | **Sales/Use tax exemption certificate** (e.g. NJ ST-5) | Tax-exempt purchasing | No | `<<FILL IN>>` |
-| 14 | **Certificate of Good Standing / formation** | Active, compliant legal entity | No | `<<FILL IN>>` |
-| 15 | **Audited financials / financial review** (if available) | Grant due diligence | No | `<<FILL IN>>` |
+| 11 | **W-9** (current year, signed) | Vendor payment setup; legal name + EIN + signature | No (attach on request) | `<<FILL IN>>` |
+| 12 | **Certificate of Insurance (COI)** — general liability, D&O, workers' comp | Proof of insurance; issued by broker | **No — website exception (shows coverage limits); attach on approval only, no public link** | `<<FILL IN — request from broker>>` |
+| 13 | **Sales/Use tax exemption certificate** (e.g. NJ ST-5) | Tax-exempt purchasing | Optional | `<<FILL IN>>` |
+| 14 | **Certificate of Good Standing / formation** | Active, compliant legal entity | Optional | `<<FILL IN>>` |
+| 15 | **Audited financials / financial review** (if available) | Grant due diligence | Optional | `<<FILL IN>>` |
 | 16 | **Governance policies** — conflict-of-interest, whistleblower, document-retention | Grant due diligence | Optional | `<<FILL IN>>` |
 | 17 | **Non-discrimination / EEO / DEI statement** | Grant eligibility | Optional | `<<FILL IN>>` |
 

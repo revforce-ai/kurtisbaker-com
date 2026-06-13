@@ -4,12 +4,17 @@ Email bodies for the responder. Fill `{{...}}` from the thread and
 `reference/document-catalog.md`. Keep the signature block on every reply. Match
 the requester's formality; trim anything that doesn't apply.
 
+Every reply (except the insurance certificate) should give **both** the public
+air.ngo link **and** the attached PDF. Use the legal name on payment/contract
+paperwork.
+
 **Standard signature:**
 ```
 Warm regards,
 Kurt Baker
 Co-Founder, Attitudes In Reverse® (AIR®)
-A 501(c)(3) nonprofit — air.ngo
+Everybody Loves Kenny Project, Inc. — a 501(c)(3) nonprofit · EIN 27-2372917
+www.air.ngo
 kbaker@cwmi.us
 ```
 
@@ -29,10 +34,11 @@ Reverse® (AIR®) as a vendor:
 {{- Certificate of insurance, if requested}}
 
 For your records:
-- Legal name: Attitudes In Reverse® (AIR®)
-- EIN: {{EIN}}
+- Legal name: Everybody Loves Kenny Project, Inc. (dba Attitudes In Reverse®)
+- EIN: 27-2372917
 - 501(c)(3) public charity
 
+The 501(c)(3) letter is also public here: https://www.air.ngo/about-air/financials/
 If you need anything else for onboarding, just let me know.
 ```
 
@@ -51,12 +57,12 @@ Glad to support {{their org}}'s application/review. Attached / linked:
 {{- Governance policies / non-discrimination statement, if requested}}
 
 Key facts:
-- Legal name: Attitudes In Reverse® (AIR®)
-- EIN: {{EIN}}
+- Legal name: Everybody Loves Kenny Project, Inc. (dba Attitudes In Reverse®)
+- EIN: 27-2372917
 - State charity registration #: {{reg #}}
 - 501(c)(3) public charity — air.ngo
 
-More background and documents are on our transparency page: {{air.ngo docs URL}}
+These are also public at our financials page: https://www.air.ngo/about-air/financials/ (and GuideStar: https://www.guidestar.org/profile/27-2372917).
 Happy to provide anything further the application requires.
 ```
 
@@ -66,10 +72,11 @@ Happy to provide anything further the application requires.
 ```
 Hi {{name}},
 
-Attached is AIR®'s {{document}}. For quick reference:
-- Legal name: Attitudes In Reverse® (AIR®)
-- EIN: {{EIN}}
-- 501(c)(3) public charity — air.ngo
+Attached is AIR®'s {{document}}{{, also available at <air.ngo link>}}. For quick
+reference:
+- Legal name: Everybody Loves Kenny Project, Inc. (dba Attitudes In Reverse®)
+- EIN: 27-2372917
+- 501(c)(3) public charity — www.air.ngo
 
 Let me know if you need anything else.
 ```

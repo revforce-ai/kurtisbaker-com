@@ -19,12 +19,12 @@ for "your 501(c)(3) letter / W-9 / 990 / proof of insurance" — into an
 assisted, near-automatic reply with the correct documents attached.
 
 **Org identity (AIR®):**
-- Legal/brand name: **Attitudes In Reverse®** ("AIR®")
+- Legal name: **Everybody Loves Kenny Project, Inc.** — **dba Attitudes In
+  Reverse® ("AIR®")**. Use the legal name on W-9s, contracts, and registrations.
+- Tax status: **501(c)(3) public charity** — **EIN 27-2372917**
 - Mission: eliminating the stigma around mental health through school-based
-  education; founded in 2010 in memory of Kenny Baker. Co-founded by Kurt &
-  Tricia Baker.
-- Website: **https://air.ngo**
-- Tax status: **501(c)(3) public charity**
+  education; founded in memory of Kenny Baker. Co-founded by Kurt & Tricia Baker.
+- Website: **https://www.air.ngo** · GuideStar: https://www.guidestar.org/profile/27-2372917
 - Contacts: Kurt Baker (kbaker@cwmi.us) is the operator running this skill.
 
 > Org-specific numbers (EIN, NJ charity registration #, mailing address) and
@@ -43,15 +43,19 @@ EIN and an authorized signature. Treat it accordingly:
    so Kurt sends with one click. This removes the slow part (reading the ask,
    picking the right docs, writing the reply) while keeping a human on the
    trigger.
-2. **Sensitivity tiers gate behavior** (see catalog):
-   - **Public** docs (501c3 letter, 990, charity reg #, mission one-pager) —
-     fine to draft automatically; may be auto-sent if the operator turns on
-     auto-send mode.
-   - **Restricted** docs (W-9, certificate of insurance, good-standing,
-     ST-5) — **always draft for human approval**, never auto-send.
-   - **Never-auto** items (banking / ACH / voided check, anything with an SSN
-     or non-public financials) — do **not** attach. Draft a reply that asks the
-     requester to use the secure channel and flag it for Kurt.
+2. **Sensitivity tiers gate behavior** (see catalog). Nonprofit org documents
+   are public by nature, so most are freely shareable:
+   - **Public** docs (501c3 letter, 990, charity reg #, mission one-pager,
+     board list) — public on air.ngo. Reply includes BOTH the website link AND
+     the attached PDF; fine to draft automatically and auto-send if enabled.
+   - **On-request** docs (W-9, ST-5, good-standing) — fine to attach; for the
+     signed W-9 and any financials, confirm the requester is legitimate first.
+   - **Insurance certificate (COI)** — the one exception that is **not** public
+     and gets **no website link** (it discloses coverage limits). Attach only on
+     human approval; never auto-send.
+   - **Never-send** items (banking / ACH / voided check, anything with an SSN) —
+     do **not** attach. Draft a reply that redirects to a secure channel and
+     flag it for Kurt.
 3. **Verify the requester looks legitimate before attaching restricted docs.**
    Real vendor/grant requests name an organization, reference an engagement or
    application, and come from a matching corporate domain. A bare "send me your
@@ -121,13 +125,14 @@ the draft and in your operator summary.
 
 ### 4. Draft the reply
 Use a template from `reference/reply-templates.md`. The reply should:
-- Greet the requester and confirm what's attached.
-- State the public facts inline (legal name, EIN, 501(c)(3) status, charity
+- Greet the requester and confirm what's included.
+- State the public facts inline (legal name "Everybody Loves Kenny Project, Inc.
+  dba Attitudes In Reverse®", EIN 27-2372917, 501(c)(3) status, charity
   registration #) so simple asks need no attachment.
-- Attach only the documents whose tier permits it (Public always; Restricted
-  only when requester is verified; Never-auto items: omit + redirect to secure
-  channel).
-- Point to the air.ngo transparency page for anything public (see §7).
+- For each requested doc, **include both the air.ngo website link AND attach the
+  PDF** downloaded from AIR®'s Drive (catalog Tier 1 & most of Tier 2).
+- **Insurance (COI):** attach the PDF on approval only — no website link.
+- **Never-send** items (banking/ACH): omit + redirect to a secure channel.
 - Sign as AIR® with Kurt's contact block.
 
 ### 5. Label and hand off
@@ -142,14 +147,26 @@ attached, tier, draft created (y/n), and any **flags** (missing/stale doc,
 restricted doc awaiting approval, suspicious requester, never-auto redirect).
 Do not claim a message was sent unless a send tool actually returned success.
 
-### 7. Website note (recommend, don't assume)
-Per the operator's intent, every document except **proof of insurance** can and
-should live on a public **air.ngo transparency / "Nonprofit Documents" page**
-(determination letter, latest 990, charity reg #, mission one-pager, board
-list). When that page exists, the skill links to it instead of attaching public
-PDFs, and reserves attachments for the restricted set. air.ngo is a separate
-site/repo from this one — flag the page as a recommendation; don't build it
-here.
+### 7. Source of truth: air.ngo website + air.ngo Drive
+Documents live in two places, both owned by AIR® (not this repo, and not
+kurtisbaker.com):
+- **air.ngo website** — public links. AIR® already publishes much of this:
+  - Financials (501(c)(3) letter + Form 990s): https://www.air.ngo/about-air/financials/
+  - Resources / brand assets: https://www.air.ngo/get-involved/resources/
+  - Forms: https://www.air.ngo/get-involved/forms/
+  - Mission: https://www.air.ngo/about-air/mission/
+- **air.ngo Google Drive** — the canonical PDFs the skill downloads and attaches.
+
+Every document except **proof of insurance** is public, so the reply carries
+**both** the website link and the attached PDF. Insurance is the one exception:
+attached on approval, never linked publicly.
+
+**Best-practice page additions** (recommend to whoever maintains the air.ngo
+site — don't build here): add the items grantors and vendors routinely request
+that aren't yet posted — **W-9**, state charity registration #, Articles of
+Incorporation, board-of-directors list, mission/capability one-pager, and a
+current annual/impact report. A small "Nonprofit Documents / For Vendors &
+Grantors" section (or the existing /vendor/ page) is the natural home.
 
 ---
 
