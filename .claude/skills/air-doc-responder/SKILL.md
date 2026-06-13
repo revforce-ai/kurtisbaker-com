@@ -166,7 +166,8 @@ site — don't build here): add the items grantors and vendors routinely request
 that aren't yet posted — **W-9**, state charity registration #, Articles of
 Incorporation, board-of-directors list, mission/capability one-pager, and a
 current annual/impact report. A small "Nonprofit Documents / For Vendors &
-Grantors" section (or the existing /vendor/ page) is the natural home.
+Grantors" section (or the existing /vendor/ page) is the natural home — see
+**`reference/air-ngo-vendor-grantor-page.md`** for ready-to-paste page copy.
 
 ---
 
