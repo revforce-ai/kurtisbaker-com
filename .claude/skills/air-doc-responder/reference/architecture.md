@@ -37,12 +37,20 @@ recommends this over attachments. Benefits: always current, no 25MB limit,
 access can be revoked. Binary attachment remains a manual one-click step at send
 time, or a future upgrade if an attachment-capable send tool is connected.
 
-## What's needed to reach full automation (see ASKS in chat)
-- **Write access to air.ngo's Google Drive** (or a decision to use an
-  alternative store) — to stage the canonical folder + generate share links.
-- **The source PDFs** that don't exist digitally yet — current signed **W-9**
-  and a **Certificate of Insurance** from The Hartford. Cannot be fabricated.
-- **A recurring trigger** (e.g., `/loop`, a scheduled web session, or Gmail
-  push) — to make monitoring automatic rather than on-demand.
-- (Optional) an **attachment-capable email tool** if binary attachments are
-  required over links.
+## Confirmed decisions (2026-06-13)
+- **Store:** air.ngo's own Google Drive (per operator). Blocked on write access.
+- **Delivery:** BOTH — website/Drive links in the body now; binary PDF
+  attachments added once an attachment-capable send tool is connected.
+- **Automation:** recurring, draft-only sweep ("ready to reply quickly") — the
+  skill detects requests on a schedule and queues drafts; human always sends.
+
+## What's needed to reach full automation (operator must provision)
+1. **Write access to air.ngo's Google Drive** — to create the
+   "AIR — Org Documents" folder and generate share links. (Today only the
+   kurt@20paws.com Drive is writable.) Enable an air.ngo Drive MCP connection.
+2. **The source PDFs** that aren't digital yet — current signed **W-9** and a
+   **Certificate of Insurance** from The Hartford. Cannot be fabricated.
+3. **A recurring trigger** — a scheduled Claude Code web session (cron-style)
+   or the `/loop` skill in-session to run the sweep on a cadence.
+4. **An attachment-capable email/send tool** — to satisfy the "attachments"
+   half of the delivery decision (links work today without it).
