@@ -36,7 +36,8 @@ from a 501(c)(3).
 | Tax status | 501(c)(3) public charity |
 | EIN / Federal Tax ID | **27-2372917** |
 | State charity registration # | `<<FILL IN — NJ Charities Registration #>>` |
-| Location / mailing address | Princeton, NJ — `<<FILL IN full street address>>` |
+| Location / mailing address | PO Box 3127, Princeton, NJ 08543 |
+| Phone | 609-647-0004 |
 | Website | https://www.air.ngo |
 | Fiscal year end | `<<FILL IN>>` |
 | SAM.gov UEI (federal grants) | `<<FILL IN — if registered>>` |
@@ -68,7 +69,7 @@ discloses coverage limits.
 | # | Document | What it proves / used for | On website? | Drive file |
 |---|---|---|---|---|
 | 11 | **W-9** (current year, signed) | Vendor payment setup; legal name + EIN + signature | No (attach on request) | `<<FILL IN>>` |
-| 12 | **Certificate of Insurance (COI)** — general liability, D&O, workers' comp | Proof of insurance; issued by broker | **No — website exception (shows coverage limits); attach on approval only, no public link** | `<<FILL IN — request from broker>>` |
+| 12 | **Certificate of Insurance (COI)** — general liability, D&O, workers' comp | Proof of insurance; carrier is **The Hartford** (acct #548418020924428) — request COI from carrier/broker | **No — website exception (shows coverage limits); attach on approval only, no public link** | `<<FILL IN — request from The Hartford>>` |
 | 13 | **Sales/Use tax exemption certificate** (e.g. NJ ST-5) | Tax-exempt purchasing | Optional | `<<FILL IN>>` |
 | 14 | **Certificate of Good Standing / formation** | Active, compliant legal entity | Optional | `<<FILL IN>>` |
 | 15 | **Audited financials / financial review** (if available) | Grant due diligence | Optional | `<<FILL IN>>` |
@@ -97,6 +98,18 @@ discloses coverage limits.
 | "grant due diligence packet" | #1, #3, #5, #8, #16, #17 (+ EIN, reg # inline) |
 | "vendor onboarding packet" | #11 W-9, #1, #12 COI — restricted |
 | "voided check / ACH / banking details" | NONE — Tier 3 redirect to secure channel |
+
+## Current document locations (as of 2026-06 — Drive not yet staged)
+A live-mailbox check found **no org-doc PDFs in air.ngo's Drive**. Until a
+canonical Drive folder is set up, the current sources are:
+- **Form 990:** 2023 & 2024 filed (2025 not yet); currently shared as email
+  attachments — also on the financials page + GuideStar.
+- **Certificate of Insurance:** carrier is The Hartford; obtain current COI from
+  them when requested.
+- **Annual report:** none on file — create a one-pager if a funder requires it.
+- **Action:** stage the "AIR — Org Documents" Drive folder and drop in current
+  copies (501c3 letter, 990s, signed W-9, board list, budget, one-pager) so the
+  responder can auto-attach instead of relying on manual email attachments.
 
 ## Maintenance
 - Refresh the **W-9** at the start of each calendar year (date it for the new year).
