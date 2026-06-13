@@ -6,11 +6,26 @@ and the verified state of the connected accounts (as of 2026-06-13).
 ## Verified account topology
 | Capability | Tool / account | Status |
 |---|---|---|
-| Read AIR® inbox + Drive | Workspace MCP, `account: air.ngo` (gmail_search/read, drive_search/read) | ✅ working |
-| Create AIR® email **drafts** | Workspace MCP `gmail_send_draft` (`send:false`), `account: air.ngo` | ✅ working (live test: draft `r-3087836254759269045`) |
-| **Write** to AIR® Drive (create folder/upload) | — | ❌ no tool. The only Drive-write MCP is authed to **kurt@20paws.com**, a different entity. |
+| Read AIR® inbox + Drive, create drafts, create filters | Workspace MCP `f0c96ff0` (multi-account: air.ngo, cwmi.us/net, revforce.ai, 20paws.com) | ✅ working |
+| Gmail label create + threads | MCP `d6d9b006` — authed to **kbaker@cwmi.net** (Kurt's main mailbox, NOT air.ngo) | ⚠️ wrong account for AIR |
+| Drive **write** (folders/upload) | MCP `5da2bcef` — authed to **kurt@20paws.com** | ⚠️ not air.ngo's Drive |
+| Custom label on **air.ngo** | — | ❌ no tool (f0c96ff0 can't create labels; d6d9b006 is a different mailbox) → using STARRED + query sweep instead |
 | Binary PDF **attachment** on a draft | — | ❌ not supported by current draft tools |
-| Recurring/auto **trigger** | — | ❌ skill runs only when invoked |
+
+## Live operational setup (as of 2026-06-13)
+- **Interim document store** (until air.ngo Drive is writable): folder
+  **"AIR — Org Documents"** in the kurt@20paws.com "Claude Brain" Drive —
+  https://drive.google.com/drive/folders/1PYBaz7CRg-IDMuRcWMclnM7FRMBdBe8t
+  with an INDEX & checklist doc listing every needed PDF + naming convention.
+- **Auto-detection filter** on air.ngo (id `ANe1BmgFcr1Cwc7hb9KFcZYnzv7Kbx-ItaqNQA`):
+  future doc-request emails are auto-**starred** (no custom label is creatable
+  via current tools); noisy senders (Intuit/Periscope/Idealist/TechSoup/YouTube)
+  excluded. Reversible via gmail_delete_filter. A proper nested label
+  ("AIR/Needs Doc Reply") can be created manually in air.ngo Gmail if preferred.
+- **Detection sweep:** the keyword search query in SKILL.md §1 (works without the
+  filter; the star is just a fast human signal).
+- **Live test draft:** unsent reply to a real grant request, draft
+  `r-3087836254759269045` in the air.ngo mailbox.
 
 ## Best-in-class pipeline (target)
 1. **Trigger.** Gmail filter auto-labels inbound document requests
