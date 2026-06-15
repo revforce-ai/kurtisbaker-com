@@ -33,23 +33,23 @@ body {
 
 /*
  * AIR sandbox palette — scoped so it never affects the live kurtisbaker.com theme.
- * Remaps the same semantic tokens (bg / ink / accent / border) to a calm, hopeful
- * mental-health palette: teal primary + warm coral CTA accent.
+ * Remaps the same semantic tokens (bg / ink / accent / border) to AIR's official
+ * brand identity: green + white. Brand green sampled from the AIR logo (#014810);
+ * green = children's mental-health awareness, white = hope.
  * Used by /air-sandbox only.
  */
 .air-theme {
-  --bg: #f1f6f4;
+  --bg: #f4f7f1;
   --bg-elevated: #ffffff;
-  --ink: #11272b;
-  --ink-muted: #4c6065;
-  --accent: #0e7d78;
-  --accent-hover: #0a615d;
-  --border: #d6e6e0;
-  /* AIR-specific extras */
-  --air-coral: #ef6f53;
-  --air-coral-hover: #e1543a;
-  --air-sky: #2f8f9d;
-  --air-sand: #f7efe4;
+  --ink: #12281a;
+  --ink-muted: #4b5d50;
+  --accent: #0c6b2a;        /* AIR brand green — actionable on white */
+  --accent-hover: #014810;  /* deep logo green */
+  --border: #dbe7da;
+  /* AIR brand extras */
+  --air-forest: #014810;    /* exact logo green — rich dark sections */
+  --air-leaf: #1c8a3c;      /* brighter green for highlights */
+  --air-mist: #edf3ea;      /* soft green-tinted surface */
 }
 
 .font-serif {

@@ -13,7 +13,8 @@ export const metadata: Metadata = {
 
 /* ---------------------------------------------------------------- helpers */
 
-function CoralButton({
+// Donate — the priority CTA. Solid deep brand green (the logo's forest green).
+function DonateButton({
   href,
   children,
   className = "",
@@ -25,8 +26,8 @@ function CoralButton({
   return (
     <a
       href={href}
-      className={`group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white shadow-[0_6px_20px_-6px_rgba(239,111,83,0.6)] transition-all hover:-translate-y-0.5 ${className}`}
-      style={{ background: "var(--air-coral)" }}
+      className={`group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white shadow-[0_6px_20px_-6px_rgba(1,72,16,0.55)] transition-all hover:-translate-y-0.5 ${className}`}
+      style={{ background: "var(--air-forest)" }}
     >
       {children}
     </a>
@@ -44,21 +45,21 @@ function AirMesh() {
         className="absolute -right-32 -top-40 h-[640px] w-[640px] rounded-full opacity-[0.30] blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(14,125,120,0.55), transparent 70%)",
+            "radial-gradient(closest-side, rgba(28,138,60,0.50), transparent 70%)",
         }}
       />
       <div
         className="absolute -left-40 top-1/4 h-[520px] w-[520px] rounded-full opacity-[0.22] blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(239,111,83,0.40), transparent 70%)",
+            "radial-gradient(closest-side, rgba(1,72,16,0.35), transparent 70%)",
         }}
       />
       <div
         className="absolute -bottom-40 right-12 h-[560px] w-[560px] rounded-full opacity-[0.18] blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(47,143,157,0.5), transparent 70%)",
+            "radial-gradient(closest-side, rgba(94,166,74,0.45), transparent 70%)",
         }}
       />
     </div>
@@ -113,9 +114,9 @@ export default function AirSandboxPage() {
               </a>
             ))}
           </div>
-          <CoralButton href={air.cta.donate} className="px-5 py-2 text-sm">
+          <DonateButton href={air.cta.donate} className="px-5 py-2 text-sm">
             Donate
-          </CoralButton>
+          </DonateButton>
         </nav>
       </header>
 
@@ -133,9 +134,7 @@ export default function AirSandboxPage() {
                 style={{ fontVariationSettings: '"opsz" 96, "SOFT" 40' }}
               >
                 Start the conversation.{" "}
-                <span className="italic" style={{ color: "var(--air-coral)" }}>
-                  Save a life.
-                </span>
+                <span className="italic text-accent">Save a life.</span>
               </h1>
               <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-ink-muted md:text-xl">
                 Attitudes In Reverse® teaches young people about mental health
@@ -151,7 +150,7 @@ export default function AirSandboxPage() {
                   Bring AIR to your school
                   <span aria-hidden>→</span>
                 </a>
-                <CoralButton href={air.cta.donate}>Donate</CoralButton>
+                <DonateButton href={air.cta.donate}>Donate</DonateButton>
               </div>
               <p className="mt-6 text-sm text-ink-muted">
                 A nonprofit founded in 2009 in memory of Kenny Baker.
@@ -233,7 +232,7 @@ export default function AirSandboxPage() {
                     </p>
                     <p
                       className="mt-5 border-l-2 pl-3 text-sm text-ink-muted"
-                      style={{ borderColor: "var(--air-coral)" }}
+                      style={{ borderColor: "var(--air-leaf)" }}
                     >
                       {p.proof}
                     </p>
@@ -265,7 +264,6 @@ export default function AirSandboxPage() {
                   <a
                     href={item.href}
                     className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
-                    style={item.primary ? { color: "var(--air-coral)" } : undefined}
                   >
                     {item.cta}
                     <span aria-hidden>→</span>
@@ -283,7 +281,7 @@ export default function AirSandboxPage() {
         >
           <div
             className="overflow-hidden rounded-3xl px-8 py-12 text-center md:px-16 md:py-16"
-            style={{ background: "var(--ink)" }}
+            style={{ background: "var(--air-forest)" }}
           >
             <ScrollReveal>
               <h2 className="mx-auto max-w-xl font-serif text-3xl leading-tight text-white md:text-4xl">
@@ -304,8 +302,7 @@ export default function AirSandboxPage() {
                 />
                 <button
                   type="submit"
-                  className="rounded-full px-6 py-3 font-semibold text-white transition-all hover:-translate-y-0.5"
-                  style={{ background: "var(--air-coral)" }}
+                  className="rounded-full bg-white px-6 py-3 font-semibold text-accent transition-all hover:-translate-y-0.5"
                 >
                   Subscribe
                 </button>
@@ -346,7 +343,7 @@ export default function AirSandboxPage() {
       </main>
 
       {/* Footer with crisis resources repeated */}
-      <footer className="border-t border-border" style={{ background: "var(--air-sand)" }}>
+      <footer className="border-t border-border" style={{ background: "var(--air-mist)" }}>
         <div className="mx-auto max-w-6xl px-6 py-14">
           <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
             <div>

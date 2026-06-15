@@ -20,7 +20,7 @@ Design principles that flow from that:
 
 1. **Help is never more than one glance away.** A crisis line (988) is visible on every screen. This is both a moral obligation and a best-in-class signal.
 2. **Hope leads, loss supports.** Kenny's story is the engine, but the hero sells the future, not the tragedy.
-3. **Calm, breathable, light.** Teal + warm coral, generous whitespace, soft motion. Never clinical, never dark, never alarmist.
+3. **Calm, breathable, light.** AIR's brand green + white (green for children's mental-health awareness, white for hope), generous whitespace, soft motion. Never clinical, never dark, never alarmist.
 4. **One clear next step per audience.** Students → "get help / start a club." Schools → "book a presentation." Donors → "give." Volunteers → "get involved." Never make a visitor guess.
 5. **Evidence on the surface.** "Research-validated by TCNJ" does more for a school district than any adjective.
 
@@ -184,7 +184,7 @@ Ship each tier as it's ready. Tier 1 is live in days; by Tier 3 it's award-grade
 - [ ] **A clear "Get Help / Get Involved" fork** in the header and hero.
 - [ ] **One frictionless "Donate" button** in the nav, styled to stand out, on a reputable processor.
 - [ ] **"Bring AIR to your school" funnel** — a single, obvious booking/request form.
-- [ ] **Modern, hopeful visual refresh** — calm teal + warm coral palette, real photography, generous whitespace, soft scroll reveals. (See `/air-sandbox`.)
+- [ ] **Modern, hopeful visual refresh** — AIR's official green + white brand palette (logo green `#014810`), real photography, generous whitespace, soft scroll reveals. (See `/air-sandbox`.)
 - [ ] **Mobile-first + accessibility pass** — WCAG 2.2 AA contrast, keyboard nav, alt text, captions. (Especially important for this audience.)
 - [ ] **Core SEO hygiene** — titles, meta descriptions, one H1/page, sitemap, schema (NGO + FAQ), fast load.
 - [ ] **Newsletter capture** wired to AIR's email platform.
@@ -302,6 +302,6 @@ The working prototype lives at **`/air-sandbox`** in this repo.
 |---|---|---|
 | 2026-06-15 | Three-tier rollout (stabilize → best-in-class → award-grade) | Faster feedback, lower risk; mirrors the proven kurtisbaker.com approach |
 | 2026-06-15 | Website positioned as the *anchor* of a fundraising/growth flywheel | Sustainability requires recurring revenue + a participation engine, not a brochure |
-| 2026-06-15 | Calm/hopeful palette (teal + coral), crisis line always visible | Category best practice for youth MH / suicide prevention; safety-first |
+| 2026-06-15 | Use AIR's official brand palette (green + white, logo green #014810), crisis line always visible | On-brand identity; category best practice for youth MH / suicide prevention; safety-first |
 | 2026-06-15 | Recommend migrating off WordPress/Divi to Next.js + Vercel | Root cause of most QC issues (duplicates, legacy subdomain, performance) |
 | 2026-06-15 | SEO **and** GEO/AEO from Tier 1–2 | Audience increasingly finds help via AI assistants and search both |
