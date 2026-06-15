@@ -1,8 +1,16 @@
+"use client";
+
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 const GHL_CHAT_WIDGET_ID = "674f4b44f9c66bff51f57f57";
 
 export function GhlChatWidget() {
+  const pathname = usePathname();
+  // The AIR sandbox is a separate nonprofit identity — never load Kurt's
+  // wealth-management CRM chat there.
+  if (pathname?.startsWith("/air-sandbox")) return null;
+
   return (
     <Script
       id="ghl-chat-widget"

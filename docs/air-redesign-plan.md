@@ -8,6 +8,27 @@ Board-prep strategy for transforming air.ngo into the best-in-class youth mental
 
 ---
 
+## AIR is its own organization — not the personal hub
+
+**This is the most important framing in this document.** kurtisbaker.com is a *personal hero hub* — it exists to tell one person's story and route to his ventures. **air.ngo is a nonprofit institution** — it exists to serve a mission, raise money, and outlive any individual. They are different *categories of website* and must not look, sound, or behave the same.
+
+| | kurtisbaker.com (personal hub) | air.ngo (nonprofit) |
+|---|---|---|
+| **Job** | Tell Kurt's story, point to ventures | Serve a mission, raise funds, save lives |
+| **"Conversion"** | Book a call, subscribe | Donate, volunteer, book a presentation, get help |
+| **Voice** | Premium, editorial, founder-operator | Warm, hopeful, human, movement-driven |
+| **Identity** | Editorial serif (Fraunces), warm gold | AIR brand green + white, friendly sans |
+| **Owns the relationship** | Kurt | The institution + its community |
+| **Longevity** | Tied to one person | Must be sustainable independently |
+
+**What this means practically:**
+
+- **Separate brand identity.** AIR uses its *own* logo green (`#014810`), its own friendlier typography, and its own voice — not the wealth-advisor aesthetic. The sandbox reflects this (different font, different palette, no Kurt chrome).
+- **Separate property.** Production AIR should ultimately live as its **own codebase, deployment, and domain (air.ngo)** — not as a route inside the personal hub. The `/air-sandbox` here is only a prototype to align the board; treat it as a design reference, not the final home.
+- **The only relationship between the two:** Kurt is a *co-founder* of AIR, and kurtisbaker.com links *out* to air.ngo from its "ventures" section. That's it. AIR doesn't depend on the hub for traffic, identity, or credibility.
+
+---
+
 ## North Star
 
 **Hopeful, credible, urgent — without ever being heavy.**
@@ -300,7 +321,9 @@ The working prototype lives at **`/air-sandbox`** in this repo.
 
 | Date | Decision | Why |
 |---|---|---|
-| 2026-06-15 | Three-tier rollout (stabilize → best-in-class → award-grade) | Faster feedback, lower risk; mirrors the proven kurtisbaker.com approach |
+| 2026-06-15 | AIR is an independent nonprofit property — own brand, voice, codebase, and domain; **not** a section of the personal hub | Different category of site; must be sustainable and credible on its own |
+| 2026-06-15 | AIR gets its own typography (friendly sans) + brand-green palette, distinct from kurtisbaker.com's editorial serif | Nonprofit voice ≠ personal-brand voice |
+| 2026-06-15 | Three-tier rollout (stabilize → best-in-class → award-grade) | Faster feedback, lower risk; reuses the proven *process* (not the brand) from kurtisbaker.com |
 | 2026-06-15 | Website positioned as the *anchor* of a fundraising/growth flywheel | Sustainability requires recurring revenue + a participation engine, not a brochure |
 | 2026-06-15 | Use AIR's official brand palette (green + white, logo green #014810), crisis line always visible | On-brand identity; category best practice for youth MH / suicide prevention; safety-first |
 | 2026-06-15 | Recommend migrating off WordPress/Divi to Next.js + Vercel | Root cause of most QC issues (duplicates, legacy subdomain, performance) |

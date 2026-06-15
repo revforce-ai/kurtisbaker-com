@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ScrollReveal } from "@/app/components/ScrollReveal";
 import { air, stats, programs, involve, faqs } from "./air-data";
 
@@ -90,8 +89,7 @@ export default function AirSandboxPage() {
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-baseline gap-2">
             <span
-              className="font-serif text-2xl tracking-tight text-accent"
-              style={{ fontVariationSettings: '"opsz" 36' }}
+              className="font-serif text-2xl font-extrabold tracking-tight text-accent"
             >
               AIR
             </span>
@@ -129,10 +127,7 @@ export default function AirSandboxPage() {
               <p className="mb-6 text-sm font-medium uppercase tracking-[0.22em] text-accent">
                 Youth Mental Health · Suicide Prevention
               </p>
-              <h1
-                className="mx-auto max-w-4xl font-serif text-[2.6rem] leading-[1.02] tracking-[-0.025em] text-ink sm:text-6xl md:text-7xl"
-                style={{ fontVariationSettings: '"opsz" 96, "SOFT" 40' }}
-              >
+              <h1 className="mx-auto max-w-4xl font-serif text-[2.6rem] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink sm:text-6xl md:text-7xl">
                 Start the conversation.{" "}
                 <span className="italic text-accent">Save a life.</span>
               </h1>
@@ -384,12 +379,7 @@ export default function AirSandboxPage() {
           </div>
           <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-xs text-ink-muted sm:flex-row sm:items-center">
             <p>© {new Date().getFullYear()} Attitudes In Reverse®. A 501(c)(3) nonprofit.</p>
-            <p className="text-ink-muted/70">
-              Design sandbox ·{" "}
-              <Link href="/" className="underline hover:text-accent">
-                kurtisbaker.com
-              </Link>
-            </p>
+            <p className="text-ink-muted/70">Design prototype — not the live site</p>
           </div>
         </div>
       </footer>

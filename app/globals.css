@@ -50,6 +50,10 @@ body {
   --air-forest: #014810;    /* exact logo green — rich dark sections */
   --air-leaf: #1c8a3c;      /* brighter green for highlights */
   --air-mist: #edf3ea;      /* soft green-tinted surface */
+  /* AIR's own display voice (Poppins) — overrides the kurtisbaker.com serif
+     within the sandbox only, so headings read friendly/approachable, not
+     editorial-premium. */
+  --font-serif-stack: var(--font-air-display), ui-sans-serif, system-ui, sans-serif;
 }
 
 .font-serif {
