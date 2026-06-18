@@ -4,10 +4,14 @@
 **Scope:** Where to host, how to roll out, how to test each part against the
 competition and best practices, how to generate leads, and how to close sales.
 
-> ⚠️ Same compliance reality as the offer stack: CWMI is an SEC-regulated RIA.
-> Anything that drives to advisory services can be deemed an "advertisement"
-> under the **SEC Marketing Rule**. Brand separation (below) reduces risk but
-> does **not** remove the need for compliance review. See §7.
+> ⚠️ Same compliance reality as the offer stack: CWMI is a **state-registered
+> RIA (New Jersey Bureau of Securities)** today (AUM < $100M), planning an **SEC**
+> transition in ~12–24 months as this initiative scales. The SEC Marketing Rule
+> doesn't technically bind a state adviser yet, but NJ advertising rules + the
+> Advisers Act **§206 anti-fraud** provisions do — and we **build to the SEC
+> standard now** so nothing breaks at the threshold. Anything that drives to
+> advisory services can be deemed an "advertisement." Brand separation (below)
+> reduces risk but does **not** remove the need for compliance review. See §7.
 
 ---
 
@@ -257,9 +261,13 @@ budget flows to what actually closes (referrals usually win on quality).
 
 ## 7. Compliance guardrails (gating, not optional)
 
-- Marketing that promotes advisory services can be an **advertisement** under the
-  SEC Marketing Rule **even on FRB** — brand separation lowers but doesn't
-  remove the obligation. Compliance reviews the funnel end to end.
+- **Current regulator: NJ Bureau of Securities** (state, AUM < $100M). Follow
+  NJ advertising rules + Advisers Act **§206 anti-fraud** (applies to all
+  advisers) now; **build to the SEC Marketing Rule standard** so the funnel
+  survives the planned SEC transition without a rebuild.
+- Marketing that promotes advisory services can be an **advertisement** **even
+  on FRB** — brand separation lowers but doesn't remove the obligation.
+  Compliance reviews the funnel end to end.
 - **No performance/return promises** anywhere. Guarantee process/experience only
   (the Clarity Guarantee).
 - **Testimonials/endorsements:** disclose client status, compensation, conflicts
@@ -267,7 +275,8 @@ budget flows to what actually closes (referrals usually win on quality).
 - **Substantiate every value figure** or label illustrative; no fictitious
   discounts.
 - **Required on the close surface (CWMI.us):** "not investment/tax/legal advice,"
-  Form ADV / Form CRS links, fiduciary statement, IAPD/BrokerCheck link.
+  **Form ADV (2A/2B)** link + firm **IAPD** link, fiduciary statement. (Form CRS
+  attaches at SEC registration — add it then unless NJ requires sooner.)
 - **SMS/A2P 10DLC:** consent checkbox in the GHL form + STOP/HELP + privacy
   carve-out.
 - **ADA/WCAG 2.2 AA** on every page.
@@ -288,5 +297,13 @@ budget flows to what actually closes (referrals usually win on quality).
   Guarantee, GHL nurture; webinar as the one-to-many accelerator.
 - **Test:** competitive benchmark + best-practice audit + one-variable A/B,
   instrumented stage-by-stage, re-benchmarked quarterly.
+- **The North-Star milestone:** this initiative's success *is* the SEC
+  transition — crossing **$100M AUM** moves CWMI from NJ state registration to
+  SEC. Track AUM-added as the headline KPI, and trigger the SEC-registration
+  workstream (Form ADV refiling via IARD, Form CRS, Marketing-Rule re-audit of
+  every public asset) as AUM approaches the threshold so registration is ready,
+  not reactive.
 
-*All figures and claims pending CWMI confirmation and compliance/legal review.*
+*All figures and claims pending CWMI confirmation and compliance/legal review.
+Regulatory status: NJ Bureau of Securities (state) today; SEC transition planned
+at the $100M AUM threshold.*

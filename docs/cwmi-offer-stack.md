@@ -5,9 +5,12 @@
 **Built with:** Russell Brunson's *Offer Stack* (value-stacking + the "Stack Slide")
 overlaid on McCall Jones' **REP framework — Realization · Effort · Proof.**
 
-> ⚠️ **This is a draft marketing asset for an SEC-regulated RIA.** Every claim,
-> value figure, testimonial, and guarantee must clear compliance/legal review
-> before publication. See **§9 Compliance Guardrails** — it is not optional.
+> ⚠️ **This is a draft marketing asset for a state-registered RIA** (CWMI is
+> currently registered with the **New Jersey Bureau of Securities**; AUM is
+> under $100M, with a planned transition to **SEC** registration in ~12–24
+> months as this initiative scales). Every claim, value figure, testimonial,
+> and guarantee must clear compliance/legal review before publication. See
+> **§9 Compliance Guardrails** — it is not optional.
 
 ---
 
@@ -281,22 +284,33 @@ scarcity:
 
 ## 9. Compliance guardrails (READ BEFORE PUBLISHING)
 
-CWMI is an SEC/state-regulated RIA. The **SEC Marketing Rule** governs this copy.
-Non-negotiables before anything ships:
+CWMI is a **state-registered RIA (New Jersey Bureau of Securities)** today. The
+**SEC Marketing Rule does not technically govern a state adviser** — but NJ's
+advertising rules (built on the NASAA model rule) and the Investment Advisers
+Act **§206 anti-fraud provisions (which apply to *every* adviser, state or SEC)**
+do. **Build to the stricter SEC Marketing Rule standard now anyway:** it keeps
+this asset forward-compatible for the planned SEC transition (~12–24 months) so
+nothing has to be torn down and rebuilt at the $100M threshold. Non-negotiables
+before anything ships:
 
 1. **No performance or return promises.** Nothing here may imply investment
-   returns. Guarantees cover *process/experience* only (see §7).
+   returns. Guarantees cover *process/experience* only (see §7). (Anti-fraud
+   §206 — applies regardless of registration tier.)
 2. **Substantiate every value figure** in §4–§6, or relabel them clearly as
    illustrative estimates of comparable standalone costs. Do not present a
    fictitious "discount."
 3. **Testimonials/endorsements** (if added): disclose whether the person is a
    client, whether they were compensated, and any material conflict — *clearly
    and prominently*, not buried in a footnote.
-4. **Required disclosures:** "Not investment, tax, or legal advice"; links to
-   **Form ADV / Form CRS**; fiduciary statement; firm IAPD/BrokerCheck link.
+4. **Required disclosures:** "Not investment, tax, or legal advice"; link to
+   **Form ADV (Parts 2A/2B)** filed via NJ/IARD; fiduciary statement; firm
+   **IAPD** link. (Form CRS/Part 3 is an SEC-registration requirement — add it
+   at the SEC transition, not before, unless NJ requires it.)
 5. **Credentials:** keep verification links live (cfp.net, EPI, Fi360) — they
    are the strongest *Proof* asset and an E-E-A-T signal.
-6. **Legal counsel review** of the final asset for the firm's jurisdiction
+6. **NJ-specific review:** confirm the asset against current NJ Bureau of
+   Securities advertising/recordkeeping rules; retain copies of all advertising.
+7. **Legal counsel review** of the final asset for the firm's jurisdiction
    before any public use.
 
 ---
