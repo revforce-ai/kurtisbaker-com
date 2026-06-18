@@ -1,0 +1,54 @@
+name: "📋 Project registration"
+description: "Register a Claude Code project in the central registry so it isn't duplicated or dropped."
+title: "[project] <short name>"
+labels: ["registry", "status:todo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this to **register a unit of work** before starting it. One issue = one project.
+        Before opening: search existing `registry` issues to avoid a duplicate.
+  - type: input
+    id: repo
+    attributes:
+      label: Target repo(s)
+      description: Which repository(ies) this project touches.
+      placeholder: revforce-ai/kurtisbaker-com
+    validations:
+      required: true
+  - type: input
+    id: branch
+    attributes:
+      label: Working branch
+      description: The branch Claude Code develops on (if known yet).
+      placeholder: claude/<slug>-<id>
+    validations:
+      required: false
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal / scope
+      description: One or two sentences on what "done" looks like.
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - "todo"
+        - "in-progress"
+        - "blocked"
+        - "in-review"
+        - "done"
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: Person accountable (not the Claude session).
+      placeholder: "@kbaker"
+    validations:
+      required: false
