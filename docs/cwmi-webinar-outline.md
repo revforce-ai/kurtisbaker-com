@@ -41,9 +41,10 @@ stack/offer) + McCall Jones REP.
 
 ### B. The stakes / why now (7 min)
 - The trapped-wealth reality: most of an owner's net worth in one illiquid asset.
-- **The hard stat:** most businesses that go to market never sell. (Insert the
-  sourced figure from the competitive benchmark — commonly cited that only
-  ~20–30% of listed businesses actually sell. Verify before stating.)
+- **The hard stats (EPI *State of Owner Readiness* — verify current edition's
+  exact figures before stating):** roughly **3 in 4 owners profoundly regret
+  selling** within a year of the sale, and only about **a third have a
+  documented exit plan.** (See `docs/cwmi-competitive-benchmark.md` for sources.)
 - "Hope is not an exit plan. The market won't wait for you to be ready."
 
 ### C. Secret #1 — Realization (12 min)
