@@ -115,15 +115,31 @@ in our outline). **LEAVE:** the hypey, scarcity-timer, "guru" tone — fatal for
 fiduciary. **Translate, don't transplant:** Brunson mechanics + RIA-compliant
 restraint.
 
-## Category 5 — Counter-example (what NOT to do)
-The archetype to avoid: the generic advisor/firm site — stock photos of
-sailboats and golf, "comprehensive solutions for your financial future," a
-brochure of services, no lead magnet, no proof beyond a logo, a single buried
-"Contact Us," zero content engine, and no owner-specific message. It ranks for
-nothing, captures no leads, and is indistinguishable from every other firm.
-**Lesson:** specificity (business owners), a real diagnostic magnet (the Audit),
-verifiable proof (credentials with links), and a content engine are exactly what
-separates the leaders above from this.
+## Category 5 — Counter-example (what NOT to do) — verified
+**Florida Financial Advisors** (floridafa.com), Tampa, FL — a real, live regional
+firm useful as a "dated template + single-path funnel + undifferentiated
+positioning" case. *(Caveat: the site 403s to automated fetch; findings are
+reconstructed from search snippets + indexed page URLs/titles. Notably it is
+**not** a zero-effort site — it runs a learning center, calculators, newsletter,
+and blog — so the honest critique is **funnel + positioning**, not absence of
+effort.)*
+- **No value-first lead magnet** — calculators/newsletter exist but are passive
+  utilities, not capture-and-nurture offers. *Lesson: an asset only earns its
+  keep if it captures contact info and triggers follow-up.*
+- **One-step funnel** — effectively just "schedule a free consultation"; no
+  low-commitment first "yes" before the high-friction call.
+- **Underleveraged/contradictory proof** — a disclaimer says they don't consider
+  reviews testimonials, yet quotes appear elsewhere; credentials lean on tenure
+  ("30 years") not visible CFP®/fiduciary positioning.
+- **No prospect-facing pricing** — fee model buried in disclosure language.
+- **Generic, templated content** on a legacy `.htm` site — interchangeable copy
+  ("holistic," "see the big picture"), weak for modern SEO/mobile.
+- **LEAVE / avoid:** dated template, single door, vague "comprehensive" copy with
+  no named niche, buried fee model, self-contradictory proof, and treating
+  calculators/newsletter as decoration instead of wiring them into a funnel.
+- **Lesson:** the gap between the leaders above and this isn't *effort* — it's
+  specificity (business owners), a real diagnostic magnet (the Audit), deliberate
+  verifiable proof, and a modern capture-and-nurture funnel.
 
 ---
 
@@ -159,27 +175,56 @@ separates the leaders above from this.
 - **Integrated wealth + exit under one fiduciary** — most are *either* brokers
   *or* planners; CWMI is the coordinated whole.
 
-## Sourced facts / stats (verify verbatim before publishing)
+## Sourced facts / stats — verified verbatim (EPI *2023 National State of Owner Readiness*)
 
-- EPI *State of Owner Readiness*: **~75% of owners profoundly regret selling**
-  within 12 months of the sale; **only ~?32% have a documented exit/transition
-  plan.** Source: exit-planning-institute.org/state-of-owner-readiness (confirm
-  current edition's exact figures).
-- CEPA designation / Value Acceleration Methodology:
-  exit-planning-institute.org/program/certified-exit-planning-advisor
-- Verified competitor registries: adviserinfo.sec.gov/firm/315874 (Beyond Your
-  Exit), napfa.org member listing, exit-planning-institute.org/member-detail/
-  jessica-fialkovich.
+All quoted verbatim from the primary 2023 report PDF (text-extracted, since EPI's
+HTML pages 403 automated fetch). **Note attributions carefully** — some are EPI
+citing third parties.
 
-> The often-cited "only ~20–30% of listed businesses actually sell" figure
-> (commonly attributed to industry/marketplace data) should be sourced to a
-> specific, current citation before use on the webinar/landing page — do not
-> state it unsourced.
+- **Wealth concentration (the trapped-wealth hook):** *"The business typically
+  equates to 80% or more of the owner's total net worth."* (EPI 2023.) Strongest
+  stat for the CWMI "wealth-at-risk" message.
+- **Regret — attribute to PwC, not EPI:** *"PwC research indicates that 75% of
+  business owners profoundly regret selling their company just one year after
+  selling it."* (Report separately cites a 70% figure.) **Cite as PwC, via EPI.**
+- **The exit wave:** *"75% of business owners would like to exit … within the
+  next 10 years"* — *"4.5 million privately held businesses … nearly $14 trillion
+  of business wealth at stake."* (EPI 2023; the "$10T → $14T opportunity.")
+- **Most owners have no plan:** *"only 42% … had a written and formal transition
+  plan"* (≈ fewer than half) and *"70% of owners indicated they have no formal
+  estate plan."* (EPI 2023.)
+- **Businesses that don't sell (now citable):** *"Only 20 to 30% of businesses
+  that go to market actually sell, leaving up to 80% … without solid options to
+  harvest their wealth."* Attributed to EPI / **Christopher Snider, *Walking to
+  Destiny.*** ✅ Use the **20–30% range** (citable); ⚠️ avoid the bare "only 20%"
+  BizBuySell attribution — it does not cleanly trace to a citable BizBuySell
+  report.
 
-**Sources:** exitfactor.com (+ /process/, /offices/…/exit-assessment),
-certifiedexitplanners.com (+ /business-exit-services/, go. subdomain, /blog/),
-beyondyourexitwm.com (+ /free-readiness-assessment, /services-and-fees,
-/podcast/…), adviserinfo.sec.gov/firm/315874, napfa.org, exit-planning-institute.org.
+### EPI Value Acceleration Methodology™ (positioning — the comps' shared playbook)
+- **Three gates:** **Discover → Prepare → Decide** (Prepare runs in focused
+  **90-day sprints**).
+- **Three Legs of the Stool™:** align **business, personal, and financial**
+  readiness equally — maps exactly to CWMI's "is the business ready / are you
+  ready" framing; centers on closing the owner's **"Wealth Gap."**
+- **The 5 Ds** the plan must mitigate: **Death, Disability, Divorce, Distress,
+  Disagreement.** (Useful content/objection hooks.)
 
-*Re-benchmark quarterly. Confirm verbatim headlines on live homepages before
-quoting externally.*
+### Referral / Centers-of-Influence best practice (highest-quality lead source)
+- Build **COI** relationships with **CPAs + attorneys** (owners' two most-trusted
+  advisors per EPI); **lead with value, don't ask for referrals.**
+- Practitioner playbook: **Kitces' 3-meeting framework** to vet/establish COIs;
+  **co-host events/webinars** (CPA+advisor tax session, attorney+advisor estate
+  session); set referral protocols; measure referral volume *and* close rate.
+- The CEPA positions as the owner's transition **"quarterback"** coordinating the
+  CPA/attorney/M&A team — which *is* the referral engine.
+
+**Sources:** EPI 2023 report PDF (s3.amazonaws.com/static.contentres.com/media/
+documents/3c618ea5-…pdf); exit-planning-institute.org (/state-of-owner-readiness,
+/about-us-methodology); blog.exit-planning-institute.org (value-acceleration,
+the gates, /protect-business-from-5-ds); kitces.com (COI strategy);
+exitfactor.com, certifiedexitplanners.com, beyondyourexitwm.com (+ adviserinfo.
+sec.gov/firm/315874, napfa.org); floridafa.com (counter-example).
+
+*Re-benchmark quarterly. Confirm verbatim competitor homepage wording on live
+sites before quoting externally; some advisor sites (and EPI HTML) 403 automated
+fetch — verify by hand.*

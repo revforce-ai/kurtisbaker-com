@@ -40,11 +40,13 @@ stack/offer) + McCall Jones REP.
 *REP — Realization framing for the whole session.*
 
 ### B. The stakes / why now (7 min)
-- The trapped-wealth reality: most of an owner's net worth in one illiquid asset.
-- **The hard stats (EPI *State of Owner Readiness* — verify current edition's
-  exact figures before stating):** roughly **3 in 4 owners profoundly regret
-  selling** within a year of the sale, and only about **a third have a
-  documented exit plan.** (See `docs/cwmi-competitive-benchmark.md` for sources.)
+- **The trapped-wealth reality (EPI 2023):** the business is typically **80%+ of
+  the owner's net worth** — the single best stat for this slide.
+- **The hard stats (verified — see `docs/cwmi-competitive-benchmark.md`):**
+  only **~42% of owners have a written transition plan** (EPI 2023); **only
+  20–30% of businesses that go to market actually sell** (EPI / *Walking to
+  Destiny*); **75% of owners regret selling within a year** (*PwC*, cited via
+  EPI — attribute to PwC).
 - "Hope is not an exit plan. The market won't wait for you to be ready."
 
 ### C. Secret #1 — Realization (12 min)

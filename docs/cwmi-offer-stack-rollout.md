@@ -194,10 +194,16 @@ a referral-heavy, relationship-led motion.
 - **Email list** — nurture the existing list into Audits.
 
 ### Partnerships / referrals (highest quality — the exit-planning superpower)
-- Formal **referral network with CPAs, estate attorneys, business brokers, M&A
-  advisors, banks**. These professionals sit on exit-intent before anyone else.
-- Co-hosted workshops/webinars with partners; reciprocal referral agreements
-  (compliant; document any compensation).
+- Formal **Centers-of-Influence (COI) network with CPAs, estate attorneys,
+  business brokers, M&A advisors, banks** — per EPI, the advisor and attorney are
+  owners' two most-trusted advisors, so this triangle is the natural engine.
+- **Lead with value, don't ask for referrals** (Kitces' 3-meeting COI framework).
+  CWMI's CEPA positions Kurt as the owner's transition **"quarterback"**
+  coordinating the team — which itself generates referrals.
+- Co-hosted workshops/webinars with partners (CPA+advisor tax session,
+  attorney+advisor estate session); reciprocal referral agreements (compliant;
+  document any compensation). Track referral volume *and* close rate.
+  *(Sources in `docs/cwmi-competitive-benchmark.md`.)*
 
 ### Paid (scale what organic proves)
 - **LinkedIn Ads** — best B2B targeting (title, company revenue, industry,
