@@ -27,9 +27,10 @@ shapes are common; detect which is available before starting:
   `label_thread` / `list_labels`. No account argument; operates on the one
   authenticated mailbox.
 
-If the user didn't say which mailbox, use their primary account and tell them
-which one you scanned. If no email tool is connected, say so plainly and stop —
-do not fabricate results.
+**Default mailbox:** if the user didn't name one, scan `kbaker@cwmi.us` (their
+primary account) and state which mailbox you scanned. If they name another of
+their domains/addresses, use that instead. If no email tool is connected, say
+so plainly and stop — do not fabricate results.
 
 ## 2. Decide the scan window
 
@@ -82,10 +83,20 @@ is confident or the user asked:
 
 ## 5. Alert
 
-Always end with a concise written summary. Additionally fire a
-**`PushNotification`** (status `proactive`) when the scan finds phishing or a
-non-trivial spam batch, since the user may have stepped away. Keep it under 200
-chars, lead with the actionable count, e.g.:
+A concise written summary is the baseline alert and is **always** produced.
+
+When the scan finds phishing or a non-trivial spam batch, also try a proactive
+push so the user is reached even if they stepped away — **best effort**:
+
+1. If a `PushNotification` tool is available this session, fire it (status
+   `proactive`).
+2. Otherwise fall back to the next available proactive channel — e.g. a
+   `SendUserFile`-style proactive surface, or draft an alert email to the user
+   via the email tools (`create_draft` / a draft to `kbaker@cwmi.us`) so the
+   notice is waiting for them. Never let a missing push tool swallow the alert.
+
+Note in your written summary which channel you used (or that push was
+unavailable). Keep the push under 200 chars, lead with the actionable count:
 
 `Inbox scan: 1 phishing (fake DocuSign, spoofed sender) + 3 spam in last 24h — review flagged.`
 
@@ -109,9 +120,19 @@ If nothing fired, say `No spam or phishing found in <N> messages (<window>).`
 
 ## Recurring monitoring
 
-This skill is one scan. For continuous monitoring, suggest the `/loop` skill to
-re-run it on an interval (e.g. `/loop 15m inbox-spam-monitor`), and rely on the
-`PushNotification` step to surface anything new.
+This skill is one scan. For continuous monitoring, run it on a recurring
+interval with the `/loop` skill. **Recommended cadence: every 30 minutes**
+during the workday — frequent enough to catch active phishing quickly, infrequent
+enough to avoid noise and rate limits:
+
+```
+/loop 30m inbox-spam-monitor
+```
+
+Each iteration re-scans the default unread/last-24h window, so only genuinely
+new flags trigger the proactive alert. Use a tighter interval (10–15m) only when
+expecting a targeted attack, and stop the loop when monitoring is no longer
+needed.
 
 ## Guardrails
 
