@@ -674,6 +674,87 @@ redesign required.
 
 ---
 
+## 11. Shopping list — real boxes, pricing & purchase links (June 2026)
+
+> **Price-shock warning.** A 2026 AI-driven memory shortage has roughly **doubled
+> DDR5/SSD prices** and pushed the **RTX 5090 35–100%+ over its $1,999 MSRP**.
+> Analysts expect elevated prices through 2027–2028. Major retailer pages
+> (Newegg, Best Buy, eBay, Amazon, builder sites) block automated fetching, so
+> every figure below comes from search snapshots and price trackers, **not live
+> page reads — confirm price and stock in a browser before buying.** All three
+> 24–32 GB tiers run Gemma 3 27B at Q4 (~16–17 GB) comfortably.
+
+### Tier A — Premium: RTX 5090 32GB (the Section 10 primary pick)
+
+32 GB runs Gemma 27B Q4 *and* keeps a small model warm beside it.
+
+**GPU alone (cheapest first):**
+| Card | Retailer | ~Price | Link |
+|------|----------|--------|------|
+| Gigabyte RTX 5090 Aorus Master 32G | Best Buy | ~$2,700 | [bestbuy.com](https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-5090-aorus-master-32g-gddr7-pci-express-5-0-graphics-card-black/6615931.p?skuId=6615931) |
+| ASUS TUF Gaming RTX 5090 32GB | Newegg | ~$2,910 | [newegg.com](https://www.newegg.com/asus-tuf-gaming-tuf-rtx5090-32g-gaming-geforce-rtx-5090-32gb-graphics-card-triple-fans/p/N82E16814126752) |
+| Gigabyte Gaming OC / MSI Trio OC | Newegg | ~$3,300 | [Newegg 5090 list](https://www.newegg.com/p/pl?d=rtx+5090) |
+| MSI Suprim Liquid SOC 32GB (premium) | Newegg | ~$3,500 | [newegg.com](https://www.newegg.com/msi-rtx-5090-32g-suprim-liquid-soc-geforce-rtx-5090-32gb-graphics-card-liquid-cooler/p/N82E16814137916) |
+
+**Prebuilt desktops (64 GB RAM):**
+| System | CPU / RAM / Storage | ~Price | Link |
+|--------|---------------------|--------|------|
+| **iBUYPOWER RDY Y70 B05** ⭐ best value, in stock | Core Ultra 9 285K / 64GB / 4TB | ~$4,799 | [ibuypower.com](https://www.ibuypower.com/store/rdy-y70-b05) |
+| NZXT Player Three Prime | Ryzen 7 9800X3D / 64GB / 4TB | ~$4,999 | [nzxt.com](https://nzxt.com/products/player-three-prime) |
+| Skytech Legacy 4 | Ryzen 9 9950X3D / 64GB / 4TB | ~$4,999–5,799 | [skytechgaming.com](https://skytechgaming.com/product/legacy-4-amd-r9-9950x3d-nvidia-rtx-5090-32gb-4-tb-nvme-gen4-64gb-ram) |
+| CyberPowerPC Gamer Supreme | Ryzen 9 9950X / 64GB / 4TB | ~$5,100 | [bestbuy.com](https://www.bestbuy.com/product/cyberpowerpc-gaming-desktop-amd-ryzen-9-9950x-nvidia-geforce-rtx-5090-32gb-64gb-ddr5-4tb-pcie-4-0-ssd-black/J3L7GQW86X) |
+
+*Linux note: the 5090 (Blackwell) needs NVIDIA driver 570+ and CUDA 12.8+ — all of Ollama/llama.cpp/vLLM support it.*
+
+### Tier B — Value: used RTX 3090 24GB (best $/VRAM, the value pick)
+
+The consensus value champion: ~87 tok/s class on 27B Q4, ~20% slower than a
+4090 at a third of the price, CUDA-native.
+
+| Option | ~Price | Link |
+|--------|--------|------|
+| **Used RTX 3090 24GB** (EVGA/FE preferred) | ~$800–1,050 | [eBay listings](https://www.ebay.com/sch/i.html?_nkw=rtx+3090+24gb&_sop=15) · [price tracker](https://bestvaluegpu.com/history/new-and-used-rtx-3090-price-history-and-specs/) · [r/hardwareswap](https://www.reddit.com/r/hardwareswap/) |
+| AMD RX 7900 XTX 24GB (new, warranty) | ~$1,100–1,340 new / ~$790–900 used | [Sapphire Pulse @ Newegg](https://www.newegg.com/sapphire-tech-pulse-11322-02-20g-radeon-rx-7900-xtx-24gb-graphics-card-triple-fans/p/N82E16814202429) · [tracker](https://bestvaluegpu.com/history/new-and-used-rx-7900-xtx-price-history-and-specs/) |
+| RTX 4090 24GB (skip — poor value now) | ~$2,200–2,470 used | [eBay](https://www.ebay.com/sch/i.html?_nkw=rtx+4090&_sop=12) · [tracker](https://bestvaluegpu.com/history/new-and-used-rtx-4090-price-history-and-specs/) |
+
+**DIY build around a used 3090 (≈ $2,635–2,770 total):**
+| Part | Pick | ~Price |
+|------|------|--------|
+| GPU | Used RTX 3090 24GB | ~$950 |
+| CPU | Ryzen 7 9700X | ~$300 |
+| Motherboard | B650/B650E (AM5) | ~$170 |
+| RAM | 64GB DDR5-5600 *(shortage-inflated)* | ~$600–710 |
+| SSD | 2TB Gen4 NVMe (990 Pro / SN850X) | ~$345–370 |
+| PSU | Seasonic Focus GX-1000 | ~$140 |
+| Case + air cooler | Fractal/Phanteks + Peerless Assassin | ~$130 |
+
+Build live on [PCPartPicker](https://pcpartpicker.com/list/) to pull current prices. *RAM is ~⅓ of the cost right now thanks to the shortage; 32 GB (~$375) also works since the model lives in VRAM.* AMD note: on the 7900 XTX, llama.cpp's **Vulkan** backend currently beats ROCm — viable but more setup friction than CUDA.
+
+### Tier C — Turnkey Linux AI workstations (Ubuntu/Pop!_OS preinstalled, AI-literate support)
+
+Pay a premium for a tested, driver-ready, warrantied box from a vendor who knows CUDA-on-Linux.
+
+| Vendor / model | GPU | Base price | As-configured for 27B | Ubuntu | Link |
+|----------------|-----|-----------|------------------------|--------|------|
+| **BIZON V3000 G4** ⭐ lowest-cost turnkey single-GPU | up to RTX 5090 32GB | $3,191 | ~$3.5k–4.5k w/ 5090 | ✅ preinstalled + AI stack | [bizon-tech.com](https://bizon-tech.com/bizon-v3000.html) |
+| **System76 Thelio Mira** | up to RTX 5090 32GB | $1,699 | ~$8.5k–9.5k w/ 5090 *(5090 upgrade alone +$5,299)* | ✅ Pop!_OS/Ubuntu | [system76.com](https://system76.com/desktops/thelio-mira) |
+| **Puget Single-GPU AI tower** (buy-409) | up to RTX 5090 32GB | quote | ~$5k–8k (est.) | ✅ HW supported; not the OS | [pugetsystems.com](https://www.pugetsystems.com/solutions/ai/develop/buy-409/) |
+| **Maingear MG-1 / Pro WS** | RTX 5090 32GB | quote | ~$6k–8.5k (est.) | ✅ Ubuntu/dual-boot; explicit AI marketing | [maingear.com](https://maingear.com/collections/new-mg-1) |
+| System76 Thelio Major | RTX PRO 6000 96GB | $6,999 | ~$16k–22k (FP16 27B + headroom) | ✅ | [system76.com](https://system76.com/desktops/thelio-major) |
+| Exxact Valence (VWS-135223847) | RTX PRO 6000 96GB | $6,215 | low-to-mid five figures | ✅ + CUDA-X stack | [configurator](https://configurator.exxactcorp.com/configure/VWS-135223847) |
+| Puget Multi-GPU Threadripper PRO (buy-570) | RTX PRO 6000 96GB | quote | ~$13k–18k+ | ✅ HW supported; not the OS | [pugetsystems.com](https://www.pugetsystems.com/solutions/ai/develop/buy-570/) |
+
+BIZON and System76 ship Ubuntu + a preinstalled AI stack (CUDA, Ollama, vLLM, llama.cpp, PyTorch) — "power on and run Gemma in minutes." **Maingear** explicitly offers Ubuntu/dual-boot and markets local-LLM workstations (its Pro AI line). **Puget** preinstalls Ubuntu and validates the AI stack but warns it does **not** support the Linux OS itself (hardware/labor only). **Origin PC** is a weaker Linux fit — Windows-default; you'd order no-OS (~$129 off) and self-install ([configurator](https://www.originpc.com/configurator/genesis/)). **Lambda is no longer an option** — it exited hardware in Aug 2025 (its free [Lambda Stack](https://lambda.ai/lambda-stack-deep-learning-software) installer still works on any Ubuntu box). *Turnkey vendor sites all blocked automated fetching, so as-configured prices are estimates — get a live quote from the configurator.*
+
+### Which to buy (mapped to the Section 10 plan)
+
+- **Best overall (premium):** **iBUYPOWER RDY Y70 B05 (~$4,799)** — RTX 5090 32GB, 64 GB, 4 TB, in stock, cheapest turnkey 5090; wipe and install Ubuntu. Or **DIY 5090 build ~$3,800–4,400** to save ~$700–1,200.
+- **Best value:** **DIY used-RTX-3090 build (~$2,650–2,800)** — runs the exact same Gemma 27B Q4 workload; spend the savings on a second backup drive.
+- **Best zero-hassle Linux:** **BIZON V3000 G4** w/ single RTX 5090 (~$3.5k–4.5k) — Ubuntu + AI stack preinstalled, AI-literate support, up to 5-yr warranty.
+- **Want FP16 27B / room to grow to 70B+:** System76 Thelio Major or Exxact Valence with RTX PRO 6000 96GB (low-to-mid five figures).
+
+---
+
 ## TL;DR recommendations
 
 - **Just want to try Gemma cheaply:** use **Google AI Studio's free Gemma API**, or
