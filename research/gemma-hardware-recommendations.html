@@ -1,0 +1,1404 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><title>Gemma Hardware Recommendations</title>
+<style>
+body{font-family:'Liberation Sans',Arial,sans-serif;font-size:11pt;line-height:1.45;color:#1a1a1a;max-width:900px;margin:0 auto;padding:24px;}
+h1{font-size:22pt;border-bottom:2px solid #444;padding-bottom:6px;}
+h2{font-size:16pt;margin-top:24px;border-bottom:1px solid #ccc;padding-bottom:3px;}
+h3{font-size:13pt;margin-top:18px;}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:9.5pt;}
+th,td{border:1px solid #bbb;padding:5px 7px;text-align:left;vertical-align:top;}
+th{background:#f0f0f0;}
+tr:nth-child(even){background:#fafafa;}
+code{background:#f3f3f3;padding:1px 4px;border-radius:3px;font-family:'Liberation Mono',monospace;font-size:9.5pt;}
+pre{background:#f6f8fa;border:1px solid #ddd;border-radius:4px;padding:10px;overflow-x:auto;font-size:9pt;}
+pre code{background:none;padding:0;}
+blockquote{border-left:4px solid #f0ad4e;background:#fffaf0;margin:10px 0;padding:8px 14px;}
+a{color:#0b62c4;text-decoration:none;}
+</style>
+</head><body><h1 id="gemma-hardware-recommendations-cost-20252026">Gemma Hardware Recommendations &amp; Cost (2025–2026)</h1>
+<p>A practical buyer's and builder's guide to running Google's <strong>Gemma</strong> open models
+locally for inference — from per-model memory requirements through hardware
+options with USD costs and purchase links, a recommended local-first + cloud
+architecture, security/operations best practices, and a concrete shopping list.
+Written for the stated goal: <strong>a local Linux box that runs private data locally,
+calls cloud LLMs only for hard non-private work, stays resilient if any model
+goes down, and backs up to the cloud</strong> — already using Tailscale + Google Drive,
+not in healthcare.</p>
+<blockquote>
+<p><strong>Read this first — pricing is abnormal right now.</strong> A severe DRAM/GDDR memory
+shortage in 2026 (foundry capacity monopolized by AI accelerators; GDDR7
+scarce) has inflated GPU prices well above MSRP. The RTX 5090 ($1,999 MSRP) is
+selling at ~$2,700–$4,700; RTX 40-series is discontinued and overpriced on the
+used market, and DDR5/SSD prices have roughly doubled. Treat every "new" price
+below as a wide, volatile range and verify live before buying. Datacenter cards
+(A100/H100/H200) are quoted in $20k–$45k+ ranges and are usually <em>rented</em>, not
+bought.</p>
+</blockquote>
+<hr />
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-how-much-memory-does-each-gemma-model-need">How much memory does each Gemma model need?</a></li>
+<li><a href="#2-consumer--prosumer-gpus-nvidia--amd">Consumer / prosumer GPUs (NVIDIA + AMD)</a></li>
+<li><a href="#3-apple-silicon-macs-unified-memory">Apple Silicon Macs (unified memory)</a></li>
+<li><a href="#4-workstation--datacenter-gpus-for-27b-at-full-precision-or-serving">Workstation / datacenter GPUs</a></li>
+<li><a href="#5-cloud-gpu-rental--the-alternative-to-buying">Cloud GPU rental — the alternative to buying</a></li>
+<li><a href="#6-recommended-setup-local-linux-box--cloud-backup">Recommended setup: local Linux box + cloud backup</a></li>
+<li><a href="#7-making-the-architecture-hipaa-compliant">Making the architecture HIPAA-compliant</a> <em>(optional — secondary for you)</em></li>
+<li><a href="#8-verifying-your-current-stack-tailscale--google-drive">Verifying your current stack (Tailscale + Google Drive)</a></li>
+<li><a href="#9-operational-best-practices-reliability-resilience-security-results--backup">Operational best practices: reliability, resilience, security, results &amp; backup</a></li>
+<li><a href="#10-the-optimized-plan-recommended-build">The optimized plan (recommended build)</a></li>
+<li><a href="#11-shopping-list--real-boxes-pricing--purchase-links-june-2026">Shopping list — real boxes, pricing &amp; purchase links</a></li>
+<li><a href="#12-upgradeability--future-proofing">Upgradeability &amp; future-proofing</a></li>
+<li><a href="#tldr-recommendations">TL;DR recommendations</a></li>
+<li><a href="#sources">Sources</a></li>
+</ol>
+<hr />
+<h2 id="1-how-much-memory-does-each-gemma-model-need">1. How much memory does each Gemma model need?</h2>
+<p>LLM token generation is <strong>memory-bound</strong>: the model's weights must fit in
+VRAM (or Apple unified memory), and generation speed scales with memory
+<em>bandwidth</em>. The single most important number for "will it run" is the weight
+size at your chosen quantization, plus KV-cache/runtime overhead.</p>
+<p><strong>Quantization in one line:</strong> FP16/BF16 = full precision (2 bytes/param);
+INT8/Q8 ≈ half that; INT4/Q4 ≈ a quarter — with a modest quality trade-off that
+is small for Q8 and usually acceptable for Q4 (especially Google's
+Quantization-Aware-Trained "QAT" int4 checkpoints).</p>
+<h3 id="gemma-3-1b-4b-12b-27b-weights-only">Gemma 3 (1B, 4B, 12B, 27B) — weights only</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>FP16/BF16</th>
+<th>INT8 / Q8</th>
+<th>INT4 / Q4 (Google QAT)</th>
+<th>Ollama Q4 on-disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 3 1B</td>
+<td>~2 GB</td>
+<td>~1 GB</td>
+<td>~0.5 GB</td>
+<td>~0.8 GB</td>
+</tr>
+<tr>
+<td>Gemma 3 4B</td>
+<td>~8 GB</td>
+<td>~4 GB</td>
+<td>~2.6 GB</td>
+<td>~3.3 GB</td>
+</tr>
+<tr>
+<td>Gemma 3 12B</td>
+<td>~24 GB</td>
+<td>~12 GB</td>
+<td>~6.6 GB</td>
+<td>~8.1 GB</td>
+</tr>
+<tr>
+<td>Gemma 3 27B</td>
+<td>~54 GB</td>
+<td>~27 GB</td>
+<td>~14.1 GB</td>
+<td>~17 GB</td>
+</tr>
+</tbody>
+</table>
+<p>BF16 and int4 figures are from Google's official QAT blog; Q8 is interpolated
+(~half BF16) since Google publishes official QAT figures only for int4 and BF16.
+The <strong>27B int4 = 14.1 GB (Google) vs ~17 GB (Ollama Q4_K_M)</strong> gap is expected, not
+a contradiction: Google quotes pure int4 weights; Ollama's Q4_K_M is a
+mixed-precision GGUF (some tensors kept at higher bit-width) measured on disk.</p>
+<h3 id="gemma-3n-e2b-e4b-mobileedge-optimized">Gemma 3n (E2B, E4B — mobile/edge optimized)</h3>
+<p>"E" = <em>effective</em> parameters. Per-Layer Embeddings (PLE) offload embedding tables
+to CPU RAM, so accelerator memory behaves like a smaller model.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Raw params</th>
+<th>BF16 (full)</th>
+<th>INT4 / Q4</th>
+<th>Official minimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 3n E2B</td>
+<td>~5B (~2B effective)</td>
+<td>~5 GB</td>
+<td>~2 GB</td>
+<td><strong>2 GB</strong></td>
+</tr>
+<tr>
+<td>Gemma 3n E4B</td>
+<td>~8B (~4B effective)</td>
+<td>~8 GB</td>
+<td>~3–4 GB</td>
+<td><strong>3 GB</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The "2 GB / 3 GB" figures are <em>minimums</em> (max quantization, short context, PLE
+offloaded); BF16 full loads are meaningfully larger (~5 GB / ~8 GB).</p>
+<h3 id="gemma-2-2b-9b-27b-weights-only">Gemma 2 (2B, 9B, 27B) — weights only</h3>
+<p>No official Google QAT table exists for Gemma 2; figures are weights-only
+estimates (bytes-per-param) corroborated by Ollama on-disk sizes.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>FP16/BF16</th>
+<th>INT8 / Q8</th>
+<th>INT4 / Q4</th>
+<th>Ollama Q4 on-disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 2 2B</td>
+<td>~5 GB</td>
+<td>~2.5 GB</td>
+<td>~1.2–1.5 GB</td>
+<td>1.6 GB</td>
+</tr>
+<tr>
+<td>Gemma 2 9B</td>
+<td>~18 GB</td>
+<td>~9 GB</td>
+<td>~5–6 GB</td>
+<td>5.4 GB</td>
+</tr>
+<tr>
+<td>Gemma 2 27B</td>
+<td>~54 GB</td>
+<td>~27 GB</td>
+<td>~13.5–16 GB</td>
+<td>16 GB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="context-kv-cache-overhead-dont-forget-this">Context / KV-cache overhead (don't forget this)</h3>
+<p>All weight figures above <strong>exclude the KV cache</strong>, which grows with context
+length and often decides whether a long-context job fits.</p>
+<ul>
+<li><strong>Rule of thumb:</strong> add ~15–20% on top of weight size for runtime + activations +
+  short (≤2K-token) context. Long 32K–128K contexts can add several GB more,
+  especially on the 12B/27B variants.</li>
+<li><strong>Gemma 3</strong> uses interleaved local/global attention (5:1 ratio, 1024-token
+  sliding window). Only ~1/6 of layers store K/V for the full 128K window,
+  cutting long-context KV overhead from ~60% (Gemma 1 style) to <strong>under 15%</strong>.</li>
+<li><strong>Gemma 2</strong> uses a 1:1 local/global ratio with a 4096-token window → higher KV
+  overhead than Gemma 3 at equivalent context.</li>
+</ul>
+<hr />
+<h2 id="2-consumer-prosumer-gpus-nvidia-amd">2. Consumer / prosumer GPUs (NVIDIA + AMD)</h2>
+<p>The practical dividing line: <strong>24 GB VRAM is the floor for running 27B
+comfortably at Q4.</strong> 16 GB cards are excellent for the 12B tier but force 27B
+into degraded Q3 quants. 12 GB handles 4B and 12B-Q4.</p>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>VRAM</th>
+<th>~USD price (2026, volatile)</th>
+<th>Best Gemma fit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RTX 3060</strong></td>
+<td>12 GB</td>
+<td>~$280–$466 new / ~$200–$250 used</td>
+<td>4B (any), 12B Q4. <strong>Best budget entry</strong>; 2026 relaunch rumored.</td>
+</tr>
+<tr>
+<td><strong>RTX 4060 Ti 16GB</strong></td>
+<td>16 GB</td>
+<td>~$499 MSRP (often higher)</td>
+<td>12B at Q8, or 12B Q4 long-context. Good VRAM/watt.</td>
+</tr>
+<tr>
+<td><strong>RTX 4070 / 4070 Ti Super</strong></td>
+<td>12 / 16 GB</td>
+<td>~$549–$700 / ~$799 MSRP (now ~$740 used)</td>
+<td>12B Q4 (4070); 12B Q8 (Ti Super). Discontinued.</td>
+</tr>
+<tr>
+<td><strong>RTX 4080 / 4080 Super</strong></td>
+<td>16 GB</td>
+<td>$999 MSRP (inflated now)</td>
+<td>12B Q8 fast; 27B only at low (Q3) quant.</td>
+</tr>
+<tr>
+<td><strong>RTX 4090</strong></td>
+<td>24 GB</td>
+<td>~$1,599 MSRP → ~$2,300 used / ~$2,755 new</td>
+<td>Classic 27B-Q4 card (~31 tok/s). Discontinued, pricey.</td>
+</tr>
+<tr>
+<td><strong>RTX 5070 / 5070 Ti</strong></td>
+<td>12 / 16 GB</td>
+<td>~$549 / $749 MSRP</td>
+<td>12B Q4 (5070); 12B Q8 (Ti). <strong>Best balanced new buy.</strong></td>
+</tr>
+<tr>
+<td><strong>RTX 5080</strong></td>
+<td>16 GB</td>
+<td>$999 MSRP, often +45%</td>
+<td>12B Q8 fast; 16 GB caps 27B.</td>
+</tr>
+<tr>
+<td><strong>RTX 5090</strong></td>
+<td>32 GB</td>
+<td>$1,999 MSRP → street ~$4,200–$4,700</td>
+<td><strong>Best single consumer card:</strong> 27B Q4 long-context or near-Q8 (~42 tok/s).</td>
+</tr>
+<tr>
+<td><strong>AMD RX 7900 XTX</strong></td>
+<td>24 GB</td>
+<td>~$750–$850 used / ~$1,100–$1,400 new</td>
+<td><strong>Best value for 27B Q4</strong> — half a 4090's price for the same 24 GB. ROCm 7.x.</td>
+</tr>
+<tr>
+<td><strong>AMD RX 9070 XT</strong></td>
+<td>16 GB</td>
+<td>$599 MSRP / ~$689 new</td>
+<td>RDNA4, 12B Q8 tier; 16 GB caps 27B. ROCm maturing.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="recommended-consumer-card-by-target">Recommended consumer card by target</h3>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Practical minimum</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 4B (Q4/Q8)</td>
+<td>RTX 3060 12GB (or any 8 GB)</td>
+<td>RTX 3060 12GB</td>
+</tr>
+<tr>
+<td>Gemma 12B Q4</td>
+<td>RTX 3060 12GB</td>
+<td>RTX 5070 Ti / 4070 Ti Super (more bandwidth)</td>
+</tr>
+<tr>
+<td>Gemma 12B Q8</td>
+<td>RTX 4060 Ti 16GB</td>
+<td>RTX 5070 Ti / 5080 / RX 9070 XT</td>
+</tr>
+<tr>
+<td>Gemma 27B Q4</td>
+<td>RTX 4090 24GB <strong>or</strong> RX 7900 XTX 24GB</td>
+<td>RTX 5090 32GB (headroom); RX 7900 XTX for value</td>
+</tr>
+<tr>
+<td>Gemma 27B Q8</td>
+<td>RTX 5090 32GB (tight)</td>
+<td>RTX 5090 32GB, or dual 24 GB / workstation card</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-apple-silicon-macs-unified-memory">3. Apple Silicon Macs (unified memory)</h2>
+<p>Macs share one memory pool between CPU and GPU. They're a strong, power-efficient
+option for the 12B–27B tier because you can buy a lot of "VRAM" cheaply — but
+<strong>memory bandwidth (Pro → Max → Ultra) drives token speed far more than the
+M-generation number.</strong></p>
+<ul>
+<li><strong>Usable as VRAM:</strong> macOS caps GPU memory at ~2/3 of RAM (≤36 GB machines) or
+  ~75% (&gt;36 GB). Raise it with <code>sudo sysctl iogpu.wired_limit_mb=&lt;MB&gt;</code> (leave
+  8–16 GB for the system). This matters mainly for 27B-Q8 / large context on
+  32–48 GB Macs.</li>
+<li><strong>Bandwidth by tier:</strong> base M4 ~120 GB/s · M4 Pro ~273 GB/s · M4 Max ~410–546
+  GB/s · M3 Ultra ~800 GB/s. A Max roughly doubles a Pro's token rate; the Ultra
+  is the fastest single box and the only path to 128–512 GB.</li>
+<li><strong>Reference speed:</strong> Gemma 27B Q4 ≈ <strong>24 tok/s on M3 Ultra</strong> (Ollama; MLX/LM
+  Studio a bit faster). Backend speed: MLX ≥ LM Studio ≥ llama.cpp Metal ≈ Ollama.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Recommended Mac</th>
+<th>Chip / Bandwidth</th>
+<th>RAM</th>
+<th>~USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4B — entry</td>
+<td>MacBook Air M4 13"</td>
+<td>M4 / 120 GB/s</td>
+<td>16 GB</td>
+<td><strong>$999</strong></td>
+</tr>
+<tr>
+<td>4B + light 12B</td>
+<td>Mac mini M4</td>
+<td>M4 / 120 GB/s</td>
+<td>16 GB</td>
+<td><strong>$599</strong> (24 GB ~$799)</td>
+</tr>
+<tr>
+<td>12B sweet spot</td>
+<td>Mac mini M4 Pro</td>
+<td>M4 Pro / 273 GB/s</td>
+<td>24 GB</td>
+<td><strong>~$1,399</strong></td>
+</tr>
+<tr>
+<td>12B comfortable</td>
+<td>Mac mini M4 Pro</td>
+<td>M4 Pro / 273 GB/s</td>
+<td>48 GB</td>
+<td><strong>~$1,999</strong></td>
+</tr>
+<tr>
+<td>27B Q4 — best laptop</td>
+<td>MacBook Pro 14/16" M4 Max</td>
+<td>M4 Max / 410–546 GB/s</td>
+<td>48 GB</td>
+<td><strong>~$3,200–3,500</strong></td>
+</tr>
+<tr>
+<td>27B Q4 — best value desktop</td>
+<td>Mac Studio M4 Max</td>
+<td>M4 Max / 410–546 GB/s</td>
+<td>64 GB</td>
+<td><strong>~$2,500</strong> ($1,999 base 36 GB)</td>
+</tr>
+<tr>
+<td>27B Q8 / long context</td>
+<td>MacBook Pro 16" M4 Max</td>
+<td>M4 Max / 546 GB/s</td>
+<td>64–128 GB</td>
+<td><strong>~$4,159 → $4,700+</strong></td>
+</tr>
+<tr>
+<td>27B fastest + future-proof</td>
+<td>Mac Studio M3 Ultra</td>
+<td>M3 Ultra / 800 GB/s</td>
+<td>96 GB (→512)</td>
+<td><strong>$3,999 → $14,099 maxed</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Memory caps to know: MacBook Air M4 maxes at 32 GB; Mac mini M4 Pro maxes at
+48 GB; M4 Max scales to 128 GB; M3 Ultra scales to 512 GB.</p>
+<hr />
+<h2 id="4-workstation-datacenter-gpus-for-27b-at-full-precision-or-serving">4. Workstation / datacenter GPUs (for 27B at full precision or serving)</h2>
+<p>Gemma 3 27B at <strong>BF16 needs ~54 GB for weights alone</strong> (more with KV cache and
+batching). A single 48 GB card therefore <em>cannot</em> hold full-precision 27B with
+overhead — you must quantize (INT8/FP8/4-bit) or use two cards. <strong>80 GB+ cards
+run it comfortably at BF16</strong> with room for long context and batched serving.</p>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>VRAM</th>
+<th>~USD purchase (volatile)</th>
+<th>Gemma 27B fit / notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RTX A6000</strong> (Ampere)</td>
+<td>48 GB</td>
+<td>~$3,500–$6,250 (~$5,200 avg)</td>
+<td>Quantize for single-card, or 2× for BF16. Cheapest 48 GB; no FP8.</td>
+</tr>
+<tr>
+<td><strong>RTX 6000 Ada</strong></td>
+<td>48 GB</td>
+<td>~$6,800–$8,100</td>
+<td>Faster than A6000, FP8 support. Quantize or pair for BF16.</td>
+</tr>
+<tr>
+<td><strong>RTX PRO 6000 Blackwell</strong></td>
+<td>96 GB GDDR7</td>
+<td>~$11,400–$13,250 (MSRP raised ~55% in a year)</td>
+<td><strong>Best single-card BF16 fit</strong> — full weights + big context, newest arch, FP8/FP4.</td>
+</tr>
+<tr>
+<td><strong>NVIDIA L4</strong></td>
+<td>24 GB</td>
+<td>~$2,000–$3,000</td>
+<td>Too small for 27B even quantized; fine for 1B/4B. Low-power (75W).</td>
+</tr>
+<tr>
+<td><strong>NVIDIA L40S</strong></td>
+<td>48 GB</td>
+<td>~$7,500</td>
+<td>Quantize or 2× for BF16; better serving throughput than A6000, FP8.</td>
+</tr>
+<tr>
+<td><strong>NVIDIA A100 40GB</strong></td>
+<td>40 GB</td>
+<td>~$10,000–$15,000 new</td>
+<td>Can't hold BF16 27B alone; needs quant or 2×. 80 GB sibling is the better target.</td>
+</tr>
+<tr>
+<td><strong>NVIDIA A100 80GB</strong></td>
+<td>80 GB</td>
+<td>~$8,000–$15,000 new; ~$4k–9k used</td>
+<td><strong>Comfortable BF16 fit</strong> + KV/batching. Great value vs H100 for serving. No FP8.</td>
+</tr>
+<tr>
+<td><strong>NVIDIA H100 80GB</strong></td>
+<td>80 GB</td>
+<td>PCIe ~$25k–$30k; SXM ~$35k–$40k</td>
+<td><strong>Excellent BF16 serving</strong>, high throughput, FP8. Usually rented.</td>
+</tr>
+<tr>
+<td><strong>NVIDIA H200 141GB</strong></td>
+<td>141 GB</td>
+<td>~$28k–$45k</td>
+<td>Overkill-comfortable: huge context/batch on one card (4.8 TB/s). Rent unless heavy 24/7.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>By use case:</strong> single full-precision card → RTX PRO 6000 Blackwell 96GB
+(~$13k); production serving → A100 80GB (value) or H100 80GB (perf + FP8); max
+context/batch → H200. Avoid L4 and single A100 40GB for 27B BF16.</p>
+<hr />
+<h2 id="5-cloud-gpu-rental-the-alternative-to-buying">5. Cloud GPU rental — the alternative to buying</h2>
+<p>For bursty, experimental, or low-duty workloads, renting (or just using a
+per-token API) is almost always cheaper than buying. Specialized providers
+(Vast.ai, RunPod, Lambda) run <strong>2–5× cheaper</strong> than the AWS/GCP/Azure hyperscalers
+for the same silicon.</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>GPU</th>
+<th>~USD/hour (on-demand)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vast.ai</td>
+<td>RTX 4090 24GB</td>
+<td>$0.35–$0.40</td>
+</tr>
+<tr>
+<td>Vast.ai</td>
+<td>RTX 5090 32GB</td>
+<td>$0.36–$0.45 (up to ~$2.00)</td>
+</tr>
+<tr>
+<td>Vast.ai</td>
+<td>H100 80GB</td>
+<td>$2.15–$4.00+</td>
+</tr>
+<tr>
+<td>RunPod</td>
+<td>RTX 4090 24GB</td>
+<td>$0.34 (Community) – $0.69 (Secure)</td>
+</tr>
+<tr>
+<td>RunPod</td>
+<td>L4 24GB</td>
+<td>~$0.39</td>
+</tr>
+<tr>
+<td>RunPod</td>
+<td>L40S 48GB</td>
+<td>~$0.79</td>
+</tr>
+<tr>
+<td>RunPod</td>
+<td>A100 80GB</td>
+<td>~$1.49–$1.99</td>
+</tr>
+<tr>
+<td>RunPod</td>
+<td>H100 80GB</td>
+<td>~$2.89 (Secure)</td>
+</tr>
+<tr>
+<td>Lambda Labs</td>
+<td>A100 80GB PCIe</td>
+<td>~$1.99</td>
+</tr>
+<tr>
+<td>Lambda Labs</td>
+<td>H100 PCIe / SXM</td>
+<td>~$3.29 / ~$3.99–$4.29</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>A100 80GB (p4d, 8-GPU)</td>
+<td>~$4.10/GPU</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>H100 (p5)</td>
+<td>~$6.88/GPU</td>
+</tr>
+<tr>
+<td>GCP</td>
+<td>A100 80GB (a2)</td>
+<td>~$3.28/GPU</td>
+</tr>
+<tr>
+<td>GCP</td>
+<td>H100 (a3-high)</td>
+<td>~$3.00–$3.67/GPU</td>
+</tr>
+<tr>
+<td>Azure</td>
+<td>H100 (NC H100 v5)</td>
+<td>~$6.98/GPU</td>
+</tr>
+</tbody>
+</table>
+<p>For Gemma you rarely need an H100: 1B–12B run happily on an <strong>L4 ($0.39)</strong>, <strong>RTX
+4090 ($0.35–0.69)</strong>, or <strong>L40S ($0.79)</strong>; 27B fits a single <strong>A100 80GB
+(~$1.50–2.00)</strong>.</p>
+<h3 id="per-token-serverless-apis-no-gpu-to-manage">Per-token / serverless APIs (no GPU to manage)</h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Gemma offering</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Google AI Studio</strong> (Gemini API)</td>
+<td>Gemma</td>
+<td><strong>Free</strong> (rate-limited; free-tier prompts may train Google products)</td>
+</tr>
+<tr>
+<td><strong>OpenRouter</strong></td>
+<td>Gemma free + paid variants</td>
+<td>$0 free variants; paid adds ~5.5% fee, $5 min credit</td>
+</tr>
+<tr>
+<td><strong>Together AI</strong></td>
+<td>Gemma serverless</td>
+<td>~$0.20 / 1M input, ~$0.50 / 1M output (Batch up to 50% off)</td>
+</tr>
+<tr>
+<td><strong>Google Vertex AI</strong></td>
+<td>Self-deployed Gemma endpoint</td>
+<td>Pay underlying GPU machine hourly; can autoscale to zero</td>
+</tr>
+</tbody>
+</table>
+<p>The cheapest path for most low-to-moderate volume is <strong>Google AI Studio's free
+Gemma tier</strong>, then OpenRouter/Together AI per-token, with self-hosted GPU only
+justified at high sustained volume or for privacy/control.</p>
+<h3 id="rent-vs-buy-break-even-rule-of-thumb">Rent vs. buy — break-even rule of thumb</h3>
+<table>
+<thead>
+<tr>
+<th>Card</th>
+<th>Buy</th>
+<th>Rent</th>
+<th>Break-even</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTX 4090</td>
+<td>~$1,800 + system</td>
+<td>~$0.40/hr</td>
+<td>~4,500–5,000 GPU-hours (~6–7 mo @ 24/7)</td>
+</tr>
+<tr>
+<td>A100 80GB</td>
+<td>~$15,000–18,000</td>
+<td>~$1.50/hr</td>
+<td>~10,000+ hours (&gt;1 yr @ 24/7)</td>
+</tr>
+<tr>
+<td>H100</td>
+<td>~$30,000+</td>
+<td>~$3/hr</td>
+<td>~10,000 hours (+ obsolescence risk)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Buy</strong> only for sustained 24/7 production on a fixed model, or for
+privacy/always-on needs — and factor in power, cooling, depreciation, and fast
+GPU-generation turnover. Otherwise <strong>rent</strong> (or use the free Gemma API).</p>
+<hr />
+<h2 id="6-recommended-setup-local-linux-box-cloud-backup">6. Recommended setup: local Linux box + cloud backup</h2>
+<p>This is the recommended architecture for the stated preference — <strong>own a local
+Linux box for day-to-day inference, with the cloud as failover/burst capacity and
+for off-site backup.</strong> You get data privacy, no per-hour meter for routine use,
+and a safety valve for spikes or hardware failure.</p>
+<h3 id="hardware-pick-by-the-largest-model-you-run-regularly">Hardware — pick by the largest model you run regularly</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>GPU</th>
+<th>VRAM</th>
+<th>~USD (GPU)</th>
+<th>Runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Budget</strong></td>
+<td>RTX 3060 12GB (or used 4070 Ti Super 16GB)</td>
+<td>12–16 GB</td>
+<td>~$280–$740</td>
+<td>4B any · 12B Q4/Q8</td>
+</tr>
+<tr>
+<td><strong>Sweet spot (recommended)</strong></td>
+<td><strong>AMD RX 7900 XTX 24GB</strong> <em>or</em> used <strong>RTX 3090 24GB</strong></td>
+<td>24 GB</td>
+<td>~$750–$900</td>
+<td>27B Q4 with real context</td>
+</tr>
+<tr>
+<td><strong>Headroom</strong></td>
+<td>RTX 5090 32GB</td>
+<td>32 GB</td>
+<td>~$2,000 MSRP (street higher)</td>
+<td>27B near-Q8, long context</td>
+</tr>
+<tr>
+<td><strong>Pro single-card BF16</strong></td>
+<td>RTX PRO 6000 Blackwell 96GB</td>
+<td>96 GB</td>
+<td>~$11k–$13k</td>
+<td>27B full precision + serving</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>NVIDIA vs AMD on Linux:</strong> NVIDIA + CUDA remains the most frictionless path
+(best driver/runtime support across Ollama, llama.cpp, vLLM). A <strong>used RTX 3090
+24GB</strong> (~$700–$900) is often the best value-per-VRAM local card and is
+CUDA-native. AMD's <strong>RX 7900 XTX 24GB</strong> is cheaper still and well-supported by
+ROCm 7.x for inference, but expect occasional rough edges versus CUDA. If you
+want zero driver hassle, go NVIDIA; if you want maximum VRAM-per-dollar and
+don't mind ROCm, go 7900 XTX.</p>
+</blockquote>
+<p>A sensible <strong>recommended build</strong>: Ryzen 7/9 or Core i5/i7 CPU, <strong>64 GB system RAM</strong>
+(lets you offload layers to CPU and run bigger quants than VRAM alone allows),
+1–2 TB NVMe, a 24 GB GPU, and a 750W+ PSU. Budget roughly <strong>$1,500–$2,000 all-in</strong>
+with a used 3090, or <strong>~$2,500–$3,000</strong> with an RTX 5090.</p>
+<h3 id="linux-software-stack">Linux software stack</h3>
+<ul>
+<li><strong>Distro:</strong> Ubuntu 24.04 LTS or Debian 13 — best driver/CUDA/ROCm coverage and
+  the path most guides assume.</li>
+<li><strong>NVIDIA:</strong> install the proprietary driver + CUDA toolkit (<code>nvidia-driver-xxx</code>,
+  CUDA 12.x). Verify with <code>nvidia-smi</code>.</li>
+<li><strong>AMD:</strong> install <strong>ROCm 7.x</strong> (check your GPU is on the supported list — gfx1100
+  for the 7900 XTX) and use ROCm-enabled builds of llama.cpp/Ollama.</li>
+<li><strong>Inference runtime:</strong></li>
+<li><strong>Ollama</strong> — easiest; one command pulls quantized Gemma (<code>ollama run gemma3:27b</code>).
+    Great default for a personal box.</li>
+<li><strong>llama.cpp</strong> — most control over quantization, GPU/CPU offload split, and
+    context; pair with GGUF quants (e.g. Q4_K_M).</li>
+<li><strong>vLLM</strong> — if you'll serve multiple users/high throughput from the box.</li>
+<li><strong>LM Studio</strong> — GUI option if you want a desktop app on Linux.</li>
+<li><strong>Remote access:</strong> expose Ollama's OpenAI-compatible API on your LAN, or tunnel
+  via Tailscale/WireGuard for secure access from elsewhere.</li>
+</ul>
+<h3 id="cloud-as-backup-burst">Cloud as backup / burst</h3>
+<p>Two distinct meanings — set up both:</p>
+<ol>
+<li><strong>Compute failover / burst</strong> — when the box is busy, down, or a job needs more
+   VRAM than you own (e.g. 27B at full BF16, or many concurrent users):
+   - <strong>On-demand rental:</strong> RunPod or Vast.ai — RTX 4090 ~$0.35–0.69/hr, A100 80GB
+     ~$1.50–2.00/hr. Because Ollama/vLLM expose the same OpenAI-style API locally
+     and in the cloud, you can point your client at either with a config flip.
+   - <strong>Zero-ops fallback:</strong> Google AI Studio's <strong>free Gemma API</strong> or
+     OpenRouter/Together AI per-token — ideal as an emergency backstop with no
+     instance to spin up.</li>
+<li><strong>Data / model backup</strong> — back up your models, fine-tunes, prompts, and configs
+   off-site:
+   - Object storage (Backblaze B2 ~$6/TB-month, Cloudflare R2, or AWS S3) synced
+     with <strong>restic</strong> or <strong>rclone</strong> on a cron/systemd timer. Re-downloadable base
+     weights don't need backup — prioritize your <em>own</em> artifacts (LoRAs, datasets,
+     configs, <code>~/.ollama</code> customizations).</li>
+</ol>
+<p><strong>Net cost picture:</strong> a one-time ~$1,500–$2,000 local box handles all routine
+Gemma work at zero marginal cost; cloud rental is reserved for overflow (a few
+dollars per burst) and backup runs ~$5–$10/month for storage. This beats renting
+24/7 within ~6–7 months for a 4090-class workload (see break-even table above).</p>
+<hr />
+<h2 id="7-making-the-architecture-hipaa-compliant">7. Making the architecture HIPAA-compliant</h2>
+<blockquote>
+<p><strong>Reality check first.</strong> HIPAA compliance is <em>organizational and legal</em>, not a
+setting you switch on. No architecture is "HIPAA compliant" by itself — your
+<em>organization</em> is, once it has signed BAAs, a documented risk analysis,
+policies, workforce training, and breach-notification procedures in place. What
+follows is an architecture <strong>designed to support</strong> HIPAA compliance for a system
+handling <strong>PHI</strong> (Protected Health Information). This is engineering guidance,
+not legal advice — have counsel/your compliance officer review before going
+live with real PHI.</p>
+</blockquote>
+<h3 id="the-one-rule-that-reshapes-the-design-baas">The one rule that reshapes the design: BAAs</h3>
+<p>Under HIPAA, <strong>any third party that can access PHI is a Business Associate and
+must sign a Business Associate Agreement (BAA)</strong> with you. No BAA → you may not
+send PHI to that service, period. This forces two corrections to Section 6:</p>
+<ul>
+<li>❌ <strong>OpenRouter is out of any PHI path</strong> — aggregators don't sign BAAs.</li>
+<li>❌ <strong>Free API tiers are out</strong> — Google AI Studio's free Gemma tier, Claude
+  Free/Pro/Max/Team, and OpenAI consumer tiers are <strong>not</strong> BAA-eligible (and some
+  train on your prompts).</li>
+</ul>
+<p><strong>Cloud LLMs that DO offer a BAA (verified June 2026 — confirm current terms):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>BAA-eligible surface</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Anthropic (Claude)</strong></td>
+<td>First-party <strong>Messages API</strong> + Enterprise</td>
+<td>NOT Console/Workbench or Free/Pro/Max/Team. Covered models require <strong>30-day retention</strong> (no zero-retention). BAAs signed after 2025-12-02 cover API + Enterprise together.</td>
+</tr>
+<tr>
+<td><strong>OpenAI</strong></td>
+<td>API endpoints that are <strong>ZDR-eligible</strong></td>
+<td>Request via <code>baa@openai.com</code>. Live web-search tool is <strong>not</strong> eligible. ZDR needs a managed/Enterprise agreement.</td>
+</tr>
+<tr>
+<td><strong>Google Cloud Vertex AI</strong></td>
+<td>Vertex AI (Gemini, and Gemma via Model Garden)</td>
+<td>Sign the <strong>Google Cloud BAA at the org level</strong>; use only HIPAA-eligible services; consumer Gemini / AI Studio are <strong>not</strong> covered.</td>
+</tr>
+</tbody>
+</table>
+<p>For the cloud leg, pick <strong>one or two</strong> of these under signed BAAs and route only to
+them. Your <strong>local Gemma box never needs a BAA</strong> — PHI that stays on hardware you
+control isn't disclosed to a third party. That's the strongest argument for the
+local-first design here.</p>
+<h3 id="redaction-is-defense-in-depth-not-legal-de-identification">Redaction is defense-in-depth, not legal de-identification</h3>
+<p>Presidio-style PII stripping (Section 6) is valuable, but <strong>automated redaction
+does not make data "de-identified" under HIPAA.</strong> True de-identification requires
+either <strong>Safe Harbor</strong> (removing all 18 specified identifiers <em>and</em> having no
+actual knowledge the residual could re-identify) or <strong>Expert Determination</strong>.
+Automated detection is best-effort and will occasionally miss an identifier, so:</p>
+<ul>
+<li><strong>Do not</strong> rely on redaction to send PHI to a non-BAA service.</li>
+<li><strong>Do</strong> keep redaction as a <em>minimum-necessary</em> control on top of a BAA'd
+  channel — send the cloud model the least PHI required for the task.</li>
+</ul>
+<h3 id="technical-safeguards-on-the-local-linux-box-hipaa-security-rule">Technical safeguards on the local Linux box (HIPAA Security Rule)</h3>
+<p>Because you're self-hosting, <em>you</em> own the safeguards a SaaS BAA would otherwise
+provide:</p>
+<ul>
+<li><strong>Encryption at rest:</strong> full-disk encryption with <strong>LUKS/dm-crypt</strong> on the box
+  and on every backup target. PHI at rest unencrypted is a finding.</li>
+<li><strong>Encryption in transit:</strong> TLS 1.2+ for all egress; keep the trusted zone on a
+  private network; remote access only via <strong>WireGuard/Tailscale</strong>, never an open
+  port.</li>
+<li><strong>Access control &amp; authentication:</strong> unique per-user accounts, <strong>MFA</strong>,
+  role-based access (least privilege), and automatic session logoff. No shared
+  logins.</li>
+<li><strong>Audit controls:</strong> log every PHI access and every model call. LiteLLM can log
+  request metadata; pair with OS-level <code>auditd</code> and ship logs to append-only
+  storage. Retain audit logs (HIPAA expects ~6 years of compliance
+  documentation).</li>
+<li><strong>Integrity &amp; availability:</strong> checksums/versioning on PHI stores; tested
+  <strong>encrypted backups</strong> with a documented disaster-recovery plan.</li>
+<li><strong>Physical safeguards:</strong> a local box storing PHI must be <strong>physically secured</strong>
+  (locked room/rack, controlled facility access) — this is a real obligation that
+  cloud users outsource but you now own.</li>
+</ul>
+<h3 id="cloud-backupburst-hipaa-version">Cloud backup/burst — HIPAA version</h3>
+<p>Section 6's cloud backup must also sit under BAAs:</p>
+<ul>
+<li><strong>Backup storage:</strong> use a <strong>HIPAA-eligible, BAA-covered</strong> object store — <strong>AWS
+  S3, Google Cloud Storage, or Azure Blob</strong> (all sign BAAs). <strong>Backblaze B2 does
+  not sign a BAA</strong>, so it's out for PHI backups. Encrypt client-side with
+  restic/rclone regardless.</li>
+<li><strong>Compute burst:</strong> rent only from a provider that will sign a BAA and lets you
+  run in an isolated, encrypted environment (e.g. a dedicated GPU instance in your
+  BAA'd cloud account). Generic Vast.ai/RunPod marketplace hosts are <strong>not</strong>
+  appropriate for PHI without a BAA and tenancy guarantees — keep PHI workloads on
+  your local box or a BAA'd cloud VM, and reserve cheap marketplace GPUs for
+  non-PHI/de-identified work only.</li>
+</ul>
+<h3 id="administrative-requirements-dont-skip-these">Administrative requirements (don't skip these)</h3>
+<p>Architecture alone won't pass an audit. You also need: a documented <strong>risk
+analysis</strong>, written <strong>policies &amp; procedures</strong>, <strong>workforce training</strong>, a
+<strong>breach-notification</strong> process, signed BAAs with every vendor, and (if you're a
+Business Associate yourself) the obligations that flow down from your covered
+entity.</p>
+<h3 id="net-effect-on-the-design">Net effect on the design</h3>
+<p>The local-first architecture is <em>already</em> the HIPAA-friendly shape: keep PHI on
+the encrypted local box by default; when a frontier model is genuinely needed,
+send the <strong>minimum necessary</strong>, <strong>redacted</strong>, over TLS, <strong>only</strong> to a
+<strong>BAA-covered</strong> endpoint (Claude Messages API / OpenAI ZDR-eligible / Vertex AI);
+log everything; back up encrypted to a BAA'd store. OpenRouter, free tiers, and
+marketplace GPU hosts move to the "non-PHI / de-identified only" lane.</p>
+<hr />
+<h2 id="8-verifying-your-current-stack-tailscale-google-drive">8. Verifying your current stack (Tailscale + Google Drive)</h2>
+<p>You're already running <strong>Tailscale</strong> (secure transport) and <strong>Google Drive</strong>
+(cloud storage/backup). Both can meet the Section 7 security bar — the task is
+verifying they're <em>configured</em> to, not just present. Healthcare/HIPAA is not the
+driver here, so BAAs are optional; the bar is the security posture: encryption,
+least-privilege access, enforced MFA, audit logging, and keeping private info
+private.</p>
+<blockquote>
+<p><strong>Prerequisite — confirm this is Google Workspace, not consumer Drive.</strong> A
+custom domain (<code>@cwmi.us</code>) implies Workspace. Only Workspace exposes the admin
+console, audit logs, and DLP needed to <em>verify</em> anything below. If it's a
+consumer Gmail Drive, you cannot verify to this standard — migrate to Workspace
+first.</p>
+</blockquote>
+<h3 id="tailscale-checklist-secure-transport-layer">Tailscale checklist (secure transport layer)</h3>
+<ul>
+<li>[ ] <strong>Least-privilege ACLs</strong> — Admin console → <em>Access Controls</em>. Default-deny;
+      only specific users/devices reach the local box, only on needed ports. Not
+      the default allow-all (<code>"*" : ["*"]</code>).</li>
+<li>[ ] <strong>Device approval ON</strong> — <em>Settings → Device management</em>. New machines need
+      admin sign-off before joining the tailnet.</li>
+<li>[ ] <strong>Key expiry enabled</strong> — <em>Machines</em> list. No device shows "Key expiry
+      disabled"; keys rotate on schedule.</li>
+<li>[ ] <strong>MFA enforced via SSO</strong> — identity provider (Google/Okta). No
+      personal-account backdoors into the tailnet.</li>
+<li>[ ] <strong>No public exposure</strong> — Tailscale <strong>Funnel off</strong> unless deliberately
+      publishing a service; nodes reachable only inside the tailnet.</li>
+<li>[ ] <strong>ACL tests</strong> — add a <code>tests</code> block to the policy file asserting who <em>can</em>
+      and <em>cannot</em> reach the box, so the config can't silently regress.</li>
+<li>[ ] <strong>Tailnet lock</strong> (optional, high value) — <em>Settings → Tailnet lock</em>.
+      Cryptographically blocks rogue node injection.</li>
+<li>[ ] <strong>Audit logging</strong> — configuration + network-flow logs enabled and shipped
+      somewhere you review.</li>
+</ul>
+<p>Local sanity checks: <code>tailscale status</code> (who's on the tailnet) and
+<code>tailscale ping &lt;box&gt;</code> (confirm a direct, encrypted path). Transport is WireGuard
+end-to-end by default — the work is the <em>access policy</em>, not the crypto.</p>
+<h3 id="google-drive-checklist-cloud-storage-backup-leg">Google Drive checklist (cloud storage / backup leg)</h3>
+<p>First decide the data question: in the Section 6/7 design, <strong>private info should
+stay local</strong>. So either (a) only non-sensitive / already-sanitized data lives in
+Drive, or (b) sensitive data is there but <strong>client-side encrypted</strong> so Google
+holds only ciphertext.</p>
+<ul>
+<li>[ ] <strong>Workspace + DPA</strong> — confirm it's Workspace (not consumer) and Google's
+      Data Processing Amendment is accepted. (Workspace can also sign a BAA later
+      if healthcare ever returns.)</li>
+<li>[ ] <strong>External sharing locked down</strong> — <em>Apps → Drive → Sharing settings</em>.
+      Restricted or warn-on-external; default link sharing = <strong>"restricted,"</strong> not
+      "anyone with the link."</li>
+<li>[ ] <strong>2-Step Verification enforced</strong> — <em>Security → Authentication</em>. Mandatory
+      for all users, not optional.</li>
+<li>[ ] <strong>Audit logging</strong> — <em>Security → Investigation tool / Drive log events</em>. You
+      can see who viewed/shared/downloaded what; alert on external shares.</li>
+<li>[ ] <strong>DLP rules</strong> — <em>Security → Data protection</em>. Block/warn when content
+      matching private-data patterns is shared externally.</li>
+<li>[ ] <strong>Sharing audit</strong> — run an Investigation-tool query for files shared
+      publicly/externally; remediate anything unexpected.</li>
+<li>[ ] <strong>Third-party app access</strong> — <em>Security → API controls</em>. OAuth apps
+      allowlisted; block unverified apps from Drive scopes.</li>
+<li>[ ] <strong>Client-side encryption</strong> — <em>Security → Client-side encryption</em>. Enable for
+      sensitive folders if private data must live in Drive; Google then holds only
+      ciphertext.</li>
+<li>[ ] <strong>Encryption baseline</strong> — Google encrypts at rest + in transit by default;
+      fine for non-sensitive data, but <strong>not sufficient alone</strong> for your most
+      private data without CSE.</li>
+</ul>
+<h3 id="highest-value-checks">Highest-value checks</h3>
+<p>Across both tools, the two checks that surface the most real-world exposure:
+<strong>(1) enforce MFA</strong> (Tailscale SSO + Workspace 2SV), and <strong>(2) run the Drive
+external-sharing audit</strong>. Do those first.</p>
+<h3 id="bottom-line">Bottom line</h3>
+<ul>
+<li><strong>Tailscale</strong> is the right transport and easy to pass — tighten ACLs to
+  least-privilege, enable device approval + key expiry, enforce MFA via SSO, and
+  add ACL <code>tests</code>.</li>
+<li><strong>Google Drive</strong> works as the cloud-backup/collaboration leg <strong>for non-sensitive
+  or client-side-encrypted data</strong>. Decide: keep genuinely private info <em>off</em> Drive
+  (local-only, per the architecture), or turn on <strong>CSE + DLP + restricted external
+  sharing</strong> so Drive holds only data Google can't read and you can audit access.</li>
+</ul>
+<hr />
+<h2 id="9-operational-best-practices-reliability-resilience-security-results-backup">9. Operational best practices: reliability, resilience, security, results &amp; backup</h2>
+<p>The design principle that ties this all together: <strong>the local box is the floor.</strong>
+Every cloud dependency is an enhancement that can fail without taking you to zero.
+Build so that if every external LLM is down, you still operate locally — degraded
+in quality, never offline.</p>
+<h3 id="reliability-keep-the-local-box-healthy">Reliability (keep the local box healthy)</h3>
+<ul>
+<li><strong>Run the runtime as a managed service.</strong> Put Ollama/vLLM under <strong>systemd</strong> with
+  <code>Restart=always</code> so a crash self-heals. Add a watchdog that pings the model
+  endpoint and restarts on failure.</li>
+<li><strong>Keep models warm.</strong> Use keep-alive (e.g. Ollama <code>OLLAMA_KEEP_ALIVE</code>) so the
+  weights stay resident and you avoid multi-second cold starts.</li>
+<li><strong>Monitor the box.</strong> Track GPU temp/VRAM, OOM-kills, disk, and service uptime
+  (Prometheus + node/DCGM exporters, or a simple cron health check). Alert before
+  you run out of VRAM, not after.</li>
+<li><strong>Timeouts, retries, queueing.</strong> Every model call gets a timeout + bounded retry
+  with backoff; serialize heavy jobs through a queue so concurrent requests don't
+  OOM the GPU.</li>
+<li><strong>Pin everything offline.</strong> Pre-download and pin model weights + quant by digest
+  so a registry outage never blocks startup. The box must boot and serve with <strong>no
+  network</strong>.</li>
+</ul>
+<h3 id="resilience-failover-when-an-llm-goes-down">Resilience / failover (when an LLM goes down)</h3>
+<ul>
+<li><strong>Tiered fallback chain</strong> through the <strong>LiteLLM gateway</strong>:
+  <code>primary cloud → secondary cloud → local Gemma 27B → local Gemma 4B</code>. The chain
+  <em>ends</em> on local, so there's always an answer.</li>
+<li><strong>Health-aware routing + circuit breakers.</strong> The gateway marks a failing
+  provider unhealthy and stops hammering it; it retries that provider later
+  instead of blocking every request.</li>
+<li><strong>Local-only "lifeboat" mode.</strong> A single flag (or automatic trigger when all
+  cloud backends are unhealthy) routes 100% locally. Test it deliberately by
+  pulling the network.</li>
+<li><strong>Response caching.</strong> A semantic/result cache means repeated or recent queries
+  keep working through an outage and cut load. Cache lives on the local box.</li>
+<li><strong>Graceful degradation, signalled.</strong> When you fall back to a smaller/local
+  model, <strong>tag the response as "degraded mode"</strong> so downstream users/systems know
+  the quality tier changed.</li>
+<li><strong>Capacity headroom.</strong> Keep enough free VRAM that the local fallback can actually
+  load when cloud traffic suddenly lands on it — don't size the box to exactly the
+  primary model.</li>
+</ul>
+<h3 id="security-recap-enforced-continuously">Security (recap, enforced continuously)</h3>
+<ul>
+<li><strong>Encryption everywhere:</strong> LUKS at rest on box + backups; TLS 1.2+ and
+  <strong>Tailscale/WireGuard</strong> in transit; no open inbound ports.</li>
+<li><strong>Access:</strong> enforced MFA/SSO, least-privilege accounts, auto-logoff; secrets
+  (API keys) in a vault or env file with strict perms — never in code or git.</li>
+<li><strong>Egress boundary:</strong> the trusted zone reaches the internet <strong>only</strong> through the
+  gateway, which applies minimum-necessary redaction before any cloud call.</li>
+<li><strong>Patch &amp; rotate:</strong> keep OS/drivers/runtime patched; rotate API keys and
+  Tailscale keys on a schedule.</li>
+<li><strong>Audit:</strong> log every model call + PHI/private-data access to append-only storage;
+  review periodically (ties to Section 8).</li>
+</ul>
+<h3 id="results-quality-dont-let-reliability-cost-correctness">Results / quality (don't let reliability cost correctness)</h3>
+<ul>
+<li><strong>Pin model + quant versions.</strong> Don't silently auto-upgrade; a model swap can
+  change behavior. Promote new versions deliberately.</li>
+<li><strong>Golden eval set.</strong> Keep a small regression suite of representative
+  prompts+expected outputs; run it whenever you change model, quant, or prompt to
+  catch quality drops — <em>especially</em> before trusting a fallback model.</li>
+<li><strong>Validate outputs.</strong> Use structured/JSON mode + schema validation; reject or
+  retry malformed results rather than passing them downstream.</li>
+<li><strong>Quality-aware routing.</strong> Hard tasks → strongest available model; add a
+  critique/verify pass for high-stakes outputs; keep a human in the loop where it
+  matters.</li>
+<li><strong>Version prompts in git</strong> alongside the gateway and infra config.</li>
+</ul>
+<h3 id="backup-protocols">Backup protocols</h3>
+<ul>
+<li><strong>3-2-1 rule:</strong> ≥3 copies, on 2 media types, with 1 off-site. Off-site = your
+  <strong>Google Drive</strong> (client-side encrypted) and/or S3/GCS.</li>
+<li><strong>Back up what you can't re-download.</strong> Base Gemma weights are re-pullable (just
+  record the version+digest); prioritize your <strong>own artifacts</strong>: fine-tunes/LoRAs,
+  datasets, prompts, gateway config, <strong>Tailscale ACL policy</strong>, vector DB/embeddings,
+  and data stores.</li>
+<li><strong>Encrypt client-side, then sync.</strong> <code>restic</code> or <code>rclone crypt</code> → Drive/S3 so the
+  cloud holds only ciphertext. Automate via systemd timer/cron; keep <strong>versioned,
+  append-only</strong> snapshots to survive ransomware/accidental deletion.</li>
+<li><strong>Config-as-code.</strong> Keep box setup (compose/systemd units, LiteLLM config,
+  Tailscale ACLs, prompts) in <strong>git</strong> so the entire environment is reproducible
+  from scratch.</li>
+<li><strong>Test restores.</strong> A backup you've never restored is a hope, not a backup.
+  Schedule periodic restore drills.</li>
+<li><strong>Write a DR runbook</strong> with target <strong>RPO/RTO</strong> (how much data you can lose / how
+  fast you must be back) and the exact steps to rebuild the box from backups.</li>
+</ul>
+<h3 id="one-line-summary">One-line summary</h3>
+<p>Local Gemma is the always-on floor; LiteLLM gives tiered, health-checked failover
+ending locally; everything private is encrypted in transit and at rest with
+enforced MFA and an audited egress boundary; quality is protected by pinned
+versions + a golden eval set; and a 3-2-1, client-side-encrypted, config-as-code,
+restore-tested backup regime lets you rebuild the whole box on demand.</p>
+<hr />
+<h2 id="10-the-optimized-plan-recommended-build">10. The optimized plan (recommended build)</h2>
+<p>This is the single opinionated blueprint, tuned to the stated constraints:
+<strong>local-first for private data, cloud LLMs for the hard parts, resilient to any
+model going down, Linux, not healthcare, already on Tailscale + Google Drive.</strong>
+Everything below is a concrete pick, not a menu.</p>
+<h3 id="hardware-one-box">Hardware — one box</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Pick</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GPU</strong></td>
+<td><strong>RTX 5090 32GB</strong> (primary) · <em>RTX 3090 24GB used (~$800) = value pick</em></td>
+<td>32 GB runs Gemma 3 27B Q4 <strong>and</strong> keeps a small fallback model warm at the same time — that headroom <em>is</em> the resilience.</td>
+</tr>
+<tr>
+<td><strong>CPU</strong></td>
+<td>Ryzen 9 / Core i7</td>
+<td>Handles redaction + CPU-offload of extra layers.</td>
+</tr>
+<tr>
+<td><strong>RAM</strong></td>
+<td><strong>64 GB</strong></td>
+<td>Lets you offload layers / run bigger quants than VRAM alone.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>2 TB NVMe, <strong>LUKS-encrypted</strong></td>
+<td>Encryption at rest; room for multiple model weights.</td>
+</tr>
+<tr>
+<td><strong>OS</strong></td>
+<td><strong>Ubuntu 24.04 LTS</strong></td>
+<td>Best NVIDIA/CUDA support; what the guides assume.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>All-in: ~$2,500–3,000 (RTX 5090) or ~$1,500–2,000 (used RTX 3090).</strong></p>
+<h3 id="software-stack-one-of-each">Software stack — one of each</h3>
+<ul>
+<li><strong>Runtime:</strong> <strong>Ollama</strong>, run under <strong>systemd</strong> (<code>Restart=always</code>, <code>OLLAMA_KEEP_ALIVE</code>).
+  <em>(gemma.cpp is the Google-first-party alternative; Ollama wins on ease + speed.)</em></li>
+<li><strong>Models, both kept warm:</strong></li>
+<li><strong>Gemma 3 27B (Q4)</strong> — primary local model for private data.</li>
+<li><strong>Gemma 3 4B</strong> — triage/routing, redaction helper, and fast last-resort fallback.</li>
+<li><strong>Gateway:</strong> <strong>LiteLLM proxy</strong> — one OpenAI-compatible endpoint, health-checked
+  tiered failover.</li>
+<li><strong>Privacy boundary:</strong> <strong>Microsoft Presidio</strong> — minimum-necessary redaction before
+  any cloud call; default-route private data to local only.</li>
+<li><strong>Access:</strong> <strong>Tailscale</strong> (already in place) — hardened ACLs, enforced MFA/SSO,
+  no open inbound ports.</li>
+<li><strong>Backup:</strong> <strong>restic</strong> (client-side encrypted) → <strong>Google Drive</strong> (already in
+  place) + a second target (S3/GCS) for 3-2-1.</li>
+</ul>
+<h3 id="the-one-failover-chain-drives-resilience">The one failover chain (drives resilience)</h3>
+<pre><code>complex/non-private task →  Claude (API)  →  Gemini (Vertex)  →  local Gemma 27B  →  local Gemma 4B
+private/sensitive task   →  local Gemma 27B  →  local Gemma 4B          (never leaves the box)
+</code></pre>
+<p>The chain <strong>always ends locally</strong>, so no external outage takes you to zero. Cloud
+models are used only for hard, non-private (or redacted) work. Since you're not in
+healthcare, BAAs are optional — but still prefer API tiers that <strong>don't train on
+your data</strong> and avoid free tiers that do.</p>
+<h3 id="rollout-phased-for-fastest-value-lowest-risk">Rollout — phased for fastest value, lowest risk</h3>
+<ol>
+<li><strong>Phase 0 — Harden what you already run</strong> <em>(do first, cheap)</em>: Tailscale ACLs to
+   least-privilege + device approval + enforced MFA; run the <strong>Google Drive
+   external-sharing audit</strong>, restrict external sharing, enable CSE for sensitive
+   folders. (Section 8.)</li>
+<li><strong>Phase 1 — Stand up the box:</strong> Ubuntu 24.04 + LUKS; NVIDIA driver + CUDA;
+   Ollama under systemd; pull Gemma 27B + 4B; expose only over Tailscale. <em>You now
+   have a working private local LLM.</em></li>
+<li><strong>Phase 2 — Gateway + failover:</strong> LiteLLM with the fallback chain above + result
+   cache; <strong>test lifeboat mode by pulling the network</strong> and confirming local still
+   answers.</li>
+<li><strong>Phase 3 — Privacy boundary:</strong> Presidio redaction + default-local routing;
+   lock egress so the trusted zone reaches the internet only through the gateway.</li>
+<li><strong>Phase 4 — Quality + ops:</strong> pin model/quant versions; build a small <strong>golden
+   eval set</strong>; add monitoring/alerts (VRAM, OOM, uptime).</li>
+<li><strong>Phase 5 — Backup + DR:</strong> automate restic → Drive/S3 (versioned, append-only);
+   put all config (LiteLLM, systemd units, Tailscale ACLs, prompts) in <strong>git</strong>;
+   run a <strong>restore drill</strong>; write the DR runbook with RPO/RTO.</li>
+</ol>
+<h3 id="running-cost-after-build">Running cost after build</h3>
+<ul>
+<li><strong>Routine work:</strong> ~$0 marginal (runs locally).</li>
+<li><strong>Cloud burst/complex tasks:</strong> a few dollars/month at low volume (per-token APIs).</li>
+<li><strong>Backup:</strong> ~$0 extra on existing Google Drive; ~$5–10/mo if adding S3/GCS.</li>
+</ul>
+<h3 id="why-this-is-the-optimum">Why this is the optimum</h3>
+<p>It maximizes local/private operation, makes the cloud purely additive (so reliability
+never depends on it), reuses your existing Tailscale + Google Drive instead of new
+tooling, and stays a single maintainable box. Scale up later by swapping the GPU
+(toward RTX PRO 6000 / Mac Studio M3 Ultra) or adding a BAA'd cloud backend — no
+redesign required.</p>
+<hr />
+<h2 id="11-shopping-list-real-boxes-pricing-purchase-links-june-2026">11. Shopping list — real boxes, pricing &amp; purchase links (June 2026)</h2>
+<blockquote>
+<p><strong>Price-shock warning.</strong> A 2026 AI-driven memory shortage has roughly <strong>doubled
+DDR5/SSD prices</strong> and pushed the <strong>RTX 5090 35–100%+ over its $1,999 MSRP</strong>.
+Analysts expect elevated prices through 2027–2028. Major retailer pages
+(Newegg, Best Buy, eBay, Amazon, builder sites) block automated fetching, so
+every figure below comes from search snapshots and price trackers, <strong>not live
+page reads — confirm price and stock in a browser before buying.</strong> All three
+24–32 GB tiers run Gemma 3 27B at Q4 (~16–17 GB) comfortably.</p>
+</blockquote>
+<h3 id="tier-a-premium-rtx-5090-32gb-the-section-10-primary-pick">Tier A — Premium: RTX 5090 32GB (the Section 10 primary pick)</h3>
+<p>32 GB runs Gemma 27B Q4 <em>and</em> keeps a small model warm beside it.</p>
+<p><strong>GPU alone (cheapest first):</strong>
+| Card | Retailer | ~Price | Link |
+|------|----------|--------|------|
+| Gigabyte RTX 5090 Aorus Master 32G | Best Buy | ~$2,700 | <a href="https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-5090-aorus-master-32g-gddr7-pci-express-5-0-graphics-card-black/6615931.p?skuId=6615931">bestbuy.com</a> |
+| ASUS TUF Gaming RTX 5090 32GB | Newegg | ~$2,910 | <a href="https://www.newegg.com/asus-tuf-gaming-tuf-rtx5090-32g-gaming-geforce-rtx-5090-32gb-graphics-card-triple-fans/p/N82E16814126752">newegg.com</a> |
+| Gigabyte Gaming OC / MSI Trio OC | Newegg | ~$3,300 | <a href="https://www.newegg.com/p/pl?d=rtx+5090">Newegg 5090 list</a> |
+| MSI Suprim Liquid SOC 32GB (premium) | Newegg | ~$3,500 | <a href="https://www.newegg.com/msi-rtx-5090-32g-suprim-liquid-soc-geforce-rtx-5090-32gb-graphics-card-liquid-cooler/p/N82E16814137916">newegg.com</a> |</p>
+<p><strong>Prebuilt desktops (64 GB RAM):</strong>
+| System | CPU / RAM / Storage | ~Price | Link |
+|--------|---------------------|--------|------|
+| <strong>iBUYPOWER RDY Y70 B05</strong> ⭐ best value, in stock | Core Ultra 9 285K / 64GB / 4TB | ~$4,799 | <a href="https://www.ibuypower.com/store/rdy-y70-b05">ibuypower.com</a> |
+| NZXT Player Three Prime | Ryzen 7 9800X3D / 64GB / 4TB | ~$4,999 | <a href="https://nzxt.com/products/player-three-prime">nzxt.com</a> |
+| Skytech Legacy 4 | Ryzen 9 9950X3D / 64GB / 4TB | ~$4,999–5,799 | <a href="https://skytechgaming.com/product/legacy-4-amd-r9-9950x3d-nvidia-rtx-5090-32gb-4-tb-nvme-gen4-64gb-ram">skytechgaming.com</a> |
+| CyberPowerPC Gamer Supreme | Ryzen 9 9950X / 64GB / 4TB | ~$5,100 | <a href="https://www.bestbuy.com/product/cyberpowerpc-gaming-desktop-amd-ryzen-9-9950x-nvidia-geforce-rtx-5090-32gb-64gb-ddr5-4tb-pcie-4-0-ssd-black/J3L7GQW86X">bestbuy.com</a> |</p>
+<p><em>Linux note: the 5090 (Blackwell) needs NVIDIA driver 570+ and CUDA 12.8+ — all of Ollama/llama.cpp/vLLM support it.</em></p>
+<h3 id="tier-b-value-used-rtx-3090-24gb-best-vram-the-value-pick">Tier B — Value: used RTX 3090 24GB (best $/VRAM, the value pick)</h3>
+<p>The consensus value champion: ~87 tok/s class on 27B Q4, ~20% slower than a
+4090 at a third of the price, CUDA-native.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>~Price</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Used RTX 3090 24GB</strong> (EVGA/FE preferred)</td>
+<td>~$800–1,050</td>
+<td><a href="https://www.ebay.com/sch/i.html?_nkw=rtx+3090+24gb&amp;_sop=15">eBay listings</a> · <a href="https://bestvaluegpu.com/history/new-and-used-rtx-3090-price-history-and-specs/">price tracker</a> · <a href="https://www.reddit.com/r/hardwareswap/">r/hardwareswap</a></td>
+</tr>
+<tr>
+<td>AMD RX 7900 XTX 24GB (new, warranty)</td>
+<td>~$1,100–1,340 new / ~$790–900 used</td>
+<td><a href="https://www.newegg.com/sapphire-tech-pulse-11322-02-20g-radeon-rx-7900-xtx-24gb-graphics-card-triple-fans/p/N82E16814202429">Sapphire Pulse @ Newegg</a> · <a href="https://bestvaluegpu.com/history/new-and-used-rx-7900-xtx-price-history-and-specs/">tracker</a></td>
+</tr>
+<tr>
+<td>RTX 4090 24GB (skip — poor value now)</td>
+<td>~$2,200–2,470 used</td>
+<td><a href="https://www.ebay.com/sch/i.html?_nkw=rtx+4090&amp;_sop=12">eBay</a> · <a href="https://bestvaluegpu.com/history/new-and-used-rtx-4090-price-history-and-specs/">tracker</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>DIY build around a used 3090 (≈ $2,635–2,770 total):</strong>
+| Part | Pick | ~Price |
+|------|------|--------|
+| GPU | Used RTX 3090 24GB | ~$950 |
+| CPU | Ryzen 7 9700X | ~$300 |
+| Motherboard | B650/B650E (AM5) | ~$170 |
+| RAM | 64GB DDR5-5600 <em>(shortage-inflated)</em> | ~$600–710 |
+| SSD | 2TB Gen4 NVMe (990 Pro / SN850X) | ~$345–370 |
+| PSU | Seasonic Focus GX-1000 | ~$140 |
+| Case + air cooler | Fractal/Phanteks + Peerless Assassin | ~$130 |</p>
+<p>Build live on <a href="https://pcpartpicker.com/list/">PCPartPicker</a> to pull current prices. <em>RAM is ~⅓ of the cost right now thanks to the shortage; 32 GB (~$375) also works since the model lives in VRAM.</em> AMD note: on the 7900 XTX, llama.cpp's <strong>Vulkan</strong> backend currently beats ROCm — viable but more setup friction than CUDA.</p>
+<h3 id="tier-c-turnkey-linux-ai-workstations-ubuntupop_os-preinstalled-ai-literate-support">Tier C — Turnkey Linux AI workstations (Ubuntu/Pop!_OS preinstalled, AI-literate support)</h3>
+<p>Pay a premium for a tested, driver-ready, warrantied box from a vendor who knows CUDA-on-Linux.</p>
+<table>
+<thead>
+<tr>
+<th>Vendor / model</th>
+<th>GPU</th>
+<th>Base price</th>
+<th>As-configured for 27B</th>
+<th>Ubuntu</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BIZON V3000 G4</strong> ⭐ lowest-cost turnkey single-GPU</td>
+<td>up to RTX 5090 32GB</td>
+<td>$3,191</td>
+<td>~$3.5k–4.5k w/ 5090</td>
+<td>✅ preinstalled + AI stack</td>
+<td><a href="https://bizon-tech.com/bizon-v3000.html">bizon-tech.com</a></td>
+</tr>
+<tr>
+<td><strong>System76 Thelio Mira</strong></td>
+<td>up to RTX 5090 32GB</td>
+<td>$1,699</td>
+<td>~$8.5k–9.5k w/ 5090 <em>(5090 upgrade alone +$5,299)</em></td>
+<td>✅ Pop!_OS/Ubuntu</td>
+<td><a href="https://system76.com/desktops/thelio-mira">system76.com</a></td>
+</tr>
+<tr>
+<td><strong>Puget Single-GPU AI tower</strong> (buy-409)</td>
+<td>up to RTX 5090 32GB</td>
+<td>quote</td>
+<td>~$5k–8k (est.)</td>
+<td>✅ HW supported; not the OS</td>
+<td><a href="https://www.pugetsystems.com/solutions/ai/develop/buy-409/">pugetsystems.com</a></td>
+</tr>
+<tr>
+<td><strong>Maingear MG-1 / Pro WS</strong></td>
+<td>RTX 5090 32GB</td>
+<td>quote</td>
+<td>~$6k–8.5k (est.)</td>
+<td>✅ Ubuntu/dual-boot; explicit AI marketing</td>
+<td><a href="https://maingear.com/collections/new-mg-1">maingear.com</a></td>
+</tr>
+<tr>
+<td>System76 Thelio Major</td>
+<td>RTX PRO 6000 96GB</td>
+<td>$6,999</td>
+<td>~$16k–22k (FP16 27B + headroom)</td>
+<td>✅</td>
+<td><a href="https://system76.com/desktops/thelio-major">system76.com</a></td>
+</tr>
+<tr>
+<td>Exxact Valence (VWS-135223847)</td>
+<td>RTX PRO 6000 96GB</td>
+<td>$6,215</td>
+<td>low-to-mid five figures</td>
+<td>✅ + CUDA-X stack</td>
+<td><a href="https://configurator.exxactcorp.com/configure/VWS-135223847">configurator</a></td>
+</tr>
+<tr>
+<td>Puget Multi-GPU Threadripper PRO (buy-570)</td>
+<td>RTX PRO 6000 96GB</td>
+<td>quote</td>
+<td>~$13k–18k+</td>
+<td>✅ HW supported; not the OS</td>
+<td><a href="https://www.pugetsystems.com/solutions/ai/develop/buy-570/">pugetsystems.com</a></td>
+</tr>
+</tbody>
+</table>
+<p>BIZON and System76 ship Ubuntu + a preinstalled AI stack (CUDA, Ollama, vLLM, llama.cpp, PyTorch) — "power on and run Gemma in minutes." <strong>Maingear</strong> explicitly offers Ubuntu/dual-boot and markets local-LLM workstations (its Pro AI line). <strong>Puget</strong> preinstalls Ubuntu and validates the AI stack but warns it does <strong>not</strong> support the Linux OS itself (hardware/labor only). <strong>Origin PC</strong> is a weaker Linux fit — Windows-default; you'd order no-OS (~$129 off) and self-install (<a href="https://www.originpc.com/configurator/genesis/">configurator</a>). <strong>Lambda is no longer an option</strong> — it exited hardware in Aug 2025 (its free <a href="https://lambda.ai/lambda-stack-deep-learning-software">Lambda Stack</a> installer still works on any Ubuntu box). <em>Turnkey vendor sites all blocked automated fetching, so as-configured prices are estimates — get a live quote from the configurator.</em></p>
+<h3 id="which-to-buy-mapped-to-the-section-10-plan">Which to buy (mapped to the Section 10 plan)</h3>
+<ul>
+<li><strong>Best overall (premium):</strong> <strong>iBUYPOWER RDY Y70 B05 (~$4,799)</strong> — RTX 5090 32GB, 64 GB, 4 TB, in stock, cheapest turnkey 5090; wipe and install Ubuntu. Or <strong>DIY 5090 build ~$3,800–4,400</strong> to save ~$700–1,200.</li>
+<li><strong>Best value:</strong> <strong>DIY used-RTX-3090 build (~$2,650–2,800)</strong> — runs the exact same Gemma 27B Q4 workload; spend the savings on a second backup drive.</li>
+<li><strong>Best zero-hassle Linux:</strong> <strong>BIZON V3000 G4</strong> w/ single RTX 5090 (~$3.5k–4.5k) — Ubuntu + AI stack preinstalled, AI-literate support, up to 5-yr warranty.</li>
+<li><strong>Want FP16 27B / room to grow to 70B+:</strong> System76 Thelio Major or Exxact Valence with RTX PRO 6000 96GB (low-to-mid five figures).</li>
+</ul>
+<hr />
+<h2 id="12-upgradeability-future-proofing">12. Upgradeability &amp; future-proofing</h2>
+<p>All three recommended boxes can be upgraded — but to <strong>different ceilings</strong>. The
+parts you can swap anytime are the GPU, RAM (to the board's max), and storage. The
+part you <em>can't</em> change later is the <strong>motherboard/chassis platform</strong> — how many
+full-speed GPU slots, PCIe lanes, and RAM slots you get is fixed at purchase. So
+the real future-proofing decision is made on day one: single-GPU forever, or room
+for a second GPU later.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>GPU swap</th>
+<th>Add 2nd GPU</th>
+<th>RAM ceiling</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>iBUYPOWER RDY Y70 (prebuilt 5090)</strong></td>
+<td>✅ easy</td>
+<td>⚠️ usually needs new PSU + often new board</td>
+<td>128–192 GB (board max)</td>
+<td>Standard ATX parts; consumer board = one full-speed GPU slot. Check PSU wattage + case clearance before a bigger card.</td>
+</tr>
+<tr>
+<td><strong>DIY 3090 build</strong></td>
+<td>✅ easiest</td>
+<td>⚠️ consumer AM5 limits to one full-bandwidth slot</td>
+<td>128–192 GB</td>
+<td>Most flexible by design. Buy 1000W PSU + roomy case up front so a GPU swap is drop-in.</td>
+</tr>
+<tr>
+<td><strong>BIZON V3000 G4</strong></td>
+<td>✅</td>
+<td>✅ <strong>factory 2× RTX 5090 capable</strong></td>
+<td>up to 192 GB DDR5</td>
+<td>Built for upgrades; vendor-supported without voiding warranty. The headroom is part of the turnkey premium.</td>
+</tr>
+<tr>
+<td><strong>Threadripper/Xeon WS</strong> (Puget buy-570, System76 Thelio Major, Exxact)</td>
+<td>✅</td>
+<td>✅ <strong>2–4 GPUs</strong> (lots of PCIe lanes)</td>
+<td>256 GB–2 TB ECC</td>
+<td>The real multi-GPU / scale-to-70B+ path. Costs five figures.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="decision-rule">Decision rule</h3>
+<ul>
+<li><strong>Only ever one big GPU?</strong> Any of the three picks is fine — choose on price. A
+  single 24–32 GB card runs Gemma 27B Q4 indefinitely.</li>
+<li><strong>Might run 70B+ on two GPUs someday?</strong> Buy multi-GPU-capable hardware <strong>now</strong> —
+  the <strong>BIZON V3000 (2× 5090)</strong> or a Threadripper/Xeon workstation. Retrofitting a
+  second GPU into a consumer prebuilt usually means a new PSU and often a new
+  motherboard — effectively a rebuild.</li>
+</ul>
+<h3 id="upgrade-timing-notes">Upgrade-timing notes</h3>
+<ul>
+<li><strong>Buy the RAM you need at purchase.</strong> The 2026 memory shortage makes adding RAM
+  later unusually expensive — there's no cheap "add it next year" path right now.</li>
+<li><strong>GPU is the highest-leverage upgrade</strong> (more VRAM → bigger model / longer
+  context / higher quant). Size the PSU and case for the <em>next</em> GPU, not just the
+  current one.</li>
+<li><strong>Architecture doesn't change when you upgrade hardware.</strong> The Section 10 stack
+  (Ollama + LiteLLM + Tailscale + Drive) is unaffected by a GPU/RAM swap — and you
+  can always add a BAA'd or rented cloud backend for burst capacity instead of
+  buying more silicon.</li>
+</ul>
+<hr />
+<h2 id="tldr-recommendations">TL;DR recommendations</h2>
+<p><strong>For your stated goal (local-first, resilient, Linux, Tailscale + Drive):</strong> build
+the Section 10 plan around one of three boxes from Section 11 — ⭐ <strong>DIY used-RTX-3090
+build (~$2,650–2,800)</strong> for best value, <strong>iBUYPOWER RDY Y70 B05 (~$4,799)</strong> for a
+turnkey 5090 you wipe to Ubuntu, or <strong>BIZON V3000 G4 (~$3.5k–4.5k)</strong> for zero-hassle
+Linux with Ubuntu + AI stack preinstalled and room to add a 2nd GPU. Run Gemma 3 27B
+(Q4) + 4B under Ollama, front it with LiteLLM failover ending locally, back up
+encrypted to your existing Google Drive.</p>
+<p>General guidance by use case:</p>
+<ul>
+<li><strong>Just want to try Gemma cheaply:</strong> use <strong>Google AI Studio's free Gemma API</strong>, or
+  rent an <strong>RTX 4090 at ~$0.40/hr</strong>.</li>
+<li><strong>Cheapest local box (4B / 12B-Q4):</strong> <strong>RTX 3060 12GB</strong> (~$280–$466) in a PC, or a
+  <strong>Mac mini M4 16 GB</strong> (~$599).</li>
+<li><strong>12B daily driver:</strong> <strong>RTX 5070 Ti 16GB</strong> (~$749 MSRP) or <strong>Mac mini M4 Pro 24–48
+  GB</strong> (~$1,399–1,999).</li>
+<li><strong>27B at Q4, best value:</strong> <strong>AMD RX 7900 XTX 24GB</strong> (~$750–$850 used) or <strong>Mac Studio
+  M4 Max 64 GB</strong> (~$2,500).</li>
+<li><strong>27B with headroom / near-Q8, single box:</strong> <strong>RTX 5090 32GB</strong> (premium right now) or
+  <strong>Mac Studio M3 Ultra 96 GB+</strong> (~$3,999+).</li>
+<li><strong>27B at full BF16 / serving many users:</strong> rent an <strong>A100/H100 80GB</strong>, or buy an <strong>RTX
+  PRO 6000 Blackwell 96GB</strong> (~$13k) for a single full-precision card.</li>
+</ul>
+<hr />
+<h2 id="sources">Sources</h2>
+<p><strong>Model memory requirements</strong>
+- Google Developers Blog — Gemma 3 QAT: https://developers.googleblog.com/en/gemma-3-quantized-aware-trained-state-of-the-art-ai-to-consumer-gpus/
+- Ollama library — gemma3: https://ollama.com/library/gemma3 · gemma2: https://ollama.com/library/gemma2
+- Gemma 3n docs: https://ai.google.dev/gemma/docs/gemma-3n · HF blog: https://huggingface.co/blog/gemma3n
+- Gemma 3 Technical Report (KV/attention): https://arxiv.org/html/2503.19786v1
+- APXML model pages: https://apxml.com/models/gemma-3-27b · https://apxml.com/models/gemma-2-27b
+- bartowski GGUF quants: https://huggingface.co/bartowski/gemma-2-27b-it-GGUF</p>
+<p><strong>Consumer GPUs &amp; pricing</strong>
+- Will It Run AI — Gemma 3 guide: https://willitrunai.com/blog/gemma-3-local-inference-guide
+- Best GPUs for Local AI 2026: https://localaimaster.com/blog/best-gpus-for-ai-2025
+- Tom's Hardware (RTX 50-series MSRP, 5070 Ti $750, 4080 Super $999, 3060 2026 comeback): https://www.tomshardware.com/pc-components/gpus/
+- BestValueGPU price trackers (5090, 4090): https://bestvaluegpu.com/
+- RX 7900 XTX for local AI: https://localaimaster.com/blog/radeon-7900-xtx-local-ai · RX 9070 XT: https://gamersnexus.net/gpus/amd-rx-9070-9070-xt-gpu-prices-specs-release-date</p>
+<p><strong>Apple Silicon</strong>
+- Increase VRAM on Apple Silicon: https://blog.peddals.com/en/fine-tune-vram-size-of-mac-for-llm/
+- M-series bandwidth: https://craftrigs.com/benchmarks/apple-silicon-m-series-llm-benchmark-m1-m5/ · https://en.wikipedia.org/wiki/Apple_silicon
+- Gemma 3 LM Studio vs Ollama on M3 Ultra: https://medium.com/google-cloud/gemma-3-performance-tokens-per-second-in-lm-studio-vs-ollama-mac-studio-m3-ultra-7e1af75438e4
+- Apple Store: Mac Studio https://www.apple.com/shop/buy-mac/mac-studio · Mac mini https://www.apple.com/shop/buy-mac/mac-mini · MacBook Air specs https://www.apple.com/macbook-air/specs/
+- Maxed M3 Ultra $14,099: https://www.macrumors.com/2025/03/05/maxed-out-m3-ultra-mac-studio-14099/</p>
+<p><strong>Datacenter GPUs &amp; pricing</strong>
+- RTX PRO 6000 Blackwell pricing: https://www.thundercompute.com/blog/nvidia-rtx-pro-6000-pricing · VideoCardz/Tom's Hardware MSRP-hike coverage
+- L4/L40S: https://modal.com/blog/nvidia-l40s-price-article · https://getdeploying.com/gpus/nvidia-l40s
+- A100: https://www.northflank.com/blog/nvidia-a100-gpu-cost · https://directmacro.com/blog/post/nvidia-a100-in-2025
+- H100: https://www.gmicloud.ai/en/blog/nvidia-h100-gpu-pricing-2026-rent-vs-buy-cost-analysis · H200: https://www.thundercompute.com/blog/nvidia-h200-pricing
+- Gemma 3 27B VRAM (deploy): https://www.spheron.network/blog/deploy-gemma-3-gpu-cloud</p>
+<p><strong>Cloud rental &amp; APIs</strong>
+- RunPod pricing: https://www.runpod.io/pricing · Vast.ai: https://vast.ai/pricing · Lambda: https://lambda.ai/pricing
+- Cloud GPU comparison: https://www.cloudzero.com/blog/cloud-gpu-pricing-comparison/ · https://getdeploying.com/gpus
+- GCP GPU pricing: https://cloud.google.com/compute/gpus-pricing
+- Together AI: https://www.together.ai/pricing · OpenRouter Gemma: https://openrouter.ai/google
+- Gemini/Gemma API pricing: https://ai.google.dev/gemini-api/docs/pricing · Vertex AI: https://cloud.google.com/vertex-ai/pricing</p>
+<hr />
+<p><em>Compiled June 2026. GPU and cloud pricing is volatile — especially during the
+current memory shortage — so confirm live figures before purchasing. A few
+source pages returned HTTP 403 to automated fetching; figures from those rest on
+search-result extracts plus standard bytes-per-parameter math, and are flagged as
+approximate throughout.</em></p></body></html>
