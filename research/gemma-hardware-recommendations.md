@@ -591,6 +591,89 @@ restore-tested backup regime lets you rebuild the whole box on demand.
 
 ---
 
+## 10. The optimized plan (recommended build)
+
+This is the single opinionated blueprint, tuned to the stated constraints:
+**local-first for private data, cloud LLMs for the hard parts, resilient to any
+model going down, Linux, not healthcare, already on Tailscale + Google Drive.**
+Everything below is a concrete pick, not a menu.
+
+### Hardware — one box
+
+| Part | Pick | Why |
+|------|------|-----|
+| **GPU** | **RTX 5090 32GB** (primary) · *RTX 3090 24GB used (~$800) = value pick* | 32 GB runs Gemma 3 27B Q4 **and** keeps a small fallback model warm at the same time — that headroom *is* the resilience. |
+| **CPU** | Ryzen 9 / Core i7 | Handles redaction + CPU-offload of extra layers. |
+| **RAM** | **64 GB** | Lets you offload layers / run bigger quants than VRAM alone. |
+| **Storage** | 2 TB NVMe, **LUKS-encrypted** | Encryption at rest; room for multiple model weights. |
+| **OS** | **Ubuntu 24.04 LTS** | Best NVIDIA/CUDA support; what the guides assume. |
+
+**All-in: ~$2,500–3,000 (RTX 5090) or ~$1,500–2,000 (used RTX 3090).**
+
+### Software stack — one of each
+
+- **Runtime:** **Ollama**, run under **systemd** (`Restart=always`, `OLLAMA_KEEP_ALIVE`).
+  *(gemma.cpp is the Google-first-party alternative; Ollama wins on ease + speed.)*
+- **Models, both kept warm:**
+  - **Gemma 3 27B (Q4)** — primary local model for private data.
+  - **Gemma 3 4B** — triage/routing, redaction helper, and fast last-resort fallback.
+- **Gateway:** **LiteLLM proxy** — one OpenAI-compatible endpoint, health-checked
+  tiered failover.
+- **Privacy boundary:** **Microsoft Presidio** — minimum-necessary redaction before
+  any cloud call; default-route private data to local only.
+- **Access:** **Tailscale** (already in place) — hardened ACLs, enforced MFA/SSO,
+  no open inbound ports.
+- **Backup:** **restic** (client-side encrypted) → **Google Drive** (already in
+  place) + a second target (S3/GCS) for 3-2-1.
+
+### The one failover chain (drives resilience)
+
+```
+complex/non-private task →  Claude (API)  →  Gemini (Vertex)  →  local Gemma 27B  →  local Gemma 4B
+private/sensitive task   →  local Gemma 27B  →  local Gemma 4B          (never leaves the box)
+```
+
+The chain **always ends locally**, so no external outage takes you to zero. Cloud
+models are used only for hard, non-private (or redacted) work. Since you're not in
+healthcare, BAAs are optional — but still prefer API tiers that **don't train on
+your data** and avoid free tiers that do.
+
+### Rollout — phased for fastest value, lowest risk
+
+1. **Phase 0 — Harden what you already run** *(do first, cheap)*: Tailscale ACLs to
+   least-privilege + device approval + enforced MFA; run the **Google Drive
+   external-sharing audit**, restrict external sharing, enable CSE for sensitive
+   folders. (Section 8.)
+2. **Phase 1 — Stand up the box:** Ubuntu 24.04 + LUKS; NVIDIA driver + CUDA;
+   Ollama under systemd; pull Gemma 27B + 4B; expose only over Tailscale. *You now
+   have a working private local LLM.*
+3. **Phase 2 — Gateway + failover:** LiteLLM with the fallback chain above + result
+   cache; **test lifeboat mode by pulling the network** and confirming local still
+   answers.
+4. **Phase 3 — Privacy boundary:** Presidio redaction + default-local routing;
+   lock egress so the trusted zone reaches the internet only through the gateway.
+5. **Phase 4 — Quality + ops:** pin model/quant versions; build a small **golden
+   eval set**; add monitoring/alerts (VRAM, OOM, uptime).
+6. **Phase 5 — Backup + DR:** automate restic → Drive/S3 (versioned, append-only);
+   put all config (LiteLLM, systemd units, Tailscale ACLs, prompts) in **git**;
+   run a **restore drill**; write the DR runbook with RPO/RTO.
+
+### Running cost after build
+
+- **Routine work:** ~$0 marginal (runs locally).
+- **Cloud burst/complex tasks:** a few dollars/month at low volume (per-token APIs).
+- **Backup:** ~$0 extra on existing Google Drive; ~$5–10/mo if adding S3/GCS.
+
+### Why this is the optimum
+
+It maximizes local/private operation, makes the cloud purely additive (so reliability
+never depends on it), reuses your existing Tailscale + Google Drive instead of new
+tooling, and stays a single maintainable box. Scale up later by swapping the GPU
+(toward RTX PRO 6000 / Mac Studio M3 Ultra) or adding a BAA'd cloud backend — no
+redesign required.
+
+---
+
 ## TL;DR recommendations
 
 - **Just want to try Gemma cheaply:** use **Google AI Studio's free Gemma API**, or
