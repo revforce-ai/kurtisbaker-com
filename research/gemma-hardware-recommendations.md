@@ -1,17 +1,41 @@
 # Gemma Hardware Recommendations & Cost (2025–2026)
 
-A practical buyer's guide to the hardware needed to run Google's **Gemma** open
-models locally for inference, with approximate USD costs for each option. Covers
-per-model memory requirements, consumer GPUs, Apple Silicon Macs,
-workstation/datacenter GPUs, and cloud rental as an alternative.
+A practical buyer's and builder's guide to running Google's **Gemma** open models
+locally for inference — from per-model memory requirements through hardware
+options with USD costs and purchase links, a recommended local-first + cloud
+architecture, security/operations best practices, and a concrete shopping list.
+Written for the stated goal: **a local Linux box that runs private data locally,
+calls cloud LLMs only for hard non-private work, stays resilient if any model
+goes down, and backs up to the cloud** — already using Tailscale + Google Drive,
+not in healthcare.
 
 > **Read this first — pricing is abnormal right now.** A severe DRAM/GDDR memory
 > shortage in 2026 (foundry capacity monopolized by AI accelerators; GDDR7
 > scarce) has inflated GPU prices well above MSRP. The RTX 5090 ($1,999 MSRP) is
-> selling at ~$4,200–$4,700; RTX 40-series is discontinued and overpriced on the
-> used market. Treat every "new" price below as a wide, volatile range and verify
-> live before buying. Datacenter cards (A100/H100/H200) are quoted in
-> $20k–$45k+ ranges and are usually *rented*, not bought.
+> selling at ~$2,700–$4,700; RTX 40-series is discontinued and overpriced on the
+> used market, and DDR5/SSD prices have roughly doubled. Treat every "new" price
+> below as a wide, volatile range and verify live before buying. Datacenter cards
+> (A100/H100/H200) are quoted in $20k–$45k+ ranges and are usually *rented*, not
+> bought.
+
+---
+
+## Contents
+
+1. [How much memory does each Gemma model need?](#1-how-much-memory-does-each-gemma-model-need)
+2. [Consumer / prosumer GPUs (NVIDIA + AMD)](#2-consumer--prosumer-gpus-nvidia--amd)
+3. [Apple Silicon Macs (unified memory)](#3-apple-silicon-macs-unified-memory)
+4. [Workstation / datacenter GPUs](#4-workstation--datacenter-gpus-for-27b-at-full-precision-or-serving)
+5. [Cloud GPU rental — the alternative to buying](#5-cloud-gpu-rental--the-alternative-to-buying)
+6. [Recommended setup: local Linux box + cloud backup](#6-recommended-setup-local-linux-box--cloud-backup)
+7. [Making the architecture HIPAA-compliant](#7-making-the-architecture-hipaa-compliant) *(optional — secondary for you)*
+8. [Verifying your current stack (Tailscale + Google Drive)](#8-verifying-your-current-stack-tailscale--google-drive)
+9. [Operational best practices: reliability, resilience, security, results & backup](#9-operational-best-practices-reliability-resilience-security-results--backup)
+10. [The optimized plan (recommended build)](#10-the-optimized-plan-recommended-build)
+11. [Shopping list — real boxes, pricing & purchase links](#11-shopping-list--real-boxes-pricing--purchase-links-june-2026)
+12. [Upgradeability & future-proofing](#12-upgradeability--future-proofing)
+13. [TL;DR recommendations](#tldr-recommendations)
+14. [Sources](#sources)
 
 ---
 
@@ -755,7 +779,56 @@ BIZON and System76 ship Ubuntu + a preinstalled AI stack (CUDA, Ollama, vLLM, ll
 
 ---
 
+## 12. Upgradeability & future-proofing
+
+All three recommended boxes can be upgraded — but to **different ceilings**. The
+parts you can swap anytime are the GPU, RAM (to the board's max), and storage. The
+part you *can't* change later is the **motherboard/chassis platform** — how many
+full-speed GPU slots, PCIe lanes, and RAM slots you get is fixed at purchase. So
+the real future-proofing decision is made on day one: single-GPU forever, or room
+for a second GPU later.
+
+| Option | GPU swap | Add 2nd GPU | RAM ceiling | Notes |
+|--------|----------|-------------|-------------|-------|
+| **iBUYPOWER RDY Y70 (prebuilt 5090)** | ✅ easy | ⚠️ usually needs new PSU + often new board | 128–192 GB (board max) | Standard ATX parts; consumer board = one full-speed GPU slot. Check PSU wattage + case clearance before a bigger card. |
+| **DIY 3090 build** | ✅ easiest | ⚠️ consumer AM5 limits to one full-bandwidth slot | 128–192 GB | Most flexible by design. Buy 1000W PSU + roomy case up front so a GPU swap is drop-in. |
+| **BIZON V3000 G4** | ✅ | ✅ **factory 2× RTX 5090 capable** | up to 192 GB DDR5 | Built for upgrades; vendor-supported without voiding warranty. The headroom is part of the turnkey premium. |
+| **Threadripper/Xeon WS** (Puget buy-570, System76 Thelio Major, Exxact) | ✅ | ✅ **2–4 GPUs** (lots of PCIe lanes) | 256 GB–2 TB ECC | The real multi-GPU / scale-to-70B+ path. Costs five figures. |
+
+### Decision rule
+
+- **Only ever one big GPU?** Any of the three picks is fine — choose on price. A
+  single 24–32 GB card runs Gemma 27B Q4 indefinitely.
+- **Might run 70B+ on two GPUs someday?** Buy multi-GPU-capable hardware **now** —
+  the **BIZON V3000 (2× 5090)** or a Threadripper/Xeon workstation. Retrofitting a
+  second GPU into a consumer prebuilt usually means a new PSU and often a new
+  motherboard — effectively a rebuild.
+
+### Upgrade-timing notes
+
+- **Buy the RAM you need at purchase.** The 2026 memory shortage makes adding RAM
+  later unusually expensive — there's no cheap "add it next year" path right now.
+- **GPU is the highest-leverage upgrade** (more VRAM → bigger model / longer
+  context / higher quant). Size the PSU and case for the *next* GPU, not just the
+  current one.
+- **Architecture doesn't change when you upgrade hardware.** The Section 10 stack
+  (Ollama + LiteLLM + Tailscale + Drive) is unaffected by a GPU/RAM swap — and you
+  can always add a BAA'd or rented cloud backend for burst capacity instead of
+  buying more silicon.
+
+---
+
 ## TL;DR recommendations
+
+**For your stated goal (local-first, resilient, Linux, Tailscale + Drive):** build
+the Section 10 plan around one of three boxes from Section 11 — ⭐ **DIY used-RTX-3090
+build (~$2,650–2,800)** for best value, **iBUYPOWER RDY Y70 B05 (~$4,799)** for a
+turnkey 5090 you wipe to Ubuntu, or **BIZON V3000 G4 (~$3.5k–4.5k)** for zero-hassle
+Linux with Ubuntu + AI stack preinstalled and room to add a 2nd GPU. Run Gemma 3 27B
+(Q4) + 4B under Ollama, front it with LiteLLM failover ending locally, back up
+encrypted to your existing Google Drive.
+
+General guidance by use case:
 
 - **Just want to try Gemma cheaply:** use **Google AI Studio's free Gemma API**, or
   rent an **RTX 4090 at ~$0.40/hr**.
