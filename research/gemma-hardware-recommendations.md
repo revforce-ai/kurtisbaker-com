@@ -404,6 +404,93 @@ marketplace GPU hosts move to the "non-PHI / de-identified only" lane.
 
 ---
 
+## 8. Verifying your current stack (Tailscale + Google Drive)
+
+You're already running **Tailscale** (secure transport) and **Google Drive**
+(cloud storage/backup). Both can meet the Section 7 security bar — the task is
+verifying they're *configured* to, not just present. Healthcare/HIPAA is not the
+driver here, so BAAs are optional; the bar is the security posture: encryption,
+least-privilege access, enforced MFA, audit logging, and keeping private info
+private.
+
+> **Prerequisite — confirm this is Google Workspace, not consumer Drive.** A
+> custom domain (`@cwmi.us`) implies Workspace. Only Workspace exposes the admin
+> console, audit logs, and DLP needed to *verify* anything below. If it's a
+> consumer Gmail Drive, you cannot verify to this standard — migrate to Workspace
+> first.
+
+### Tailscale checklist (secure transport layer)
+
+- [ ] **Least-privilege ACLs** — Admin console → *Access Controls*. Default-deny;
+      only specific users/devices reach the local box, only on needed ports. Not
+      the default allow-all (`"*" : ["*"]`).
+- [ ] **Device approval ON** — *Settings → Device management*. New machines need
+      admin sign-off before joining the tailnet.
+- [ ] **Key expiry enabled** — *Machines* list. No device shows "Key expiry
+      disabled"; keys rotate on schedule.
+- [ ] **MFA enforced via SSO** — identity provider (Google/Okta). No
+      personal-account backdoors into the tailnet.
+- [ ] **No public exposure** — Tailscale **Funnel off** unless deliberately
+      publishing a service; nodes reachable only inside the tailnet.
+- [ ] **ACL tests** — add a `tests` block to the policy file asserting who *can*
+      and *cannot* reach the box, so the config can't silently regress.
+- [ ] **Tailnet lock** (optional, high value) — *Settings → Tailnet lock*.
+      Cryptographically blocks rogue node injection.
+- [ ] **Audit logging** — configuration + network-flow logs enabled and shipped
+      somewhere you review.
+
+Local sanity checks: `tailscale status` (who's on the tailnet) and
+`tailscale ping <box>` (confirm a direct, encrypted path). Transport is WireGuard
+end-to-end by default — the work is the *access policy*, not the crypto.
+
+### Google Drive checklist (cloud storage / backup leg)
+
+First decide the data question: in the Section 6/7 design, **private info should
+stay local**. So either (a) only non-sensitive / already-sanitized data lives in
+Drive, or (b) sensitive data is there but **client-side encrypted** so Google
+holds only ciphertext.
+
+- [ ] **Workspace + DPA** — confirm it's Workspace (not consumer) and Google's
+      Data Processing Amendment is accepted. (Workspace can also sign a BAA later
+      if healthcare ever returns.)
+- [ ] **External sharing locked down** — *Apps → Drive → Sharing settings*.
+      Restricted or warn-on-external; default link sharing = **"restricted,"** not
+      "anyone with the link."
+- [ ] **2-Step Verification enforced** — *Security → Authentication*. Mandatory
+      for all users, not optional.
+- [ ] **Audit logging** — *Security → Investigation tool / Drive log events*. You
+      can see who viewed/shared/downloaded what; alert on external shares.
+- [ ] **DLP rules** — *Security → Data protection*. Block/warn when content
+      matching private-data patterns is shared externally.
+- [ ] **Sharing audit** — run an Investigation-tool query for files shared
+      publicly/externally; remediate anything unexpected.
+- [ ] **Third-party app access** — *Security → API controls*. OAuth apps
+      allowlisted; block unverified apps from Drive scopes.
+- [ ] **Client-side encryption** — *Security → Client-side encryption*. Enable for
+      sensitive folders if private data must live in Drive; Google then holds only
+      ciphertext.
+- [ ] **Encryption baseline** — Google encrypts at rest + in transit by default;
+      fine for non-sensitive data, but **not sufficient alone** for your most
+      private data without CSE.
+
+### Highest-value checks
+
+Across both tools, the two checks that surface the most real-world exposure:
+**(1) enforce MFA** (Tailscale SSO + Workspace 2SV), and **(2) run the Drive
+external-sharing audit**. Do those first.
+
+### Bottom line
+
+- **Tailscale** is the right transport and easy to pass — tighten ACLs to
+  least-privilege, enable device approval + key expiry, enforce MFA via SSO, and
+  add ACL `tests`.
+- **Google Drive** works as the cloud-backup/collaboration leg **for non-sensitive
+  or client-side-encrypted data**. Decide: keep genuinely private info *off* Drive
+  (local-only, per the architecture), or turn on **CSE + DLP + restricted external
+  sharing** so Drive holds only data Google can't read and you can audit access.
+
+---
+
 ## TL;DR recommendations
 
 - **Just want to try Gemma cheaply:** use **Google AI Studio's free Gemma API**, or
