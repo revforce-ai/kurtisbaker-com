@@ -300,6 +300,110 @@ dollars per burst) and backup runs ~$5–$10/month for storage. This beats renti
 
 ---
 
+## 7. Making the architecture HIPAA-compliant
+
+> **Reality check first.** HIPAA compliance is *organizational and legal*, not a
+> setting you switch on. No architecture is "HIPAA compliant" by itself — your
+> *organization* is, once it has signed BAAs, a documented risk analysis,
+> policies, workforce training, and breach-notification procedures in place. What
+> follows is an architecture **designed to support** HIPAA compliance for a system
+> handling **PHI** (Protected Health Information). This is engineering guidance,
+> not legal advice — have counsel/your compliance officer review before going
+> live with real PHI.
+
+### The one rule that reshapes the design: BAAs
+
+Under HIPAA, **any third party that can access PHI is a Business Associate and
+must sign a Business Associate Agreement (BAA)** with you. No BAA → you may not
+send PHI to that service, period. This forces two corrections to Section 6:
+
+- ❌ **OpenRouter is out of any PHI path** — aggregators don't sign BAAs.
+- ❌ **Free API tiers are out** — Google AI Studio's free Gemma tier, Claude
+  Free/Pro/Max/Team, and OpenAI consumer tiers are **not** BAA-eligible (and some
+  train on your prompts).
+
+**Cloud LLMs that DO offer a BAA (verified June 2026 — confirm current terms):**
+
+| Provider | BAA-eligible surface | Notes |
+|----------|----------------------|-------|
+| **Anthropic (Claude)** | First-party **Messages API** + Enterprise | NOT Console/Workbench or Free/Pro/Max/Team. Covered models require **30-day retention** (no zero-retention). BAAs signed after 2025-12-02 cover API + Enterprise together. |
+| **OpenAI** | API endpoints that are **ZDR-eligible** | Request via `baa@openai.com`. Live web-search tool is **not** eligible. ZDR needs a managed/Enterprise agreement. |
+| **Google Cloud Vertex AI** | Vertex AI (Gemini, and Gemma via Model Garden) | Sign the **Google Cloud BAA at the org level**; use only HIPAA-eligible services; consumer Gemini / AI Studio are **not** covered. |
+
+For the cloud leg, pick **one or two** of these under signed BAAs and route only to
+them. Your **local Gemma box never needs a BAA** — PHI that stays on hardware you
+control isn't disclosed to a third party. That's the strongest argument for the
+local-first design here.
+
+### Redaction is defense-in-depth, not legal de-identification
+
+Presidio-style PII stripping (Section 6) is valuable, but **automated redaction
+does not make data "de-identified" under HIPAA.** True de-identification requires
+either **Safe Harbor** (removing all 18 specified identifiers *and* having no
+actual knowledge the residual could re-identify) or **Expert Determination**.
+Automated detection is best-effort and will occasionally miss an identifier, so:
+
+- **Do not** rely on redaction to send PHI to a non-BAA service.
+- **Do** keep redaction as a *minimum-necessary* control on top of a BAA'd
+  channel — send the cloud model the least PHI required for the task.
+
+### Technical safeguards on the local Linux box (HIPAA Security Rule)
+
+Because you're self-hosting, *you* own the safeguards a SaaS BAA would otherwise
+provide:
+
+- **Encryption at rest:** full-disk encryption with **LUKS/dm-crypt** on the box
+  and on every backup target. PHI at rest unencrypted is a finding.
+- **Encryption in transit:** TLS 1.2+ for all egress; keep the trusted zone on a
+  private network; remote access only via **WireGuard/Tailscale**, never an open
+  port.
+- **Access control & authentication:** unique per-user accounts, **MFA**,
+  role-based access (least privilege), and automatic session logoff. No shared
+  logins.
+- **Audit controls:** log every PHI access and every model call. LiteLLM can log
+  request metadata; pair with OS-level `auditd` and ship logs to append-only
+  storage. Retain audit logs (HIPAA expects ~6 years of compliance
+  documentation).
+- **Integrity & availability:** checksums/versioning on PHI stores; tested
+  **encrypted backups** with a documented disaster-recovery plan.
+- **Physical safeguards:** a local box storing PHI must be **physically secured**
+  (locked room/rack, controlled facility access) — this is a real obligation that
+  cloud users outsource but you now own.
+
+### Cloud backup/burst — HIPAA version
+
+Section 6's cloud backup must also sit under BAAs:
+
+- **Backup storage:** use a **HIPAA-eligible, BAA-covered** object store — **AWS
+  S3, Google Cloud Storage, or Azure Blob** (all sign BAAs). **Backblaze B2 does
+  not sign a BAA**, so it's out for PHI backups. Encrypt client-side with
+  restic/rclone regardless.
+- **Compute burst:** rent only from a provider that will sign a BAA and lets you
+  run in an isolated, encrypted environment (e.g. a dedicated GPU instance in your
+  BAA'd cloud account). Generic Vast.ai/RunPod marketplace hosts are **not**
+  appropriate for PHI without a BAA and tenancy guarantees — keep PHI workloads on
+  your local box or a BAA'd cloud VM, and reserve cheap marketplace GPUs for
+  non-PHI/de-identified work only.
+
+### Administrative requirements (don't skip these)
+
+Architecture alone won't pass an audit. You also need: a documented **risk
+analysis**, written **policies & procedures**, **workforce training**, a
+**breach-notification** process, signed BAAs with every vendor, and (if you're a
+Business Associate yourself) the obligations that flow down from your covered
+entity.
+
+### Net effect on the design
+
+The local-first architecture is *already* the HIPAA-friendly shape: keep PHI on
+the encrypted local box by default; when a frontier model is genuinely needed,
+send the **minimum necessary**, **redacted**, over TLS, **only** to a
+**BAA-covered** endpoint (Claude Messages API / OpenAI ZDR-eligible / Vertex AI);
+log everything; back up encrypted to a BAA'd store. OpenRouter, free tiers, and
+marketplace GPU hosts move to the "non-PHI / de-identified only" lane.
+
+---
+
 ## TL;DR recommendations
 
 - **Just want to try Gemma cheaply:** use **Google AI Studio's free Gemma API**, or
