@@ -491,6 +491,106 @@ external-sharing audit**. Do those first.
 
 ---
 
+## 9. Operational best practices: reliability, resilience, security, results & backup
+
+The design principle that ties this all together: **the local box is the floor.**
+Every cloud dependency is an enhancement that can fail without taking you to zero.
+Build so that if every external LLM is down, you still operate locally — degraded
+in quality, never offline.
+
+### Reliability (keep the local box healthy)
+
+- **Run the runtime as a managed service.** Put Ollama/vLLM under **systemd** with
+  `Restart=always` so a crash self-heals. Add a watchdog that pings the model
+  endpoint and restarts on failure.
+- **Keep models warm.** Use keep-alive (e.g. Ollama `OLLAMA_KEEP_ALIVE`) so the
+  weights stay resident and you avoid multi-second cold starts.
+- **Monitor the box.** Track GPU temp/VRAM, OOM-kills, disk, and service uptime
+  (Prometheus + node/DCGM exporters, or a simple cron health check). Alert before
+  you run out of VRAM, not after.
+- **Timeouts, retries, queueing.** Every model call gets a timeout + bounded retry
+  with backoff; serialize heavy jobs through a queue so concurrent requests don't
+  OOM the GPU.
+- **Pin everything offline.** Pre-download and pin model weights + quant by digest
+  so a registry outage never blocks startup. The box must boot and serve with **no
+  network**.
+
+### Resilience / failover (when an LLM goes down)
+
+- **Tiered fallback chain** through the **LiteLLM gateway**:
+  `primary cloud → secondary cloud → local Gemma 27B → local Gemma 4B`. The chain
+  *ends* on local, so there's always an answer.
+- **Health-aware routing + circuit breakers.** The gateway marks a failing
+  provider unhealthy and stops hammering it; it retries that provider later
+  instead of blocking every request.
+- **Local-only "lifeboat" mode.** A single flag (or automatic trigger when all
+  cloud backends are unhealthy) routes 100% locally. Test it deliberately by
+  pulling the network.
+- **Response caching.** A semantic/result cache means repeated or recent queries
+  keep working through an outage and cut load. Cache lives on the local box.
+- **Graceful degradation, signalled.** When you fall back to a smaller/local
+  model, **tag the response as "degraded mode"** so downstream users/systems know
+  the quality tier changed.
+- **Capacity headroom.** Keep enough free VRAM that the local fallback can actually
+  load when cloud traffic suddenly lands on it — don't size the box to exactly the
+  primary model.
+
+### Security (recap, enforced continuously)
+
+- **Encryption everywhere:** LUKS at rest on box + backups; TLS 1.2+ and
+  **Tailscale/WireGuard** in transit; no open inbound ports.
+- **Access:** enforced MFA/SSO, least-privilege accounts, auto-logoff; secrets
+  (API keys) in a vault or env file with strict perms — never in code or git.
+- **Egress boundary:** the trusted zone reaches the internet **only** through the
+  gateway, which applies minimum-necessary redaction before any cloud call.
+- **Patch & rotate:** keep OS/drivers/runtime patched; rotate API keys and
+  Tailscale keys on a schedule.
+- **Audit:** log every model call + PHI/private-data access to append-only storage;
+  review periodically (ties to Section 8).
+
+### Results / quality (don't let reliability cost correctness)
+
+- **Pin model + quant versions.** Don't silently auto-upgrade; a model swap can
+  change behavior. Promote new versions deliberately.
+- **Golden eval set.** Keep a small regression suite of representative
+  prompts+expected outputs; run it whenever you change model, quant, or prompt to
+  catch quality drops — *especially* before trusting a fallback model.
+- **Validate outputs.** Use structured/JSON mode + schema validation; reject or
+  retry malformed results rather than passing them downstream.
+- **Quality-aware routing.** Hard tasks → strongest available model; add a
+  critique/verify pass for high-stakes outputs; keep a human in the loop where it
+  matters.
+- **Version prompts in git** alongside the gateway and infra config.
+
+### Backup protocols
+
+- **3-2-1 rule:** ≥3 copies, on 2 media types, with 1 off-site. Off-site = your
+  **Google Drive** (client-side encrypted) and/or S3/GCS.
+- **Back up what you can't re-download.** Base Gemma weights are re-pullable (just
+  record the version+digest); prioritize your **own artifacts**: fine-tunes/LoRAs,
+  datasets, prompts, gateway config, **Tailscale ACL policy**, vector DB/embeddings,
+  and data stores.
+- **Encrypt client-side, then sync.** `restic` or `rclone crypt` → Drive/S3 so the
+  cloud holds only ciphertext. Automate via systemd timer/cron; keep **versioned,
+  append-only** snapshots to survive ransomware/accidental deletion.
+- **Config-as-code.** Keep box setup (compose/systemd units, LiteLLM config,
+  Tailscale ACLs, prompts) in **git** so the entire environment is reproducible
+  from scratch.
+- **Test restores.** A backup you've never restored is a hope, not a backup.
+  Schedule periodic restore drills.
+- **Write a DR runbook** with target **RPO/RTO** (how much data you can lose / how
+  fast you must be back) and the exact steps to rebuild the box from backups.
+
+### One-line summary
+
+Local Gemma is the always-on floor; LiteLLM gives tiered, health-checked failover
+ending locally; everything private is encrypted in transit and at rest with
+enforced MFA and an audited egress boundary; quality is protected by pinned
+versions + a golden eval set; and a 3-2-1, client-side-encrypted, config-as-code,
+restore-tested backup regime lets you rebuild the whole box on demand.
+
+---
+
 ## TL;DR recommendations
 
 - **Just want to try Gemma cheaply:** use **Google AI Studio's free Gemma API**, or
